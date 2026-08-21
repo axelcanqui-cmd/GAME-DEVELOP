@@ -2,9 +2,9 @@
 
 > **Tu plato es el campo de batalla.** Atrapa lo que te ayuda, evita lo que te perjudica y mantén tus estadísticas en equilibrio.
 
-![FOOD WARS](capturas/foodwars.png)
+![FOOD WARS](../capturas/foodwars.png)
 
-[🍎 JUGAR](ComidaSaludable.html) · [⚔️ Mecánicas](#-cómo-se-juega) · [📊 Estadísticas](#-tus-estadísticas) · [🧠 Aprendizaje](#-qué-aprendes)
+[🍎 JUGAR](ComidaSaludable.html) · ⚔️ Mecánicas · 📊 Estadísticas · 🧠 Aprendizaje
 
 ## 🥗 Ficha del juego
 | Dato | Información |
