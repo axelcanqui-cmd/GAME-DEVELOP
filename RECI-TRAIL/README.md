@@ -2,9 +2,9 @@
 
 > **Conduce, recoge y clasifica.** La montaña necesita tu ayuda y cada residuo cuenta.
 
-![Reci-Trail](capturas/recitrail.png)
+![Reci-Trail](../capturas/recitrail.png)
 
-[🏍️ JUGAR](segundojuego.html) · [♻️ Mecánica](#-mecánica-principal) · [🔋 Energía](#-energía) · [🌱 Aprendizaje](#-qué-aprendes)
+[🏍️ JUGAR](segundojuego.html) · ♻️ Mecánica · 🔋 Energía · 🌱 Aprendizaje
 
 ## 🏔️ Ficha del juego
 | Dato | Información |
