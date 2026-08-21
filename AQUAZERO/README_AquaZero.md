@@ -2,9 +2,9 @@
 
 > **Cada gota cuenta.** Conecta las tuberías antes de que el agua se pierda.
 
-![AquaZero](capturas/aquazero.png)
+![AquaZero](../capturas/aquazero.png)
 
-[💧 JUGAR](AhorrroAgua.html) · [🧩 Puzzle](#-el-puzzle) · [💦 Objetivo](#-objetivo) · [🌎 Aprendizaje](#-qué-aprendes)
+[💧 JUGAR](AhorrroAgua.html) ·🧩 Puzzle · 💦 Objetivo · 🌎 Aprendizaje
 
 ## 💧 Ficha del juego
 | Dato | Información |
