@@ -2,9 +2,9 @@
 
 > **No juegas como Leo. Juegas como su acompañante.** Durante 15 minutos tendrás que decidir qué hacer mientras el teléfono se llena de mensajes de odio.
 
-![15 Minutos](capturas/15minutos.png)
+![15 Minutos](GAME-DEVELOP/capturas/15minutos.png)
 
-[📱 VIVIR LA HISTORIA](storytelling.html) · [🧠 Decisiones](#-tus-decisiones) · [💭 Emoción](#-la-experiencia) · [🫂 Mensaje](#-qué-busca-generar)
+📱 VIVIR LA HISTORIA · 🧠 Decisiones · 💭 Emoción · 🫂 Mensaje
 
 ## 🎭 Ficha del juego
 | Dato | Información |
