@@ -1,0 +1,3356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>15 Minutos - Storytelling Interactivo</title>
+<meta name="description" content="Prototipo jugable sobre ciberbullying. Acompaña a Leo durante un viaje en teleférico y toma decisiones.">
+<style>
+/* =========================================================
+   15 MINUTOS - PROTOTIPO STORYTELLING
+   HTML + CSS + JavaScript en un solo archivo
+   ========================================================= */
+
+:root{
+    --bg:#0b1020;
+    --phone:#111827;
+    --card:#1b2438;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --accent:#7c3aed;
+    --accent2:#22d3ee;
+    --danger:#ef4444;
+    --warning:#f59e0b;
+    --success:#22c55e;
+    --shadow:0 25px 80px rgba(0,0,0,.45);
+}
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    min-height:100%;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:
+        radial-gradient(circle at 20% 10%, #26335f 0, transparent 35%),
+        radial-gradient(circle at 90% 90%, #351b55 0, transparent 35%),
+        var(--bg);
+    color:var(--text);
+}
+
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:14px;
+    overflow-x:hidden;
+}
+
+button{
+    font:inherit;
+}
+
+.app{
+    width:min(100%, 470px);
+    min-height:min(920px, calc(100vh - 28px));
+    position:relative;
+}
+
+/* =========================
+   PANTALLA DE INICIO
+   ========================= */
+
+.start-screen,
+.game-shell{
+    width:100%;
+    height:100%;
+}
+
+.start-screen{
+    min-height:min(920px, calc(100vh - 28px));
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:34px;
+    overflow:hidden;
+    background:linear-gradient(160deg,#111827,#090d18);
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:28px 22px;
+    position:relative;
+}
+
+.start-screen::before{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    background:rgba(124,58,237,.18);
+    filter:blur(60px);
+    top:-80px;
+    right:-90px;
+}
+
+.start-logo{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    margin-top:28px;
+}
+
+.start-logo .mini{
+    color:var(--accent2);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:3px;
+    text-transform:uppercase;
+}
+
+.start-logo h1{
+    font-size:52px;
+    line-height:.9;
+    margin:14px 0 10px;
+    letter-spacing:-3px;
+}
+
+.start-logo p{
+    margin:0 auto;
+    max-width:320px;
+    color:var(--muted);
+    line-height:1.5;
+}
+
+.fake-phone{
+    position:relative;
+    z-index:2;
+    width:205px;
+    height:365px;
+    margin:20px auto;
+    border:8px solid #05070d;
+    border-radius:32px;
+    background:#111827;
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
+    overflow:hidden;
+    transform:rotate(-3deg);
+}
+
+.fake-phone .notch{
+    position:absolute;
+    width:85px;
+    height:18px;
+    background:#05070d;
+    border-radius:0 0 14px 14px;
+    left:50%;
+    top:0;
+    transform:translateX(-50%);
+    z-index:3;
+}
+
+.fake-scene{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding:16px;
+    background:
+        linear-gradient(to bottom,rgba(20,28,60,.1),rgba(7,10,20,.9)),
+        radial-gradient(circle at 75% 25%, #f8c56c 0 4%, transparent 5%),
+        linear-gradient(135deg,#4c3a73,#1e355d 45%,#0d1628);
+}
+
+.fake-scene .mountain{
+    position:absolute;
+    left:-30px;
+    right:-30px;
+    bottom:95px;
+    height:120px;
+    background:linear-gradient(135deg,transparent 48%,#17233d 49% 65%,transparent 66%),
+               linear-gradient(45deg,transparent 46%,#26395c 47% 68%,transparent 69%);
+    opacity:.8;
+}
+
+.fake-person{
+    position:relative;
+    z-index:2;
+    text-align:center;
+}
+
+.fake-person .head{
+    width:72px;
+    height:72px;
+    background:#c78b62;
+    border-radius:50%;
+    margin:auto;
+    border:4px solid #111827;
+}
+
+.fake-person .body{
+    width:120px;
+    height:125px;
+    margin:-5px auto 0;
+    border-radius:55px 55px 15px 15px;
+    background:#283a66;
+}
+
+.fake-music{
+    position:absolute;
+    top:34px;
+    left:15px;
+    right:15px;
+    padding:10px;
+    border-radius:12px;
+    background:rgba(255,255,255,.1);
+    backdrop-filter:blur(10px);
+    font-size:11px;
+}
+
+.start-actions{
+    position:relative;
+    z-index:2;
+}
+
+.start-btn{
+    width:100%;
+    border:0;
+    border-radius:18px;
+    padding:17px;
+    color:white;
+    background:linear-gradient(135deg,var(--accent),#4f46e5);
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 12px 35px rgba(124,58,237,.3);
+    transition:.2s;
+}
+
+.start-btn:active{
+    transform:scale(.97);
+}
+
+.start-note{
+    text-align:center;
+    color:#64748b;
+    font-size:11px;
+    margin-top:12px;
+}
+
+/* =========================
+   JUEGO
+   ========================= */
+
+.game-shell{
+    min-height:min(920px, calc(100vh - 28px));
+    border-radius:34px;
+    overflow:hidden;
+    position:relative;
+    background:#080c15;
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:var(--shadow);
+}
+
+.status-bar{
+    height:38px;
+    padding:0 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:rgba(5,8,15,.85);
+    color:#dbeafe;
+    font-size:12px;
+    position:relative;
+    z-index:100;
+}
+
+.status-right{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.signal{
+    letter-spacing:1px;
+}
+
+.game-screen{
+    position:absolute;
+    inset:38px 0 0;
+    overflow:hidden;
+    background:#111827;
+}
+
+/* Fondo: Leo + teleférico */
+.photo-bg{
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(to bottom,rgba(8,12,25,.08),rgba(4,7,15,.8)),
+        radial-gradient(circle at 74% 18%,#f9d58a 0 3%,transparent 4%),
+        linear-gradient(135deg,#55477c 0%,#273b69 38%,#111d38 70%,#070b15 100%);
+    transition:filter 1s, transform 1s, opacity 1s;
+}
+
+.photo-bg::before{
+    content:"";
+    position:absolute;
+    left:-10%;
+    right:-10%;
+    bottom:25%;
+    height:35%;
+    background:
+        linear-gradient(145deg,transparent 20%,#18233e 21% 35%,transparent 36%),
+        linear-gradient(35deg,transparent 25%,#213153 26% 46%,transparent 47%);
+    opacity:.95;
+}
+
+.photo-bg::after{
+    content:"";
+    position:absolute;
+    left:8%;
+    right:8%;
+    bottom:0;
+    height:25%;
+    background:
+        repeating-linear-gradient(90deg,
+        rgba(255,205,110,.55) 0 4px,
+        transparent 4px 35px);
+    opacity:.28;
+}
+
+/* Representación de Leo */
+.leo{
+    position:absolute;
+    width:190px;
+    height:270px;
+    left:50%;
+    bottom:7%;
+    transform:translateX(-50%);
+    transition:1s;
+    filter:drop-shadow(0 18px 22px rgba(0,0,0,.4));
+    z-index:3;
+}
+
+.leo-head{
+    position:absolute;
+    width:88px;
+    height:88px;
+    border-radius:50%;
+    left:51px;
+    top:10px;
+    background:#bd7e59;
+    border:5px solid #151a29;
+}
+
+.leo-hair{
+    position:absolute;
+    width:93px;
+    height:48px;
+    left:48px;
+    top:3px;
+    border-radius:50% 55% 25% 35%;
+    background:#171923;
+    z-index:2;
+}
+
+.leo-ear{
+    position:absolute;
+    width:15px;
+    height:24px;
+    background:#b97554;
+    border-radius:50%;
+    top:43px;
+}
+
+.leo-ear.left{left:45px}
+.leo-ear.right{left:130px}
+
+.leo-face{
+    position:absolute;
+    left:69px;
+    top:46px;
+    width:55px;
+    height:30px;
+    z-index:4;
+}
+
+.eye{
+    position:absolute;
+    width:7px;
+    height:7px;
+    background:#1f1720;
+    border-radius:50%;
+    top:6px;
+}
+
+.eye.left{left:5px}
+.eye.right{right:5px}
+
+.mouth{
+    position:absolute;
+    left:20px;
+    top:19px;
+    width:18px;
+    height:7px;
+    border-bottom:2px solid #4b2020;
+    border-radius:50%;
+    transition:.5s;
+}
+
+.leo-body{
+    position:absolute;
+    width:145px;
+    height:160px;
+    left:22px;
+    top:92px;
+    border-radius:55px 55px 25px 25px;
+    background:linear-gradient(135deg,#293a69,#18233f);
+    border:4px solid #101624;
+}
+
+.headphones{
+    position:absolute;
+    left:35px;
+    top:-3px;
+    width:110px;
+    height:105px;
+    border:9px solid #080b13;
+    border-bottom:0;
+    border-radius:55px 55px 0 0;
+    z-index:5;
+}
+
+.headphones span{
+    position:absolute;
+    width:17px;
+    height:35px;
+    background:#080b13;
+    top:57px;
+    border-radius:9px;
+}
+
+.headphones span:first-child{left:-11px}
+.headphones span:last-child{right:-11px}
+
+.instrument{
+    position:absolute;
+    width:110px;
+    height:45px;
+    border-radius:50%;
+    background:#9a633d;
+    right:-12px;
+    bottom:25px;
+    transform:rotate(-17deg);
+    border:4px solid #53351f;
+    z-index:7;
+}
+
+.instrument::after{
+    content:"";
+    position:absolute;
+    width:95px;
+    height:4px;
+    background:#e5c89e;
+    top:19px;
+    left:8px;
+}
+
+.instrument::before{
+    content:"";
+    position:absolute;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    border:3px solid #4c2b1a;
+    left:42px;
+    top:8px;
+}
+
+/* Celular de Leo */
+.phone{
+    position:absolute;
+    width:92px;
+    height:160px;
+    right:-18px;
+    bottom:5px;
+    border:6px solid #070a11;
+    border-radius:18px;
+    background:#101827;
+    z-index:15;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+    transition:.4s;
+}
+
+.phone::before{
+    content:"";
+    position:absolute;
+    width:40px;
+    height:6px;
+    top:4px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#02040a;
+    border-radius:0 0 8px 8px;
+}
+
+.phone-screen{
+    position:absolute;
+    inset:7px;
+    border-radius:12px;
+    overflow:hidden;
+    background:linear-gradient(160deg,#24385e,#0c1324);
+}
+
+.phone-photo{
+    height:56%;
+    background:
+        radial-gradient(circle at 70% 30%,#f9d98d 0 5%,transparent 6%),
+        linear-gradient(135deg,#5c4d80,#27436d 50%,#111b31);
+    position:relative;
+}
+
+.phone-photo::after{
+    content:"🎸";
+    position:absolute;
+    font-size:35px;
+    right:8px;
+    bottom:4px;
+}
+
+.phone-text{
+    padding:8px;
+    font-size:7px;
+    color:#dbeafe;
+}
+
+.like-row{
+    display:flex;
+    gap:4px;
+    margin-top:5px;
+}
+
+.like{
+    padding:3px 5px;
+    background:rgba(255,255,255,.12);
+    border-radius:6px;
+}
+
+/* UI superior */
+.top-ui{
+    position:absolute;
+    top:14px;
+    left:14px;
+    right:14px;
+    z-index:40;
+}
+
+.trip-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.trip-title{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+}
+
+.trip-time{
+    font-size:11px;
+    padding:5px 9px;
+    border-radius:999px;
+    background:rgba(0,0,0,.4);
+    backdrop-filter:blur(10px);
+}
+
+.progress{
+    height:5px;
+    background:rgba(255,255,255,.14);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    transition:.4s;
+}
+
+/* Reproductor */
+.music-player{
+    position:absolute;
+    left:14px;
+    right:14px;
+    bottom:18px;
+    z-index:35;
+    border-radius:20px;
+    padding:12px;
+    background:rgba(8,12,23,.75);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.1);
+    transition:.7s;
+}
+
+.music-main{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.album{
+    width:43px;
+    height:43px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    background:linear-gradient(135deg,#4f46e5,#22d3ee);
+}
+
+.song{
+    flex:1;
+}
+
+.song strong{
+    display:block;
+    font-size:12px;
+}
+
+.song small{
+    color:#94a3b8;
+    font-size:10px;
+}
+
+.play-btn{
+    width:35px;
+    height:35px;
+    border:0;
+    border-radius:50%;
+    background:#f8fafc;
+    color:#0f172a;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.music-wave{
+    display:flex;
+    gap:3px;
+    height:13px;
+    align-items:center;
+    margin-top:8px;
+}
+
+.music-wave i{
+    display:block;
+    width:3px;
+    height:5px;
+    background:#67e8f9;
+    border-radius:3px;
+    animation:wave .8s infinite alternate ease-in-out;
+}
+
+.music-wave i:nth-child(2){animation-delay:.1s}
+.music-wave i:nth-child(3){animation-delay:.2s}
+.music-wave i:nth-child(4){animation-delay:.3s}
+.music-wave i:nth-child(5){animation-delay:.4s}
+.music-wave i:nth-child(6){animation-delay:.5s}
+
+@keyframes wave{
+    to{height:13px}
+}
+
+/* =========================
+   MENSAJES
+   ========================= */
+
+.message-layer{
+    position:absolute;
+    inset:70px 0 105px;
+    z-index:30;
+    overflow:hidden;
+    pointer-events:none;
+}
+
+.message{
+    position:absolute;
+    max-width:75%;
+    min-width:145px;
+    padding:11px 12px;
+    border-radius:16px;
+    background:rgba(255,255,255,.94);
+    color:#111827;
+    box-shadow:0 12px 35px rgba(0,0,0,.3);
+    pointer-events:auto;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+    animation:messageIn .35s ease-out;
+    transition:transform .2s, opacity .2s;
+}
+
+.message:active{
+    cursor:grabbing;
+}
+
+.message.bad{
+    background:linear-gradient(135deg,#fff,#ffe4e6);
+    border-left:4px solid var(--danger);
+}
+
+.message.good{
+    background:linear-gradient(135deg,#fff,#dcfce7);
+    border-left:4px solid var(--success);
+}
+
+.message-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:5px;
+    font-size:9px;
+    color:#64748b;
+}
+
+.message-user{
+    font-weight:900;
+    color:#334155;
+}
+
+.message-text{
+    font-size:12px;
+    line-height:1.35;
+    font-weight:650;
+}
+
+.message-hint{
+    margin-top:5px;
+    font-size:8px;
+    color:#94a3b8;
+}
+
+@keyframes messageIn{
+    from{
+        opacity:0;
+        transform:scale(.65) translateY(-20px);
+    }
+    to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+    }
+}
+
+/* Indicador de toque */
+.swipe-help{
+    position:absolute;
+    z-index:55;
+    left:50%;
+    bottom:115px;
+    transform:translateX(-50%);
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(10px);
+    font-size:10px;
+    color:#cbd5e1;
+    pointer-events:none;
+    animation:helpPulse 1.5s infinite;
+}
+
+@keyframes helpPulse{
+    50%{opacity:.5; transform:translateX(-50%) translateY(-3px)}
+}
+
+/* Overlay de ansiedad */
+.anxiety-overlay{
+    position:absolute;
+    inset:0;
+    z-index:50;
+    pointer-events:none;
+    opacity:0;
+    background:
+        radial-gradient(circle at center,transparent 25%,rgba(2,6,23,.2) 52%,rgba(0,0,0,.72) 100%);
+    transition:opacity 1s;
+}
+
+.anxiety-overlay::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:repeating-linear-gradient(
+        0deg,
+        transparent 0 4px,
+        rgba(255,255,255,.025) 5px 6px
+    );
+    mix-blend-mode:screen;
+}
+
+/* =========================
+   DECISIONES
+   ========================= */
+
+.decision-panel{
+    position:absolute;
+    left:12px;
+    right:12px;
+    bottom:12px;
+    z-index:80;
+    display:none;
+    padding:15px;
+    border-radius:24px;
+    background:rgba(7,11,22,.92);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(20px);
+    box-shadow:0 20px 70px rgba(0,0,0,.5);
+}
+
+.decision-panel.show{
+    display:block;
+    animation:panelUp .35s ease;
+}
+
+@keyframes panelUp{
+    from{transform:translateY(30px);opacity:0}
+    to{transform:translateY(0);opacity:1}
+}
+
+.decision-panel h2{
+    font-size:15px;
+    margin:0 0 5px;
+}
+
+.decision-panel p{
+    margin:0 0 12px;
+    color:#94a3b8;
+    font-size:11px;
+    line-height:1.4;
+}
+
+.choices{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.choice{
+    border:1px solid rgba(255,255,255,.1);
+    background:#172033;
+    color:#f8fafc;
+    border-radius:14px;
+    padding:12px 8px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:800;
+    transition:.2s;
+}
+
+.choice:hover{
+    background:#25324b;
+}
+
+.choice:active{
+    transform:scale(.96);
+}
+
+/* =========================
+   MODALES
+   ========================= */
+
+.modal{
+    position:absolute;
+    inset:0;
+    z-index:200;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+    background:rgba(2,5,12,.72);
+    backdrop-filter:blur(12px);
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    width:100%;
+    border-radius:28px;
+    padding:24px;
+    background:linear-gradient(145deg,#172033,#0d1423);
+    border:1px solid rgba(255,255,255,.13);
+    box-shadow:0 30px 90px rgba(0,0,0,.65);
+    text-align:center;
+    animation:modalIn .4s ease;
+}
+
+@keyframes modalIn{
+    from{transform:scale(.88);opacity:0}
+    to{transform:scale(1);opacity:1}
+}
+
+.modal-icon{
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.modal-card h2{
+    margin:0 0 8px;
+    font-size:23px;
+}
+
+.modal-card p{
+    color:#aebbd0;
+    line-height:1.55;
+    font-size:13px;
+}
+
+.modal-actions{
+    display:grid;
+    gap:8px;
+    margin-top:17px;
+}
+
+.modal-btn{
+    border:0;
+    padding:13px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:900;
+    color:white;
+    background:#26334b;
+}
+
+.modal-btn.primary{
+    background:linear-gradient(135deg,var(--accent),#4f46e5);
+}
+
+.modal-btn.help{
+    background:linear-gradient(135deg,#059669,#16a34a);
+}
+
+/* =========================
+   PANTALLA FINAL
+   ========================= */
+
+.final-screen{
+    position:absolute;
+    inset:0;
+    z-index:300;
+    display:none;
+    padding:30px 22px;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:
+        radial-gradient(circle at 50% 25%,rgba(34,211,238,.18),transparent 28%),
+        linear-gradient(160deg,#101a31,#070b15);
+}
+
+.final-screen.show{
+    display:flex;
+    animation:fadeIn .7s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+.final-content{
+    max-width:350px;
+}
+
+.final-icon{
+    font-size:64px;
+    margin-bottom:15px;
+}
+
+.final-content .small-title{
+    color:#67e8f9;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.final-content h2{
+    font-size:31px;
+    line-height:1.05;
+    margin:12px 0;
+}
+
+.final-content p{
+    color:#a8b5c8;
+    line-height:1.6;
+    font-size:14px;
+}
+
+.quote{
+    margin:20px 0;
+    padding:17px;
+    border-left:3px solid var(--accent2);
+    background:rgba(255,255,255,.05);
+    border-radius:0 15px 15px 0;
+    text-align:left;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.final-buttons{
+    display:grid;
+    gap:8px;
+}
+
+.final-buttons button{
+    border:0;
+    padding:13px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:900;
+    color:white;
+}
+
+.restart{
+    background:linear-gradient(135deg,var(--accent),#4f46e5);
+}
+
+.support{
+    background:#26334b;
+}
+
+/* =========================
+   ESTADOS DE ANSIEDAD
+   ========================= */
+
+.level-1 .photo-bg{
+    filter:saturate(.95);
+}
+
+.level-2 .photo-bg{
+    filter:saturate(.65) brightness(.85);
+    transform:scale(1.025);
+}
+
+.level-3 .photo-bg{
+    filter:saturate(.4) brightness(.7);
+    transform:scale(1.045);
+}
+
+.level-4 .photo-bg{
+    filter:saturate(.2) brightness(.55);
+    transform:scale(1.07);
+}
+
+.level-1 .anxiety-overlay{opacity:.12}
+.level-2 .anxiety-overlay{opacity:.25}
+.level-3 .anxiety-overlay{opacity:.45}
+.level-4 .anxiety-overlay{opacity:.68}
+
+.level-3 .leo{
+    animation:leoShake .45s infinite;
+}
+
+.level-4 .leo{
+    animation:leoShake .22s infinite;
+}
+
+@keyframes leoShake{
+    0%,100%{transform:translateX(-50%) translate(0,0)}
+    25%{transform:translateX(-50%) translate(-2px,1px)}
+    50%{transform:translateX(-50%) translate(2px,-1px)}
+    75%{transform:translateX(-50%) translate(-1px,-2px)}
+}
+
+.level-3 .music-player{
+    transform:translateY(3px) rotate(-.5deg);
+    opacity:.72;
+}
+
+.level-4 .music-player{
+    transform:translateY(5px) rotate(1deg);
+    opacity:.42;
+    filter:blur(.5px);
+}
+
+/* =========================
+   BARRA EMOCIONAL DE LEO
+   ========================= */
+
+.emotion-box{
+    margin-top:9px;
+    padding:9px 10px 8px;
+    border-radius:14px;
+    background:rgba(5,9,18,.72);
+    border:1px solid rgba(255,255,255,.10);
+    backdrop-filter:blur(12px);
+    box-shadow:0 8px 25px rgba(0,0,0,.18);
+    transition:.5s;
+}
+
+.emotion-top,
+.emotion-bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.emotion-title{
+    color:#cbd5e1;
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.emotion-label{
+    font-size:9px;
+    font-weight:900;
+    color:#86efac;
+    transition:.4s;
+}
+
+.emotion-bar{
+    position:relative;
+    height:9px;
+    margin:6px 0 5px;
+    border-radius:99px;
+    overflow:visible;
+    background:linear-gradient(
+        90deg,
+        #ef4444 0%,
+        #f59e0b 38%,
+        #facc15 60%,
+        #22c55e 82%,
+        #16a34a 100%
+    );
+    box-shadow:inset 0 1px 3px rgba(0,0,0,.4);
+}
+
+.emotion-fill{
+    position:absolute;
+    right:0;
+    top:0;
+    height:100%;
+    width:0%;
+    border-radius:99px;
+    background:rgba(2,6,23,.78);
+    transition:width .55s ease;
+}
+
+.emotion-face{
+    position:absolute;
+    top:50%;
+    left:100%;
+    transform:translate(-50%,-50%);
+    width:25px;
+    height:25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 4px 14px rgba(0,0,0,.35);
+    font-size:14px;
+    transition:left .55s ease, transform .2s;
+    z-index:2;
+}
+
+.emotion-face.pulse{
+    animation:emotionPulse .35s ease;
+}
+
+@keyframes emotionPulse{
+    50%{transform:translate(-50%,-50%) scale(1.25)}
+}
+
+.emotion-bottom{
+    font-size:8px;
+    color:#94a3b8;
+}
+
+.emotion-bottom strong{
+    color:#e2e8f0;
+    font-size:9px;
+}
+
+/* Estados emocionales */
+.emotion-box.calm{
+    border-color:rgba(34,197,94,.28);
+}
+
+.emotion-box.good{
+    border-color:rgba(74,222,128,.45);
+}
+
+.emotion-box.warning{
+    border-color:rgba(250,204,21,.45);
+}
+
+.emotion-box.stressed{
+    border-color:rgba(245,158,11,.5);
+}
+
+.emotion-box.critical{
+    border-color:rgba(239,68,68,.65);
+    animation:criticalGlow 1s infinite alternate;
+}
+
+@keyframes criticalGlow{
+    from{box-shadow:0 8px 25px rgba(0,0,0,.2)}
+    to{box-shadow:0 8px 30px rgba(239,68,68,.18)}
+}
+
+/* =========================
+   ESTADÍSTICAS DE IMPACTO
+   ========================= */
+
+.impact-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:5px;
+    margin-top:7px;
+}
+
+.impact-stats span{
+    padding:5px 4px;
+    border-radius:8px;
+    background:rgba(255,255,255,.045);
+    color:#94a3b8;
+    text-align:center;
+    font-size:7px;
+    white-space:nowrap;
+}
+
+.impact-stats strong{
+    color:#e2e8f0;
+    font-size:8px;
+}
+
+/* Indicador de consecuencia */
+.choice-impact{
+    display:block;
+    margin-top:4px;
+    color:#94a3b8;
+    font-size:8px;
+    font-weight:500;
+}
+
+/* =========================
+   CAMINO DE LA HISTORIA
+   ========================= */
+
+.story-path{
+    margin-top:6px;
+    padding:5px 7px;
+    border-radius:8px;
+    text-align:center;
+    font-size:7px;
+    font-weight:900;
+    letter-spacing:.3px;
+    color:#cbd5e1;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    transition:.4s;
+}
+
+.story-path.good{
+    color:#bbf7d0;
+    background:rgba(22,101,52,.22);
+    border-color:rgba(74,222,128,.35);
+}
+
+.story-path.bad{
+    color:#fecaca;
+    background:rgba(127,29,29,.24);
+    border-color:rgba(248,113,113,.4);
+}
+
+/* =========================
+   RECOMPENSA POR EMPATÍA
+   ========================= */
+
+.empathy-reward{
+    position:absolute;
+    z-index:120;
+    left:50%;
+    top:112px;
+    transform:translateX(-50%);
+    padding:8px 13px;
+    border-radius:999px;
+    background:rgba(22,101,52,.92);
+    color:#dcfce7;
+    border:1px solid rgba(134,239,172,.3);
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    font-size:10px;
+    font-weight:900;
+    pointer-events:none;
+    white-space:nowrap;
+    animation:rewardIn 1.4s ease forwards;
+}
+
+@keyframes rewardIn{
+    0%{opacity:0; transform:translate(-50%,15px) scale(.8)}
+    15%{opacity:1; transform:translate(-50%,0) scale(1)}
+    75%{opacity:1}
+    100%{opacity:0; transform:translate(-50%,-25px) scale(.95)}
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media(max-height:720px){
+    .app,
+    .start-screen,
+    .game-shell{
+        min-height:650px;
+    }
+
+    .leo{
+        transform:translateX(-50%) scale(.78);
+        transform-origin:bottom center;
+    }
+
+    .music-player{
+        bottom:10px;
+    }
+
+    .message-layer{
+        inset:65px 0 88px;
+    }
+}
+
+@media(max-width:390px){
+    body{padding:0}
+    .app{width:100%}
+    .game-shell,.start-screen{
+        border-radius:0;
+        min-height:100vh;
+    }
+
+    .choices{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+/* Accesibilidad */
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <!-- =========================
+         INICIO
+         ========================= -->
+    <section class="start-screen" id="startScreen">
+        <div class="start-logo">
+            <div class="mini">Prototipo de storytelling interactivo</div>
+            <h1>15<br>MINUTOS</h1>
+            <p>
+                Un viaje en teleférico. Un teléfono. Una avalancha de mensajes.
+                Tú decides cómo enfrenta Leo lo que está pasando.
+            </p>
+        </div>
+
+        <div class="fake-phone" aria-hidden="true">
+            <div class="notch"></div>
+            <div class="fake-scene">
+                <div class="fake-music">🎧 Playlist de Leo · Sonido tranquilo</div>
+                <div class="mountain"></div>
+                <div class="fake-person">
+                    <div class="head"></div>
+                    <div class="body"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="start-actions">
+            <button class="start-btn" id="startBtn">▶ COMENZAR VIAJE</button>
+            <div class="start-note">
+                Recomendado con sonido · También funciona sin audio
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================
+         JUEGO
+         ========================= -->
+    <main class="game-shell" id="gameShell" hidden>
+
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+                <span class="signal">▮▮▮</span>
+                <span>Wi‑Fi</span>
+                <span>🔋 87%</span>
+            </div>
+        </div>
+
+        <div class="game-screen" id="gameScreen">
+
+            <div class="photo-bg"></div>
+
+            <div class="top-ui">
+                <div class="trip-row">
+                    <div class="trip-title">🚡 Viaje de regreso</div>
+                    <div class="trip-time" id="tripTime">01:00 / 15:00</div>
+                </div>
+                <div class="progress">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <!-- BARRA EMOCIONAL DE LEO -->
+                <div class="emotion-box" id="emotionBox">
+                    <div class="emotion-top">
+                        <span class="emotion-title">ESTADO DE LEO</span>
+                        <span class="emotion-label" id="emotionLabel">Tranquilo</span>
+                    </div>
+
+                    <div class="emotion-bar">
+                        <div class="emotion-fill" id="emotionFill"></div>
+                        <div class="emotion-face" id="emotionFace">😊</div>
+                    </div>
+
+                    <div class="emotion-bottom">
+                        <span id="emotionMessage">Leo está disfrutando su viaje.</span>
+                        <strong id="emotionScore">100%</strong>
+                    </div>
+
+                    <div class="impact-stats">
+                        <span>💙 Apoyo <strong id="supportScore">0</strong></span>
+                        <span>🛡️ Protección <strong id="protectionScore">0</strong></span>
+                        <span>🧠 Calma <strong id="calmScore">0</strong></span>
+                    </div>
+
+                    <div class="story-path" id="storyPath">
+                        <span id="pathIcon">🧭</span>
+                        <span id="pathText">Camino: en decisión</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leo" id="leo">
+                <div class="leo-head"></div>
+                <div class="leo-hair"></div>
+                <div class="leo-ear left"></div>
+                <div class="leo-ear right"></div>
+
+                <div class="leo-face">
+                    <span class="eye left"></span>
+                    <span class="eye right"></span>
+                    <span class="mouth" id="leoMouth"></span>
+                </div>
+
+                <div class="headphones">
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <div class="leo-body"></div>
+                <div class="instrument"></div>
+
+                <div class="phone" id="leoPhone">
+                    <div class="phone-screen">
+                        <div class="phone-photo"></div>
+                        <div class="phone-text">
+                            <strong>Leo 🎸</strong>
+                            <div>Nuevo video publicado</div>
+                            <div class="like-row">
+                                <span class="like">❤️ 248</span>
+                                <span class="like">💬 31</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message-layer" id="messageLayer"></div>
+
+            <div class="swipe-help" id="swipeHelp">
+                Desliza los mensajes para cerrarlos
+            </div>
+
+            <div class="anxiety-overlay"></div>
+
+            <div class="music-player" id="musicPlayer">
+                <div class="music-main">
+                    <div class="album">🎧</div>
+                    <div class="song">
+                        <strong id="songName">Luz de tarde</strong>
+                        <small id="songState">Reproduciendo · Leo</small>
+                    </div>
+                    <button class="play-btn" id="playBtn" aria-label="Pausar o reproducir">Ⅱ</button>
+                </div>
+                <div class="music-wave" id="musicWave">
+                    <i></i><i></i><i></i><i></i><i></i><i></i>
+                </div>
+            </div>
+
+            <section class="decision-panel" id="decisionPanel">
+                <h2 id="decisionTitle">¿Qué haces?</h2>
+                <p id="decisionText">Elige una reacción.</p>
+                <div class="choices" id="choices"></div>
+            </section>
+
+            <!-- Modal de apoyo -->
+            <div class="modal" id="supportModal">
+                <div class="modal-card">
+                    <div class="modal-icon">🤝</div>
+                    <h2>No tienes que hacerlo solo</h2>
+                    <p>
+                        Leo decide hablar con alguien de confianza.
+                        La situación no desaparece mágicamente, pero pedir ayuda
+                        rompe el aislamiento.
+                    </p>
+                    <div class="modal-actions">
+                        <button class="modal-btn help" id="askHelpBtn">
+                            🤝 Hablar con alguien
+                        </button>
+                        <button class="modal-btn" id="closeSupportBtn">
+                            Continuar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final -->
+            <div class="final-screen" id="finalScreen">
+                <div class="final-content">
+                    <div class="final-icon">💙</div>
+                    <div class="small-title">Fin del viaje</div>
+                    <h2>Leo decidió no quedarse solo.</h2>
+                    <p>
+                        Después de vivir esta situación, comprende que su valor
+                        no depende de los likes ni de los comentarios de internet.
+                        Tu forma de jugar también influyó en cómo Leo llegó a este momento.
+                    </p>
+
+                    <div class="quote">
+                        <strong id="endingTitle">Tu impacto en Leo:</strong><br>
+                        Estado emocional al final: <strong id="finalEmotionScore">100%</strong>.<br>
+                        Acciones de apoyo: <strong id="finalEmpathyScore">0</strong>.<br>
+                        Protección: <strong id="finalProtectionScore">0</strong> ·
+                        Calma: <strong id="finalCalmScore">0</strong>.<br>
+                        Camino elegido: <strong id="finalPathScore">0</strong>.<br>
+                        <span id="endingMessage">
+                            Tus decisiones ayudaron a Leo a recuperar el control.
+                        </span>
+                    </div>
+
+                    <div class="final-buttons">
+                        <button class="restart" id="restartBtn">↻ Jugar nuevamente</button>
+                        <button class="support" id="finalSupportBtn">
+                            💬 ¿Qué puedo hacer si veo ciberbullying?
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+/* =========================================================
+   15 MINUTOS - JAVASCRIPT
+   Mecánicas:
+   - Notificaciones progresivas
+   - Arrastrar/deslizar mensajes
+   - Vibración física cuando el dispositivo lo permite
+   - Música generada con Web Audio API
+   - Distorsión progresiva
+   - Decisiones narrativas
+   - Estados de ansiedad
+   - Final de apoyo
+   ========================================================= */
+
+"use strict";
+
+/* =========================
+   REFERENCIAS HTML
+   ========================= */
+
+const startScreen = document.getElementById("startScreen");
+const startBtn = document.getElementById("startBtn");
+const gameShell = document.getElementById("gameShell");
+const gameScreen = document.getElementById("gameScreen");
+
+const messageLayer = document.getElementById("messageLayer");
+const swipeHelp = document.getElementById("swipeHelp");
+
+const decisionPanel = document.getElementById("decisionPanel");
+const decisionTitle = document.getElementById("decisionTitle");
+const decisionText = document.getElementById("decisionText");
+const choices = document.getElementById("choices");
+
+const tripTime = document.getElementById("tripTime");
+const progressFill = document.getElementById("progressFill");
+
+/* Barra emocional */
+const emotionBox = document.getElementById("emotionBox");
+const emotionFill = document.getElementById("emotionFill");
+const emotionFace = document.getElementById("emotionFace");
+const emotionLabel = document.getElementById("emotionLabel");
+const emotionMessage = document.getElementById("emotionMessage");
+const emotionScore = document.getElementById("emotionScore");
+const supportScore = document.getElementById("supportScore");
+const protectionScore = document.getElementById("protectionScore");
+const calmScore = document.getElementById("calmScore");
+const storyPath = document.getElementById("storyPath");
+const pathIcon = document.getElementById("pathIcon");
+const pathText = document.getElementById("pathText");
+
+const supportModal = document.getElementById("supportModal");
+const askHelpBtn = document.getElementById("askHelpBtn");
+const closeSupportBtn = document.getElementById("closeSupportBtn");
+
+const finalScreen = document.getElementById("finalScreen");
+const restartBtn = document.getElementById("restartBtn");
+const finalSupportBtn = document.getElementById("finalSupportBtn");
+
+const playBtn = document.getElementById("playBtn");
+const songState = document.getElementById("songState");
+const musicWave = document.getElementById("musicWave");
+
+const leo = document.getElementById("leo");
+const leoPhone = document.getElementById("leoPhone");
+const leoMouth = document.getElementById("leoMouth");
+const gameScreenPhoto = document.querySelector(".photo-bg");
+const musicPlayer = document.getElementById("musicPlayer");
+
+/* =========================
+   ESTADO DEL JUEGO
+   ========================= */
+
+const state = {
+    started: false,
+    elapsed: 0,
+    totalTime: 15 * 60,
+
+    phase: 0,
+    anxiety: 0,
+
+    /* 100 = Leo está bien / 0 = estado crítico */
+    emotion: 100,
+    empathyPoints: 0,
+
+    /* Variables que cambian la historia */
+    supportPoints: 0,
+    protectionPoints: 0,
+    calmPoints: 0,
+    trustPoints: 0,
+    evidenceSaved: false,
+    reported: false,
+    blockedCount: 0,
+    friendContacted: false,
+    teacherContacted: false,
+    retaliated: false,
+    accountDeleted: false,
+    musicUsed: false,
+    decisionsMade: 0,
+
+    /*
+       CAMINO:
+       + = decisiones protectoras/empáticas
+       - = decisiones agresivas/aislamiento
+       0 = todavía no está definido
+    */
+    pathScore: 0,
+    path: "neutral",
+
+    messagesCreated: 0,
+    messagesClosed: 0,
+
+    firstDecisionMade: false,
+    crisisDecisionMade: false,
+    supportChosen: false,
+
+    musicPlaying: true,
+    gameEnded: false,
+
+    timers: [],
+    audio: {
+        context: null,
+        master: null,
+        oscillator: null,
+        gain: null,
+        filter: null
+    }
+};
+
+/* =========================
+   DATOS DE MENSAJES
+   ========================= */
+
+const hatefulMessages = [
+    {
+        user: "usuario_23",
+        text: "JAJA ¿ese era el error? 😂",
+        icon: "💬"
+    },
+    {
+        user: "musica_real",
+        text: "Mejor deja de subir videos...",
+        icon: "💬"
+    },
+    {
+        user: "anon_404",
+        text: "Todos vieron tu fail 😬",
+        icon: "💬"
+    },
+    {
+        user: "tomas_x",
+        text: "Qué vergüenza ese video.",
+        icon: "💬"
+    },
+    {
+        user: "sin_nombre",
+        text: "¿De verdad creías que tocabas bien?",
+        icon: "💬"
+    },
+    {
+        user: "random_88",
+        text: "Lo compartieron en mi grupo 💀",
+        icon: "💬"
+    },
+    {
+        user: "usuario_23",
+        text: "Mira cómo se enoja jajaja",
+        icon: "💬"
+    },
+    {
+        user: "anon_404",
+        text: "Ya todos están hablando de ti.",
+        icon: "💬"
+    },
+    {
+        user: "grupo_c",
+        text: "Otro video para reírnos 😂",
+        icon: "💬"
+    },
+    {
+        user: "sin_nombre",
+        text: "Borra la cuenta mejor.",
+        icon: "💬"
+    },
+    {
+        user: "random_88",
+        text: "No puedes esconderte.",
+        icon: "💬"
+    },
+    {
+        user: "usuario_23",
+        text: "¿Por qué sigues conectado?",
+        icon: "💬"
+    }
+];
+
+/* =========================
+   MENSAJES DE APOYO
+   ========================= */
+
+const supportMessages = [
+    {
+        user: "Sofi",
+        text: "¿Estás bien? Si quieres, hablamos.",
+        icon: "💚"
+    },
+    {
+        user: "Profe Ana",
+        text: "No tienes que resolver esto solo.",
+        icon: "🤝"
+    }
+];
+
+/* =========================
+   UTILIDADES
+   ========================= */
+
+function random(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function clamp(value, min, max){
+    return Math.max(min, Math.min(max, value));
+}
+
+function schedule(fn, delay){
+    const timer = setTimeout(fn, delay);
+    state.timers.push(timer);
+    return timer;
+}
+
+function clearTimers(){
+    state.timers.forEach(clearTimeout);
+    state.timers = [];
+}
+
+function vibrate(pattern){
+    if("vibrate" in navigator){
+        try{
+            navigator.vibrate(pattern);
+        }catch(error){
+            // Algunos navegadores bloquean la vibración.
+        }
+    }
+}
+
+/* =========================
+   AUDIO
+   ========================= */
+
+/*
+   No se necesita descargar una canción externa.
+   El prototipo genera una pequeña atmósfera musical con Web Audio API.
+   La frecuencia y volumen se modifican a medida que aumenta la ansiedad.
+*/
+
+function initAudio(){
+    if(state.audio.context) return;
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+    if(!AudioContext) return;
+
+    const context = new AudioContext();
+
+    const master = context.createGain();
+    master.gain.value = 0.08;
+    master.connect(context.destination);
+
+    const filter = context.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 2200;
+    filter.Q.value = 0.7;
+    filter.connect(master);
+
+    const oscillator = context.createOscillator();
+    oscillator.type = "sine";
+    oscillator.frequency.value = 220;
+
+    const gain = context.createGain();
+    gain.gain.value = 0.03;
+
+    oscillator.connect(gain);
+    gain.connect(filter);
+    oscillator.start();
+
+    state.audio = {
+        context,
+        master,
+        oscillator,
+        gain,
+        filter
+    };
+}
+
+function startAudio(){
+    initAudio();
+
+    if(!state.audio.context) return;
+
+    if(state.audio.context.state === "suspended"){
+        state.audio.context.resume();
+    }
+
+    state.musicPlaying = true;
+    playBtn.textContent = "Ⅱ";
+    songState.textContent = "Reproduciendo · Leo";
+    musicWave.style.opacity = "1";
+}
+
+function stopAudio(){
+    if(!state.audio.context) return;
+
+    state.audio.master.gain.setTargetAtTime(
+        0,
+        state.audio.context.currentTime,
+        .08
+    );
+
+    state.musicPlaying = false;
+    playBtn.textContent = "▶";
+    songState.textContent = "Pausado";
+    musicWave.style.opacity = ".35";
+}
+
+function toggleAudio(){
+    state.musicUsed = true;
+
+    if(!state.audio.context){
+        startAudio();
+        return;
+    }
+
+    if(state.musicPlaying){
+        state.audio.master.gain.setTargetAtTime(
+            0,
+            state.audio.context.currentTime,
+            .08
+        );
+
+        state.musicPlaying = false;
+        playBtn.textContent = "▶";
+        songState.textContent = "Pausado";
+        musicWave.style.opacity = ".35";
+    }else{
+        state.audio.master.gain.setTargetAtTime(
+            getMusicVolume(),
+            state.audio.context.currentTime,
+            .08
+        );
+
+        state.musicPlaying = true;
+        playBtn.textContent = "Ⅱ";
+        songState.textContent = "Reproduciendo · Leo";
+        musicWave.style.opacity = "1";
+    }
+}
+
+function getMusicVolume(){
+    const anxiety = state.anxiety;
+    return Math.max(0.012, 0.08 - anxiety * 0.012);
+}
+
+function updateAudioForAnxiety(){
+    if(!state.audio.context) return;
+
+    const now = state.audio.context.currentTime;
+    const anxiety = state.anxiety;
+
+    const volume = state.musicPlaying ? getMusicVolume() : 0;
+
+    state.audio.master.gain.setTargetAtTime(volume, now, .25);
+
+    /* Aumenta la sensación de sonido lejano/distorsionado. */
+    const cutoff = Math.max(550, 2200 - anxiety * 360);
+
+    state.audio.filter.frequency.setTargetAtTime(
+        cutoff,
+        now,
+        .25
+    );
+
+    /* Cambia ligeramente el tono. */
+    state.audio.oscillator.frequency.setTargetAtTime(
+        220 - anxiety * 7,
+        now,
+        .35
+    );
+}
+
+function playNotificationSound(){
+    if(!state.audio.context) return;
+
+    const context = state.audio.context;
+
+    const osc = context.createOscillator();
+    const gain = context.createGain();
+
+    osc.type = "square";
+    osc.frequency.setValueAtTime(900 + state.anxiety * 60, context.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(
+        1450 + state.anxiety * 70,
+        context.currentTime + .07
+    );
+
+    gain.gain.setValueAtTime(.0001, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+        .12,
+        context.currentTime + .01
+    );
+    gain.gain.exponentialRampToValueAtTime(
+        .0001,
+        context.currentTime + .18
+    );
+
+    osc.connect(gain);
+    gain.connect(context.destination);
+
+    osc.start();
+    osc.stop(context.currentTime + .2);
+}
+
+/* =========================
+   INICIO
+   ========================= */
+
+startBtn.addEventListener("click", () => {
+    startScreen.style.display = "none";
+    gameShell.hidden = false;
+
+    state.started = true;
+
+    initAudio();
+    startAudio();
+
+    startGame();
+});
+
+/* =========================
+   INICIO DEL JUEGO
+   ========================= */
+
+function startGame(){
+    resetGameState();
+
+    showInitialMessage();
+
+    schedule(() => {
+        setPhase(1);
+    }, 4500);
+
+    schedule(() => {
+        setPhase(2);
+    }, 9000);
+
+    schedule(() => {
+        beginMessageAvalanche();
+    }, 11500);
+
+    schedule(() => {
+        showMidGameDecision();
+    }, 18500);
+
+    schedule(() => {
+        showCrisisDecision();
+    }, 34000);
+
+    runClock();
+}
+
+function resetGameState(){
+    clearTimers();
+
+    state.elapsed = 0;
+    state.phase = 0;
+    state.anxiety = 0;
+    state.emotion = 100;
+    state.empathyPoints = 0;
+
+    state.supportPoints = 0;
+    state.protectionPoints = 0;
+    state.calmPoints = 0;
+    state.trustPoints = 0;
+    state.evidenceSaved = false;
+    state.reported = false;
+    state.blockedCount = 0;
+    state.friendContacted = false;
+    state.teacherContacted = false;
+    state.retaliated = false;
+    state.accountDeleted = false;
+    state.musicUsed = false;
+    state.decisionsMade = 0;
+    state.pathScore = 0;
+    state.path = "neutral";
+
+    state.messagesCreated = 0;
+    state.messagesClosed = 0;
+    state.firstDecisionMade = false;
+    state.crisisDecisionMade = false;
+    state.supportChosen = false;
+    state.gameEnded = false;
+
+    messageLayer.innerHTML = "";
+    decisionPanel.classList.remove("show");
+    supportModal.classList.remove("show");
+    finalScreen.classList.remove("show");
+
+    gameScreen.className = "game-screen";
+    swipeHelp.style.display = "block";
+
+    if(state.audio.context){
+        state.audio.master.gain.value = .08;
+        state.audio.filter.frequency.value = 2200;
+        state.audio.oscillator.frequency.value = 220;
+    }
+
+    startAudio();
+
+    leoMouth.style.borderBottom = "2px solid #4b2020";
+    leoMouth.style.borderTop = "0";
+    updateEmotionUI();
+}
+
+/* =========================
+   RELOJ DEL VIAJE
+   ========================= */
+
+function runClock(){
+    const interval = setInterval(() => {
+        if(!state.started || state.gameEnded) return;
+
+        state.elapsed++;
+
+        if(state.elapsed > state.totalTime){
+            state.elapsed = state.totalTime;
+        }
+
+        updateClockUI();
+
+    },1000);
+
+    state.timers.push(interval);
+}
+
+function updateClockUI(){
+    const minutes = Math.floor(state.elapsed / 60);
+    const seconds = state.elapsed % 60;
+
+    tripTime.textContent =
+        `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")} / 15:00`;
+
+    const percent = (state.elapsed / state.totalTime) * 100;
+
+    progressFill.style.width = `${percent}%`;
+}
+
+/* =========================
+   ESCENAS / FASES
+   ========================= */
+
+function setPhase(phase){
+    state.phase = phase;
+
+    if(phase === 1){
+        createMessage({
+            user:"usuario_23",
+            text:"Mira el video 😂 ¿Qué fue eso?",
+            icon:"💬"
+        });
+
+        increaseAnxiety(1);
+        showFirstDecision();
+    }
+
+    if(phase === 2){
+        increaseAnxiety(2);
+    }
+}
+
+function showInitialMessage(){
+    const welcome = createMessage({
+        user:"Sofi",
+        text:"¡Buen viaje! ¿Llegaste bien del conservatorio? 🎵",
+        icon:"💚",
+        type:"good"
+    });
+
+    if(welcome){
+        schedule(() => {
+            removeMessage(welcome, true);
+        }, 3800);
+    }
+}
+
+/* =========================
+   PRIMERA DECISIÓN
+   ========================= */
+
+function showFirstDecision(){
+    decisionTitle.textContent = "La primera notificación";
+    decisionText.textContent =
+        "Leo acaba de recibir una burla. Puedes decidir cómo reaccionar.";
+
+    choices.innerHTML = "";
+
+    addChoice("🙈 Ignorar", () => {
+        state.firstDecisionMade = true;
+        hideDecision();
+
+        showFeedback(
+            "Leo intenta ignorarlo.",
+            "No es culpa de Leo que otros estén atacándolo."
+        );
+
+        applyDecisionImpact({
+            emotion:3,
+            calm:2,
+            trust:1,
+            path:2,
+            reason:"Decisión calmada"
+        });
+
+        schedule(() => beginMessageAvalanche(), 1800);
+    });
+
+    addChoice("😠 Responder", () => {
+        state.firstDecisionMade = true;
+        hideDecision();
+
+        state.retaliated = true;
+
+        showFeedback(
+            "Leo responde molesto.",
+            "La respuesta no detiene lo que está pasando y aumenta la tensión."
+        );
+
+        applyDecisionImpact({
+            anxiety:1.4,
+            calm:-1,
+            path:-2,
+            reason:""
+        });
+
+        schedule(() => beginMessageAvalanche(), 1800);
+    });
+
+    addChoice("📸 Guardar evidencia", () => {
+        state.firstDecisionMade = true;
+        hideDecision();
+
+        state.evidenceSaved = true;
+
+        showFeedback(
+            "Leo guarda capturas.",
+            "Ahora tiene pruebas de lo ocurrido. No tiene que demostrarlo todo de memoria."
+        );
+
+        applyDecisionImpact({
+            emotion:5,
+            protection:3,
+            calm:2,
+            trust:2,
+            path:3,
+            reason:"Guardaste evidencia"
+        });
+
+        schedule(() => beginMessageAvalanche(), 1800);
+    });
+
+    decisionPanel.classList.add("show");
+}
+
+function addChoice(text, callback){
+    const button = document.createElement("button");
+    button.className = "choice";
+    button.textContent = text;
+
+    button.addEventListener("click", () => {
+        callback();
+    });
+
+    choices.appendChild(button);
+}
+
+function hideDecision(){
+    decisionPanel.classList.remove("show");
+}
+
+function showFeedback(title, text){
+    const feedback = document.createElement("div");
+
+    feedback.className = "modal show";
+
+    feedback.innerHTML = `
+        <div class="modal-card">
+            <div class="modal-icon">📱</div>
+            <h2>${title}</h2>
+            <p>${text}</p>
+            <div class="modal-actions">
+                <button class="modal-btn primary">Continuar</button>
+            </div>
+        </div>
+    `;
+
+    gameScreen.appendChild(feedback);
+
+    feedback.querySelector("button").addEventListener("click", () => {
+        feedback.remove();
+    });
+
+    schedule(() => {
+        if(feedback.parentNode){
+            feedback.remove();
+        }
+    },4200);
+}
+
+/* =========================
+   AVALANCHA
+   ========================= */
+
+function beginMessageAvalanche(){
+    if(state.gameEnded) return;
+
+    state.phase = 3;
+
+    swipeHelp.style.display = "block";
+
+    /*
+       Los mensajes llegan cada vez más rápido.
+       El jugador puede cerrarlos, pero aparecen más.
+    */
+
+    const intervals = [1200,1050,900,780,650,560,480,400,340,290];
+
+    intervals.forEach((delay, index) => {
+        schedule(() => {
+            if(!state.gameEnded){
+                createHatefulMessage();
+                increaseAnxiety(.55);
+            }
+        }, index * delay + 300);
+    });
+
+    /* Ataque continuo */
+    schedule(() => {
+        startContinuousAttack();
+    }, 8500);
+
+    schedule(() => {
+        showMusicDecision();
+    }, 13500);
+}
+
+function startContinuousAttack(){
+    if(state.gameEnded) return;
+
+    let count = 0;
+
+    const attackInterval = setInterval(() => {
+        if(state.gameEnded){
+            clearInterval(attackInterval);
+            return;
+        }
+
+        createHatefulMessage();
+
+        const amount = count < 5 ? .45 : .65;
+        increaseAnxiety(amount);
+
+        count++;
+
+        if(count > 25){
+            clearInterval(attackInterval);
+        }
+    }, 620);
+
+    state.timers.push(attackInterval);
+}
+
+function createHatefulMessage(){
+    const data =
+        hatefulMessages[
+            state.messagesCreated % hatefulMessages.length
+        ];
+
+    createMessage(data);
+}
+
+/* =========================
+   CREAR MENSAJE
+   ========================= */
+
+function createMessage(data){
+    if(state.gameEnded) return null;
+
+    const message = document.createElement("article");
+
+    const type = data.type || "bad";
+
+    message.className = `message ${type}`;
+
+    const x = random(4, 68);
+    const y = random(4, 76);
+
+    message.style.left = `${x}%`;
+    message.style.top = `${y}%`;
+
+    const rotation = random(-4,4);
+
+    message.style.transform = `rotate(${rotation}deg)`;
+
+    message.innerHTML = `
+        <div class="message-head">
+            <span class="message-user">
+                ${data.icon || "💬"} ${escapeHTML(data.user)}
+            </span>
+            <span>ahora</span>
+        </div>
+        <div class="message-text">${escapeHTML(data.text)}</div>
+        <div class="message-hint">Desliza para cerrar</div>
+    `;
+
+    messageLayer.appendChild(message);
+
+    state.messagesCreated++;
+
+    if(type === "bad"){
+        playNotificationSound();
+        vibrate(getVibrationPattern());
+
+        /* El teléfono también reacciona. */
+        phoneFeedback();
+    }
+
+    enableSwipe(message);
+
+    /*
+       Si el jugador no cierra el mensaje, este permanece.
+       Así se acumulan y bloquean la pantalla.
+    */
+
+    return message;
+}
+
+/* Evita insertar HTML no deseado. */
+function escapeHTML(text){
+    return String(text)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+/* =========================
+   SWIPE / ARRASTRAR
+   ========================= */
+
+function enableSwipe(element){
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let dragging = false;
+
+    element.addEventListener("pointerdown", event => {
+        dragging = true;
+
+        startX = event.clientX;
+        startY = event.clientY;
+
+        element.setPointerCapture(event.pointerId);
+
+        element.style.transition = "none";
+    });
+
+    element.addEventListener("pointermove", event => {
+        if(!dragging) return;
+
+        currentX = event.clientX - startX;
+        currentY = event.clientY - startY;
+
+        element.style.transform =
+            `translate(${currentX}px, ${currentY}px) rotate(${currentX / 15}deg)`;
+    });
+
+    element.addEventListener("pointerup", event => {
+        if(!dragging) return;
+
+        dragging = false;
+
+        const distance = Math.sqrt(
+            currentX * currentX +
+            currentY * currentY
+        );
+
+        element.style.transition =
+            "transform .25s, opacity .25s";
+
+        if(distance > 80){
+            closeMessage(element, currentX, currentY);
+        }else{
+            element.style.transform = "";
+        }
+
+        currentX = 0;
+        currentY = 0;
+    });
+
+    element.addEventListener("pointercancel", () => {
+        dragging = false;
+        element.style.transition = "";
+        element.style.transform = "";
+    });
+}
+
+function closeMessage(element, x, y){
+    if(!element.parentNode) return;
+
+    state.messagesClosed++;
+
+    /*
+       Cerrar mensajes da una pequeña sensación de control.
+       Sin embargo, la ansiedad no desaparece porque siguen llegando.
+    */
+    recoverEmotion(0.8, "Recuperaste el control");
+
+    element.style.opacity = "0";
+
+    element.style.transform =
+        `translate(${x * 4}px, ${y * 4}px) rotate(${x / 4}deg) scale(.7)`;
+
+    setTimeout(() => {
+        element.remove();
+    },220);
+
+    /*
+       Mecánica importante:
+       cerrar un mensaje NO disminuye la ansiedad.
+       Enseguida puede aparecer otro.
+    */
+
+    if(state.anxiety >= 3){
+        schedule(() => {
+            if(!state.gameEnded){
+                createHatefulMessage();
+                increaseAnxiety(.25);
+            }
+        },300);
+    }
+}
+
+/* =========================
+   FEEDBACK DEL TELÉFONO
+   ========================= */
+
+function phoneFeedback(){
+    leoPhone.animate(
+        [
+            {transform:"translate(0,0)"},
+            {transform:"translate(-4px,1px) rotate(-2deg)"},
+            {transform:"translate(5px,-1px) rotate(2deg)"},
+            {transform:"translate(-3px,0) rotate(-1deg)"},
+            {transform:"translate(0,0)"}
+        ],
+        {
+            duration:280,
+            easing:"ease-out"
+        }
+    );
+
+    leo.animate(
+        [
+            {transform:"translateX(-50%)"},
+            {transform:"translateX(calc(-50% - 2px))"},
+            {transform:"translateX(calc(-50% + 2px))"},
+            {transform:"translateX(-50%)"}
+        ],
+        {
+            duration:250
+        }
+    );
+}
+
+function getVibrationPattern(){
+    if(state.anxiety < 2) return [60];
+
+    if(state.anxiety < 4) return [60,40,80];
+
+    if(state.anxiety < 6) return [50,30,50,30,100];
+
+    return [40,25,45,25,50,25,120];
+}
+
+/* =========================
+   ESTADO EMOCIONAL
+   ========================= */
+
+/*
+   Esta barra funciona como una mecánica de "show, don't tell".
+   El juego nunca necesita decir "Leo está muy triste":
+   el jugador lo ve caer de 100% a un estado crítico.
+*/
+
+function updateStoryPath(){
+    /*
+       El camino se muestra en vivo, pero no revela
+       cuál es "correcto" al jugador demasiado pronto.
+    */
+
+    storyPath.classList.remove("good", "bad");
+
+    if(state.pathScore >= 5){
+        state.path = "good";
+        pathIcon.textContent = "💙";
+        pathText.textContent = "Camino: apoyo y protección";
+        storyPath.classList.add("good");
+    }else if(state.pathScore <= -4){
+        state.path = "bad";
+        pathIcon.textContent = "⚠️";
+        pathText.textContent = "Camino: conflicto y aislamiento";
+        storyPath.classList.add("bad");
+    }else{
+        state.path = "neutral";
+        pathIcon.textContent = "🧭";
+        pathText.textContent = "Camino: tus decisiones están definiendo la historia";
+    }
+}
+
+function changeStoryPath(points){
+    state.pathScore += points;
+    updateStoryPath();
+}
+
+function updateEmotionUI(){
+    const value = clamp(Math.round(state.emotion), 0, 100);
+
+    /*
+       El relleno oscuro tapa la parte "perdida" de la barra.
+       Por eso 100% significa barra completamente visible.
+    */
+    emotionFill.style.width = `${100 - value}%`;
+    emotionFace.style.left = `${value}%`;
+    emotionScore.textContent = `${value}%`;
+
+    let label = "Tranquilo";
+    let message = "Leo está disfrutando su viaje.";
+    let face = "😊";
+    let className = "calm";
+
+    if(value <= 80 && value > 60){
+        label = "Inquieto";
+        message = "Las notificaciones empiezan a incomodarlo.";
+        face = "😐";
+        className = "good";
+    }
+
+    if(value <= 60 && value > 40){
+        label = "Preocupado";
+        message = "Leo comienza a sentirse observado.";
+        face = "😟";
+        className = "warning";
+    }
+
+    if(value <= 40 && value > 20){
+        label = "Agobiado";
+        message = "Los mensajes están ocupando toda su atención.";
+        face = "😣";
+        className = "stressed";
+    }
+
+    if(value <= 20){
+        label = "Al límite";
+        message = "Leo necesita apoyo. Ya no debería enfrentarlo solo.";
+        face = "😰";
+        className = "critical";
+    }
+
+    emotionLabel.textContent = label;
+    emotionMessage.textContent = message;
+    emotionFace.textContent = face;
+
+    emotionBox.classList.remove(
+        "calm",
+        "good",
+        "warning",
+        "stressed",
+        "critical"
+    );
+
+    emotionBox.classList.add(className);
+
+    supportScore.textContent = state.supportPoints;
+    protectionScore.textContent = state.protectionPoints;
+    calmScore.textContent = state.calmPoints;
+
+    updateStoryPath();
+
+    emotionFace.classList.remove("pulse");
+    void emotionFace.offsetWidth;
+    emotionFace.classList.add("pulse");
+}
+
+/*
+   Acciones que ayudan a Leo recuperan una pequeña parte
+   de su estado emocional. No lo recuperan de golpe:
+   el juego premia la empatía, pero mantiene la consecuencia.
+*/
+function applyDecisionImpact({
+    emotion = 0,
+    support = 0,
+    protection = 0,
+    calm = 0,
+    trust = 0,
+    reason = "",
+    anxiety = 0,
+    path = 0
+} = {}){
+    state.decisionsMade++;
+
+    state.supportPoints += support;
+    state.protectionPoints += protection;
+    state.calmPoints += calm;
+    state.trustPoints += trust;
+
+    if(path !== 0){
+        changeStoryPath(path);
+    }
+
+    if(anxiety > 0){
+        increaseAnxiety(anxiety);
+    }
+
+    if(emotion > 0){
+        recoverEmotion(emotion, reason);
+    }else{
+        updateEmotionUI();
+    }
+}
+
+function recoverEmotion(amount, reason){
+    const previous = state.emotion;
+
+    state.emotion = clamp(
+        state.emotion + amount,
+        0,
+        100
+    );
+
+    if(state.emotion > previous){
+        state.empathyPoints += amount;
+        updateEmotionUI();
+        showEmpathyReward(reason, amount);
+    }
+}
+
+function showEmpathyReward(reason, amount){
+    const reward = document.createElement("div");
+
+    reward.className = "empathy-reward";
+    reward.textContent = `💙 ${reason}  +${amount} ánimo`;
+
+    gameScreen.appendChild(reward);
+
+    setTimeout(() => {
+        reward.remove();
+    }, 1400);
+}
+
+/* =========================
+   ANSIEDAD
+   ========================= */
+
+function increaseAnxiety(amount){
+    state.anxiety = clamp(
+        state.anxiety + amount,
+        0,
+        8
+    );
+
+    /*
+       La ansiedad baja directamente el estado emocional.
+       Así el jugador VE las consecuencias de la avalancha.
+    */
+    state.emotion = clamp(
+        state.emotion - amount * 4.2,
+        0,
+        100
+    );
+
+    updateAnxietyUI();
+    updateEmotionUI();
+    updateAudioForAnxiety();
+}
+
+function updateAnxietyUI(){
+    const level = Math.min(
+        4,
+        Math.floor(state.anxiety / 2)
+    );
+
+    gameScreen.classList.remove(
+        "level-1",
+        "level-2",
+        "level-3",
+        "level-4"
+    );
+
+    if(level > 0){
+        gameScreen.classList.add(`level-${level}`);
+    }
+
+    if(state.anxiety >= 3){
+        leoMouth.style.borderBottom = "0";
+        leoMouth.style.borderTop = "2px solid #4b2020";
+        leoMouth.style.height = "8px";
+    }
+
+    if(state.anxiety >= 6){
+        leoPhone.style.filter = "brightness(.7)";
+    }
+
+    updateAudioForAnxiety();
+}
+
+/* =========================
+   DECISIÓN INTERMEDIA
+   ========================= */
+
+function showMidGameDecision(){
+    if(state.gameEnded || state.crisisDecisionMade) return;
+
+    decisionTitle.textContent = "La pantalla no para";
+    decisionText.textContent =
+        "Leo todavía tiene opciones. Algunas pueden protegerlo, otras pueden aumentar el conflicto.";
+
+    choices.innerHTML = "";
+
+    addChoice("🛡️ Bloquear cuentas", () => {
+        hideDecision();
+
+        state.blockedCount += 3;
+
+        applyDecisionImpact({
+            emotion:7,
+            protection:4,
+            calm:2,
+            path:3,
+            reason:"Bloqueaste cuentas"
+        });
+
+        showFeedback(
+            "Leo bloquea a quienes lo atacan.",
+            "Algunas cuentas dejan de aparecer, aunque otras personas siguen compartiendo el contenido."
+        );
+
+        schedule(() => {
+            createHatefulMessage();
+        },900);
+    });
+
+    addChoice("🚨 Reportar contenido", () => {
+        hideDecision();
+
+        state.reported = true;
+
+        applyDecisionImpact({
+            emotion:6,
+            protection:5,
+            calm:2,
+            trust:2,
+            path:3,
+            reason:"Reportaste el contenido"
+        });
+
+        showFeedback(
+            "Leo reporta el contenido.",
+            "La plataforma recibe el reporte. No es una solución instantánea, pero Leo tomó una medida de protección."
+        );
+
+        schedule(() => {
+            createHatefulMessage();
+        },1000);
+    });
+
+    addChoice("👥 Escribirle a Sofi", () => {
+        hideDecision();
+
+        state.friendContacted = true;
+
+        applyDecisionImpact({
+            emotion:12,
+            support:5,
+            calm:4,
+            trust:4,
+            path:4,
+            reason:"Buscaste compañía"
+        });
+
+        createMessage({
+            user:"Sofi",
+            text:"Estoy contigo. No respondas a esas cuentas. Guarda las pruebas y hablamos.",
+            icon:"💚",
+            type:"good"
+        });
+
+        schedule(() => {
+            showFeedback(
+                "Leo recibe una respuesta real.",
+                "Por primera vez desde que empezó la avalancha, siente que alguien está de su lado."
+            );
+        },700);
+    });
+
+    addChoice("🔥 Devolver las burlas", () => {
+        hideDecision();
+
+        state.retaliated = true;
+
+        applyDecisionImpact({
+            emotion:-4,
+            anxiety:1.2,
+            calm:-3,
+            path:-4
+        });
+
+        showFeedback(
+            "Leo empieza a responder con burlas.",
+            "La pantalla se llena todavía más. El conflicto crece y Leo pierde parte del control."
+        );
+
+        schedule(() => {
+            createHatefulMessage();
+            createHatefulMessage();
+        },800);
+    });
+
+    decisionPanel.classList.add("show");
+}
+
+/* =========================
+   DECISIÓN ESPECIAL: MÚSICA
+   ========================= */
+
+function showMusicDecision(){
+    if(state.gameEnded) return;
+
+    decisionTitle.textContent = "Necesito un momento";
+    decisionText.textContent =
+        "La música está casi perdida entre las notificaciones. Leo puede intentar recuperar un poco de calma.";
+
+    choices.innerHTML = "";
+
+    addChoice("🎧 Subir música", () => {
+        hideDecision();
+
+        state.musicUsed = true;
+
+        if(!state.musicPlaying){
+            startAudio();
+        }
+
+        applyDecisionImpact({
+            emotion:4,
+            calm:3,
+            path:1,
+            reason:"Recuperaste la calma"
+        });
+
+        showFeedback(
+            "Leo vuelve a escuchar su canción.",
+            "No hace desaparecer el problema, pero recupera unos segundos de respiración."
+        );
+    });
+
+    addChoice("📱 Seguir mirando", () => {
+        hideDecision();
+
+        applyDecisionImpact({
+            anxiety:.8,
+            calm:-1,
+            path:-1
+        });
+
+        showFeedback(
+            "Leo sigue mirando la pantalla.",
+            "Cada notificación ocupa un poco más de su atención."
+        );
+    });
+
+    decisionPanel.classList.add("show");
+}
+
+/* =========================
+   CRISIS / PUNTO DE QUIEBRE
+   ========================= */
+
+function showCrisisDecision(){
+    if(state.gameEnded || state.crisisDecisionMade) return;
+
+    state.phase = 4;
+
+    decisionTitle.textContent = "Punto de quiebre";
+    decisionText.textContent =
+        "La avalancha está al máximo. Lo que hagas ahora cambiará cómo termina el viaje.";
+
+    choices.innerHTML = "";
+
+    addChoice("📵 Apagar celular", () => {
+        crisisChoice("Apagar celular");
+    });
+
+    addChoice("🗑️ Borrar cuenta", () => {
+        crisisChoice("Borrar cuenta");
+    });
+
+    addChoice("📋 Guardar pruebas + reportar", () => {
+        crisisChoice("Proteger evidencia");
+    });
+
+    addChoice("🤝 Buscar ayuda", () => {
+        crisisChoice("Buscar ayuda");
+    });
+
+    decisionPanel.classList.add("show");
+}
+
+function crisisChoice(choice){
+    state.crisisDecisionMade = true;
+    hideDecision();
+
+    if(choice === "Apagar celular"){
+        applyDecisionImpact({
+            emotion:10,
+            calm:5,
+            protection:1,
+            path:2,
+            reason:"Tomaste distancia"
+        });
+
+        showCrisisResult(
+            "Leo apaga el celular.",
+            "Por unos segundos vuelve el silencio. Alejarse de la pantalla puede ayudar, pero Leo todavía necesita apoyo para enfrentar lo ocurrido.",
+            false
+        );
+    }
+
+    if(choice === "Borrar cuenta"){
+        state.accountDeleted = true;
+
+        applyDecisionImpact({
+            emotion:8,
+            calm:4,
+            protection:2,
+            path:1,
+            reason:"Recuperaste espacio"
+        });
+
+        showCrisisResult(
+            "Leo piensa en borrar su cuenta.",
+            "Alejarse de una plataforma tóxica puede ser válido. Aun así, borrar la cuenta no debería significar borrar también su red de apoyo.",
+            false
+        );
+    }
+
+    if(choice === "Proteger evidencia"){
+        state.evidenceSaved = true;
+        state.reported = true;
+
+        applyDecisionImpact({
+            emotion:12,
+            protection:8,
+            calm:4,
+            trust:3,
+            path:5,
+            reason:"Te protegiste"
+        });
+
+        showCrisisResult(
+            "Leo guarda pruebas y reporta.",
+            "Esta vez no intenta pelear. Conserva evidencia y utiliza herramientas de protección.",
+            false
+        );
+    }
+
+    if(choice === "Buscar ayuda"){
+        chooseSupport();
+    }
+}
+
+function showCrisisResult(title, text, thenSupport){
+    const feedback = document.createElement("div");
+
+    feedback.className = "modal show";
+
+    feedback.innerHTML = `
+        <div class="modal-card">
+            <div class="modal-icon">📱</div>
+            <h2>${title}</h2>
+            <p>${text}</p>
+            <div class="modal-actions">
+                <button class="modal-btn help">
+                    🤝 Pedir ayuda
+                </button>
+            </div>
+        </div>
+    `;
+
+    gameScreen.appendChild(feedback);
+
+    feedback.querySelector("button").addEventListener("click", () => {
+        feedback.remove();
+        chooseSupport();
+    });
+}
+
+/* =========================
+   APOYO
+   ========================= */
+
+function chooseSupport(){
+    state.supportChosen = true;
+
+    clearNonEssentialMessages();
+
+    state.anxiety = Math.max(1, state.anxiety - 2.5);
+
+    /*
+       Pedir ayuda es la acción con mayor impacto emocional positivo.
+       Si además guardó pruebas, bloqueó/reportó o habló con Sofi,
+       la recuperación es mayor.
+    */
+    let recovery = 28;
+
+    if(state.evidenceSaved) recovery += 6;
+    if(state.reported) recovery += 5;
+    if(state.blockedCount > 0) recovery += 3;
+    if(state.friendContacted) recovery += 7;
+
+    state.supportPoints += 6;
+    state.trustPoints += 5;
+
+    /* Buscar ayuda es la decisión clave del camino bueno. */
+    changeStoryPath(6);
+
+    recoverEmotion(recovery, "Pediste ayuda");
+
+    updateAnxietyUI();
+    updateEmotionUI();
+    updateAudioForAnxiety();
+
+    showSupportScene();
+}
+
+function clearNonEssentialMessages(){
+    const messages = [...messageLayer.querySelectorAll(".message")];
+
+    messages.forEach((message, index) => {
+        setTimeout(() => {
+            message.style.opacity = "0";
+            message.style.transform = "scale(.6)";
+        }, index * 40);
+
+        setTimeout(() => {
+            message.remove();
+        }, 250 + index * 40);
+    });
+}
+
+function showSupportScene(){
+    supportModal.classList.add("show");
+
+    stopAudio();
+
+    schedule(() => {
+        if(supportModal.classList.contains("show")){
+            supportModal.classList.remove("show");
+            continueAfterSupport();
+        }
+    },7000);
+}
+
+askHelpBtn.addEventListener("click", () => {
+    supportModal.classList.remove("show");
+    continueAfterSupport();
+});
+
+closeSupportBtn.addEventListener("click", () => {
+    supportModal.classList.remove("show");
+    continueAfterSupport();
+});
+
+function continueAfterSupport(){
+    if(state.gameEnded) return;
+
+    state.phase = 6;
+
+    /*
+       Mensajes positivos: el cambio se muestra mediante la interfaz.
+    */
+
+    createMessage({
+        user:"Sofi",
+        text:"Estoy aquí. No tienes que pasar por esto solo.",
+        icon:"💚",
+        type:"good"
+    });
+
+    schedule(() => {
+        createMessage({
+            user:"Profe Ana",
+            text:"Podemos hablar de lo que pasó y buscar una solución.",
+            icon:"🤝",
+            type:"good"
+        });
+    },900);
+
+    schedule(() => {
+        finishGame();
+    },3500);
+}
+
+/* =========================
+   FINAL
+   ========================= */
+
+function finishGame(){
+    state.gameEnded = true;
+
+    clearTimers();
+
+    state.anxiety = 0;
+    state.emotion = clamp(state.emotion + 18, 0, 100);
+    updateAnxietyUI();
+    updateEmotionUI();
+
+    stopAudio();
+
+    progressFill.style.width = "100%";
+    tripTime.textContent = "15:00 / 15:00";
+
+    swipeHelp.style.display = "none";
+
+    const finalEmotionScore = document.getElementById("finalEmotionScore");
+    const finalEmpathyScore = document.getElementById("finalEmpathyScore");
+    const finalProtectionScore = document.getElementById("finalProtectionScore");
+    const finalCalmScore = document.getElementById("finalCalmScore");
+    const finalPathScore = document.getElementById("finalPathScore");
+    const endingTitle = document.getElementById("endingTitle");
+    const endingMessage = document.getElementById("endingMessage");
+
+    if(finalEmotionScore){
+        finalEmotionScore.textContent = `${Math.round(state.emotion)}%`;
+    }
+
+    if(finalEmpathyScore){
+        finalEmpathyScore.textContent = `${Math.round(state.empathyPoints)}`;
+    }
+
+    if(finalProtectionScore){
+        finalProtectionScore.textContent = `${Math.round(state.protectionPoints)}`;
+    }
+
+    if(finalCalmScore){
+        finalCalmScore.textContent = `${Math.round(state.calmPoints)}`;
+    }
+
+    if(finalPathScore){
+        finalPathScore.textContent =
+            state.pathScore >= 5 ? "BUENO 💙" : "MALO ⚠️";
+    }
+
+    /*
+       El final cambia según la forma de jugar.
+    */
+    const totalPositive =
+        state.supportPoints +
+        state.protectionPoints +
+        state.calmPoints +
+        state.trustPoints;
+
+    /*
+       AQUÍ SE SEPARAN LOS DOS GRANDES CAMINOS:
+
+       CAMINO BUENO:
+       - protección
+       - evidencia
+       - apoyo
+       - calma
+       - pedir ayuda
+
+       CAMINO MALO:
+       - responder con agresividad
+       - devolver burlas
+       - seguir mirando compulsivamente
+       - aislarse
+    */
+
+    if(state.pathScore >= 5 && !state.retaliated){
+        endingTitle.textContent = "FINAL BUENO — LEO NO ESTÁ SOLO 💙";
+        endingMessage.textContent =
+            "Elegiste proteger a Leo en lugar de alimentar el conflicto. Guardó pruebas, buscó apoyo y entendió que pedir ayuda no es una debilidad. Al bajar del teleférico, ya no enfrenta el problema solo.";
+    }else{
+        endingTitle.textContent = "FINAL MALO — EL CONFLICTO CRECIÓ ⚠️";
+        endingMessage.textContent =
+            "Las decisiones agresivas y el aislamiento hicieron que la situación empeorara. Leo termina el viaje más afectado y todavía necesita ayuda. El juego muestra que devolver el daño con más daño no rompe el ciclo.";
+    }
+
+    finalScreen.classList.add("show");
+}
+
+/* =========================
+   BOTONES FINALES
+   ========================= */
+
+restartBtn.addEventListener("click", () => {
+    finalScreen.classList.remove("show");
+
+    startGame();
+});
+
+finalSupportBtn.addEventListener("click", () => {
+    alert(
+        "Si ves una situación de ciberbullying: no la compartas, " +
+        "guarda evidencia, apoya a la persona afectada y busca ayuda " +
+        "de un adulto o persona de confianza."
+    );
+});
+
+/* =========================
+   BOTÓN DE MÚSICA
+   ========================= */
+
+playBtn.addEventListener("click", toggleAudio);
+
+/* =========================
+   TECLADO
+   ========================= */
+
+document.addEventListener("keydown", event => {
+    if(event.key === "Escape"){
+        decisionPanel.classList.remove("show");
+        supportModal.classList.remove("show");
+    }
+
+    if(event.code === "Space" && state.started){
+        event.preventDefault();
+        toggleAudio();
+    }
+});
+
+/* =========================
+   EVITAR SCROLL DURANTE SWIPE
+   ========================= */
+
+gameScreen.addEventListener(
+    "touchmove",
+    event => {
+        if(event.target.closest(".message")){
+            event.preventDefault();
+        }
+    },
+    {passive:false}
+);
+
+/* =========================
+   VISIBILIDAD DE PÁGINA
+   ========================= */
+
+document.addEventListener("visibilitychange", () => {
+    if(document.hidden){
+        if(state.audio.context && state.musicPlaying){
+            state.audio.context.suspend();
+        }
+    }else{
+        if(state.audio.context && state.musicPlaying){
+            state.audio.context.resume();
+        }
+    }
+});
+
+/* =========================
+   PREPARACIÓN INICIAL
+   ========================= */
+
+gameShell.hidden = true;
+</script>
+
+</body>
+</html>
