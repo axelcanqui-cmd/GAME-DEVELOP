@@ -1,0 +1,3499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanzas a la Vista</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --azul:#56a9df;
+    --azul-oscuro:#173f68;
+    --azul-claro:#dff3ff;
+    --verde:#38bd72;
+    --verde-oscuro:#16864b;
+    --rojo:#ed5b50;
+    --amarillo:#ffc928;
+    --morado:#9a64e8;
+    --naranja:#f59b38;
+    --blanco:#fff;
+    --texto:#17334f;
+    --sombra:0 8px 20px rgba(16,54,83,.25);
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 15% 10%,#ffffff 0 4%,transparent 5%),
+        linear-gradient(#68addb 0 32%,#bde9ff 32% 100%);
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--texto);
+    overflow-x:hidden;
+}
+
+button{
+    font-family:inherit;
+    cursor:pointer;
+}
+
+.game{
+    width:min(1500px,100%);
+    min-height:100vh;
+    margin:auto;
+    position:relative;
+}
+
+/* ==============================
+        HUD SUPERIOR
+============================== */
+
+.top-hud{
+    background:linear-gradient(180deg,#d7edfb,#afd9f1);
+    border:4px solid #347cae;
+    border-top:0;
+    border-radius:0 0 28px 28px;
+    padding:12px 16px;
+    display:grid;
+    grid-template-columns:310px 1fr 300px;
+    gap:14px;
+    box-shadow:var(--sombra);
+    position:relative;
+    z-index:20;
+}
+
+.profile{
+    background:#4b9bd0;
+    border:3px solid #2e6f9d;
+    border-radius:28px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:9px;
+    color:white;
+}
+
+.avatar-small{
+    width:72px;
+    height:72px;
+    border-radius:22px;
+    background:#f5e1ca;
+    border:4px solid white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:43px;
+    position:relative;
+}
+
+.crown{
+    position:absolute;
+    bottom:-12px;
+    left:8px;
+    font-size:25px;
+}
+
+.profile-info{
+    flex:1;
+}
+
+.profile-name{
+    font-size:19px;
+    font-weight:900;
+}
+
+.level{
+    font-size:13px;
+    margin-top:5px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+}
+
+.stat{
+    background:#f5faff;
+    border:3px solid #79aecd;
+    border-radius:16px;
+    min-height:48px;
+    display:flex;
+    align-items:center;
+    padding:5px 10px;
+    font-weight:900;
+    box-shadow:0 3px 0 rgba(37,90,124,.15);
+}
+
+.stat .icon{
+    font-size:26px;
+    margin-right:7px;
+}
+
+.stat .number{
+    font-size:18px;
+}
+
+.stat small{
+    display:block;
+    color:#55829f;
+    font-size:11px;
+}
+
+.stat.money{
+    color:#198653;
+}
+
+.stat.money .number{
+    color:#16864b;
+}
+
+.stat.saving{
+    color:#2076b3;
+}
+
+.stat.happy{
+    color:#e64d55;
+}
+
+.stat.stress{
+    color:#9b5a27;
+}
+
+.day-box{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+}
+
+.calendar{
+    width:88px;
+    background:white;
+    border-radius:13px;
+    border:3px solid #568eb5;
+    overflow:hidden;
+    text-align:center;
+    box-shadow:0 3px 8px rgba(0,0,0,.15);
+}
+
+.calendar .month{
+    background:#ed6572;
+    color:white;
+    font-size:12px;
+    font-weight:bold;
+    padding:4px;
+}
+
+.calendar .day{
+    font-size:30px;
+    font-weight:900;
+    line-height:32px;
+}
+
+.calendar .year{
+    font-size:11px;
+    padding-bottom:4px;
+}
+
+.gear{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:0;
+    background:white;
+    font-size:27px;
+    box-shadow:var(--sombra);
+    transition:.2s;
+}
+
+.gear:hover{
+    transform:rotate(30deg) scale(1.05);
+}
+
+/* ==============================
+       ESCENA PRINCIPAL
+============================== */
+
+.scene{
+    position:relative;
+    min-height:720px;
+    overflow:hidden;
+    border-left:5px solid #3b83ae;
+    border-right:5px solid #3b83ae;
+    background:
+        linear-gradient(
+            to bottom,
+            transparent 0 49%,
+            rgba(255,255,255,.9) 49% 51%,
+            #65b8d4 51% 63%,
+            #3b8cae 63% 72%,
+            #dfbb91 72% 100%
+        );
+}
+
+/* nubes */
+
+.cloud{
+    position:absolute;
+    background:white;
+    border-radius:50%;
+    opacity:.82;
+    filter:blur(.2px);
+}
+
+.cloud:before,
+.cloud:after{
+    content:"";
+    position:absolute;
+    background:white;
+    border-radius:50%;
+}
+
+.cloud1{
+    width:190px;
+    height:55px;
+    top:70px;
+    left:-40px;
+}
+
+.cloud1:before{
+    width:80px;
+    height:80px;
+    left:30px;
+    bottom:0;
+}
+
+.cloud1:after{
+    width:90px;
+    height:90px;
+    right:20px;
+    bottom:0;
+}
+
+.cloud2{
+    width:210px;
+    height:60px;
+    top:110px;
+    right:-40px;
+}
+
+.cloud2:before{
+    width:90px;
+    height:85px;
+    left:35px;
+    bottom:0;
+}
+
+.cloud2:after{
+    width:80px;
+    height:75px;
+    right:25px;
+    bottom:0;
+}
+
+/* mar */
+
+.water{
+    position:absolute;
+    left:0;
+    right:0;
+    top:53%;
+    height:22%;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,.13) 0 3px,
+            transparent 3px 23px
+        ),
+        linear-gradient(#47a6c5,#226f91);
+    z-index:1;
+}
+
+.wave{
+    position:absolute;
+    width:120%;
+    height:55px;
+    left:-10%;
+    top:-25px;
+    background:#fff;
+    border-radius:50%;
+    opacity:.85;
+}
+
+/* isla */
+
+.island{
+    position:absolute;
+    left:-5%;
+    right:-5%;
+    top:65%;
+    height:12%;
+    background:#719c54;
+    border-radius:50% 50% 0 0;
+    z-index:2;
+}
+
+/* casa */
+
+.house{
+    position:absolute;
+    top:29%;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(610px,65%);
+    height:290px;
+    z-index:4;
+}
+
+.house-main{
+    position:absolute;
+    left:10%;
+    bottom:0;
+    width:80%;
+    height:80%;
+    background:#edf0e7;
+    border:4px solid #496574;
+    box-shadow:12px 14px 0 rgba(38,70,80,.15);
+}
+
+.house-top{
+    position:absolute;
+    top:0;
+    left:5%;
+    width:75%;
+    height:55px;
+    background:#f5ead8;
+    border:4px solid #496574;
+    transform:skewX(-5deg);
+}
+
+.window{
+    position:absolute;
+    background:
+        linear-gradient(90deg,transparent 46%,#142d40 46% 54%,transparent 54%),
+        linear-gradient(#31769d,#78b9d5);
+    border:5px solid #253f4c;
+    box-shadow:inset 0 0 0 2px #92d1e8;
+}
+
+.w1{
+    left:15%;
+    top:19%;
+    width:110px;
+    height:100px;
+}
+
+.w2{
+    right:15%;
+    top:19%;
+    width:145px;
+    height:100px;
+}
+
+.w3{
+    left:30%;
+    bottom:7%;
+    width:160px;
+    height:92px;
+}
+
+.w4{
+    right:9%;
+    bottom:7%;
+    width:110px;
+    height:92px;
+}
+
+.balcony{
+    position:absolute;
+    right:2%;
+    top:48%;
+    width:43%;
+    height:70px;
+    background:#dce4dc;
+    border:4px solid #637d86;
+    z-index:5;
+}
+
+.balcony:after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-35px;
+    height:34px;
+    border-top:5px solid #354e59;
+    background:repeating-linear-gradient(
+        90deg,
+        transparent 0 20px,
+        #354e59 20px 25px
+    );
+}
+
+/* árboles */
+
+.tree{
+    position:absolute;
+    z-index:3;
+    font-size:105px;
+}
+
+.tree1{
+    left:2%;
+    top:39%;
+}
+
+.tree2{
+    right:3%;
+    top:38%;
+}
+
+.tree3{
+    left:15%;
+    top:49%;
+    font-size:70px;
+}
+
+/* auto */
+
+.car{
+    position:absolute;
+    z-index:8;
+    left:50%;
+    transform:translateX(-40%);
+    bottom:17%;
+    width:min(520px,48%);
+    height:130px;
+}
+
+.car-body{
+    position:absolute;
+    bottom:15px;
+    left:3%;
+    width:94%;
+    height:75px;
+    background:linear-gradient(140deg,#31b9ed,#1978bd);
+    border:5px solid #263e50;
+    border-radius:30px 100px 28px 30px;
+    box-shadow:0 12px 0 rgba(0,0,0,.12);
+}
+
+.car-roof{
+    position:absolute;
+    top:12px;
+    left:30%;
+    width:45%;
+    height:55px;
+    background:#1f3344;
+    border:4px solid #263e50;
+    clip-path:polygon(20% 0,75% 0,100% 100%,0 100%);
+}
+
+.car-window{
+    position:absolute;
+    top:20px;
+    left:34%;
+    width:38%;
+    height:37px;
+    background:#5aa6c3;
+    clip-path:polygon(20% 0,75% 0,95% 100%,0 100%);
+}
+
+.wheel{
+    position:absolute;
+    width:58px;
+    height:58px;
+    background:#202a32;
+    border:7px solid #59616a;
+    border-radius:50%;
+    bottom:0;
+    z-index:4;
+}
+
+.wheel:after{
+    content:"";
+    position:absolute;
+    inset:13px;
+    border-radius:50%;
+    background:#aeb4b8;
+    border:4px solid #454b50;
+}
+
+.wheel1{
+    left:16%;
+}
+
+.wheel2{
+    right:14%;
+}
+
+.car-label{
+    position:absolute;
+    top:75px;
+    left:25%;
+    color:#092b43;
+    font-weight:900;
+    transform:rotate(-7deg);
+}
+
+/* ==============================
+        PERSONAJE CENTRAL
+============================== */
+
+.character{
+    position:absolute;
+    z-index:12;
+    left:50%;
+    bottom:10%;
+    transform:translateX(-50%);
+    width:210px;
+    height:390px;
+    transition:.5s;
+    filter:drop-shadow(0 14px 8px rgba(0,0,0,.15));
+}
+
+.character:hover{
+    transform:translateX(-50%) translateY(-4px);
+}
+
+/* cabeza */
+
+.head{
+    position:absolute;
+    width:110px;
+    height:125px;
+    top:0;
+    left:50px;
+    background:#f3b48f;
+    border:4px solid #4b2e28;
+    border-radius:47% 47% 45% 45%;
+    z-index:5;
+}
+
+.hair{
+    position:absolute;
+    top:-13px;
+    left:-3px;
+    width:112px;
+    height:55px;
+    background:#47251f;
+    border-radius:60% 55% 20% 30%;
+}
+
+.hair:after{
+    content:"";
+    position:absolute;
+    right:-9px;
+    top:24px;
+    width:34px;
+    height:35px;
+    background:#47251f;
+    transform:rotate(30deg);
+    border-radius:50%;
+}
+
+.eye{
+    position:absolute;
+    top:50px;
+    width:15px;
+    height:18px;
+    background:#2d2525;
+    border-radius:50%;
+    transition:.3s;
+}
+
+.eye.left{
+    left:25px;
+}
+
+.eye.right{
+    right:25px;
+}
+
+.mouth{
+    position:absolute;
+    width:42px;
+    height:20px;
+    left:30px;
+    top:86px;
+    border-bottom:5px solid #702e2b;
+    border-radius:0 0 50% 50%;
+    transition:.3s;
+}
+
+.glasses{
+    position:absolute;
+    top:44px;
+    left:14px;
+    width:82px;
+    height:32px;
+    border:4px solid #4c5660;
+    border-radius:12px;
+    z-index:8;
+}
+
+.glasses:after{
+    content:"";
+    position:absolute;
+    width:82px;
+    height:4px;
+    background:#4c5660;
+    top:10px;
+    left:-4px;
+}
+
+.body{
+    position:absolute;
+    top:112px;
+    left:34px;
+    width:142px;
+    height:180px;
+    background:#f8f8f6;
+    border:4px solid #384c57;
+    border-radius:35px 35px 20px 20px;
+}
+
+.shirt{
+    position:absolute;
+    top:0;
+    left:44px;
+    width:50px;
+    height:178px;
+    background:#253a4b;
+}
+
+.tie{
+    position:absolute;
+    left:59px;
+    top:0;
+    width:20px;
+    height:70px;
+    background:#e55245;
+    clip-path:polygon(0 0,100% 0,75% 100%,50% 80%,25% 100%);
+}
+
+.arm{
+    position:absolute;
+    width:38px;
+    height:125px;
+    background:#f3b48f;
+    border:4px solid #563a32;
+    border-radius:25px;
+    top:135px;
+}
+
+.arm.left{
+    left:8px;
+    transform:rotate(8deg);
+}
+
+.arm.right{
+    right:8px;
+    transform:rotate(-8deg);
+}
+
+.leg{
+    position:absolute;
+    width:52px;
+    height:145px;
+    background:#e9e9e9;
+    border:4px solid #45545b;
+    top:277px;
+}
+
+.leg.left{
+    left:48px;
+}
+
+.leg.right{
+    right:48px;
+}
+
+.shoe{
+    position:absolute;
+    width:70px;
+    height:30px;
+    background:#ffffff;
+    border:4px solid #39454b;
+    border-radius:25px;
+    top:395px;
+}
+
+.shoe.left{
+    left:34px;
+}
+
+.shoe.right{
+    right:34px;
+}
+
+/* emociones */
+
+.character.happy .mouth{
+    height:28px;
+    border-bottom:7px solid #702e2b;
+}
+
+.character.sad .mouth{
+    border-bottom:0;
+    border-top:5px solid #702e2b;
+    border-radius:50% 50% 0 0;
+}
+
+.character.angry .eye{
+    transform:rotate(-12deg);
+}
+
+.character.tired{
+    opacity:.83;
+    transform:translateX(-50%) translateY(10px);
+}
+
+.character.tired .eye{
+    height:5px;
+    top:57px;
+}
+
+.character.rich .mouth{
+    height:30px;
+}
+
+/* burbuja */
+
+.thought{
+    position:absolute;
+    z-index:15;
+    left:calc(50% + 100px);
+    bottom:48%;
+    max-width:310px;
+    background:white;
+    border:4px solid #3875a0;
+    border-radius:22px;
+    padding:14px 18px;
+    box-shadow:var(--sombra);
+    font-size:15px;
+    font-weight:700;
+    animation:float 2.5s infinite ease-in-out;
+}
+
+.thought:before{
+    content:"";
+    position:absolute;
+    left:-22px;
+    bottom:20px;
+    width:20px;
+    height:20px;
+    background:white;
+    border-left:4px solid #3875a0;
+    border-bottom:4px solid #3875a0;
+    transform:rotate(45deg);
+}
+
+@keyframes float{
+    50%{transform:translateY(-5px)}
+}
+
+/* ==============================
+       BOTONES LATERALES
+============================== */
+
+.side-buttons{
+    position:absolute;
+    z-index:20;
+    top:26%;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.side-buttons.left{
+    left:12px;
+}
+
+.side-buttons.right{
+    right:12px;
+}
+
+.side-btn{
+    width:88px;
+    min-height:85px;
+    border:4px solid #39749c;
+    border-radius:22px;
+    background:linear-gradient(#ffffff,#dceffc);
+    box-shadow:var(--sombra);
+    font-size:34px;
+    position:relative;
+    transition:.2s;
+}
+
+.side-btn:hover{
+    transform:scale(1.08);
+}
+
+.side-btn small{
+    display:block;
+    font-size:11px;
+    color:#234967;
+    font-weight:900;
+}
+
+.notification{
+    position:absolute;
+    right:-8px;
+    top:-10px;
+    width:31px;
+    height:31px;
+    border-radius:50%;
+    background:#f05b4e;
+    color:white;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:3px solid white;
+}
+
+/* ==============================
+       PANEL INFERIOR
+============================== */
+
+.bottom-info{
+    position:absolute;
+    z-index:20;
+    bottom:128px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(600px,60%);
+    background:#f5fbff;
+    border:4px solid #5b91b3;
+    border-radius:25px;
+    padding:13px 20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:var(--sombra);
+}
+
+.goal-icon{
+    font-size:48px;
+}
+
+.goal-text{
+    flex:1;
+}
+
+.goal-title{
+    font-size:18px;
+    font-weight:900;
+}
+
+.goal-sub{
+    margin-top:4px;
+    font-size:13px;
+}
+
+.progress{
+    height:14px;
+    background:#d9e1e5;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:8px;
+}
+
+.progress-fill{
+    width:50%;
+    height:100%;
+    background:linear-gradient(90deg,#29a968,#62dc92);
+    transition:.5s;
+}
+
+/* NAV */
+
+.nav{
+    background:linear-gradient(#b8e0f5,#78b7da);
+    border:4px solid #367da9;
+    border-radius:27px 27px 0 0;
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    padding:9px;
+    gap:8px;
+    position:relative;
+    z-index:30;
+}
+
+.nav-btn{
+    border:3px solid #4a91bb;
+    border-radius:20px;
+    background:#8ec9eb;
+    color:#143c5d;
+    min-height:85px;
+    font-weight:900;
+    font-size:14px;
+    transition:.2s;
+}
+
+.nav-btn span{
+    display:block;
+    font-size:34px;
+    margin-bottom:4px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+    background:#f6fcff;
+    transform:translateY(-5px);
+    box-shadow:0 6px 0 #4c8cae;
+}
+
+/* ==============================
+          MODALES
+============================== */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(8,34,52,.72);
+    z-index:100;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    backdrop-filter:blur(4px);
+}
+
+.overlay.show{
+    display:flex;
+}
+
+.modal{
+    width:min(700px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:#f5fbff;
+    border:5px solid #3d7fa7;
+    border-radius:30px;
+    padding:25px;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+    animation:modalIn .3s;
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:scale(.85);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+.modal h2{
+    text-align:center;
+    color:#17486d;
+    margin-bottom:15px;
+}
+
+.close{
+    float:right;
+    border:0;
+    background:#e95a50;
+    color:white;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.event-card{
+    background:white;
+    border-radius:20px;
+    border:3px solid #b4d2e2;
+    padding:18px;
+    margin:10px 0;
+}
+
+.event-image{
+    font-size:70px;
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.event-title{
+    text-align:center;
+    font-size:24px;
+    font-weight:900;
+    color:#214e6e;
+}
+
+.event-description{
+    text-align:center;
+    margin:10px 0 18px;
+    line-height:1.5;
+}
+
+.choice{
+    width:100%;
+    text-align:left;
+    border:3px solid #5991b1;
+    border-radius:17px;
+    background:#e8f6ff;
+    padding:13px;
+    margin:7px 0;
+    transition:.2s;
+}
+
+.choice:hover{
+    transform:translateX(5px);
+    background:white;
+}
+
+.choice strong{
+    display:block;
+    font-size:16px;
+    color:#173f5e;
+}
+
+.choice span{
+    font-size:12px;
+    color:#557185;
+}
+
+.choice.good{
+    border-color:#41ad70;
+}
+
+.choice.danger{
+    border-color:#e95d54;
+}
+
+.choice.neutral{
+    border-color:#e6a22e;
+}
+
+/* panel estadísticas */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.dashboard-card{
+    background:white;
+    border:3px solid #bad5e4;
+    border-radius:18px;
+    padding:15px;
+}
+
+.dashboard-card h3{
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.big{
+    font-size:27px;
+    font-weight:900;
+}
+
+/* toast */
+
+.toast{
+    position:fixed;
+    z-index:200;
+    right:25px;
+    top:25px;
+    width:min(370px,90%);
+    background:white;
+    border-left:8px solid #38bd72;
+    border-radius:15px;
+    padding:15px;
+    box-shadow:var(--sombra);
+    transform:translateX(130%);
+    transition:.4s;
+}
+
+.toast.show{
+    transform:translateX(0);
+}
+
+.toast-title{
+    font-weight:900;
+    font-size:16px;
+}
+
+.toast-message{
+    font-size:13px;
+    margin-top:5px;
+}
+
+/* tutorial */
+
+.tutorial{
+    text-align:center;
+}
+
+.tutorial-icon{
+    font-size:75px;
+}
+
+.tutorial p{
+    line-height:1.6;
+    margin:12px 0;
+}
+
+.main-btn{
+    border:0;
+    background:linear-gradient(135deg,#36b86c,#19934f);
+    color:white;
+    font-size:17px;
+    font-weight:900;
+    padding:14px 25px;
+    border-radius:18px;
+    box-shadow:0 5px 0 #12663a;
+}
+
+.main-btn:active{
+    transform:translateY(4px);
+    box-shadow:none;
+}
+
+/* log */
+
+.log{
+    max-height:250px;
+    overflow:auto;
+    margin-top:12px;
+}
+
+.log-item{
+    padding:10px;
+    border-bottom:1px solid #d7e4eb;
+    font-size:13px;
+}
+
+/* responsive */
+
+@media(max-width:1050px){
+
+    .top-hud{
+        grid-template-columns:1fr;
+    }
+
+    .profile{
+        justify-content:center;
+    }
+
+    .stats{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .day-box{
+        display:none;
+    }
+
+    .scene{
+        min-height:700px;
+    }
+
+    .house{
+        width:65%;
+    }
+
+    .character{
+        transform:translateX(-50%) scale(.88);
+        transform-origin:bottom center;
+    }
+
+    .car{
+        width:48%;
+    }
+
+    .bottom-info{
+        width:55%;
+    }
+}
+
+@media(max-width:700px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .scene{
+        min-height:760px;
+    }
+
+    .house{
+        top:27%;
+        width:80%;
+    }
+
+    .car{
+        width:70%;
+        bottom:17%;
+    }
+
+    .character{
+        transform:translateX(-50%) scale(.72);
+        transform-origin:bottom center;
+        bottom:8%;
+    }
+
+    .thought{
+        left:55%;
+        bottom:55%;
+        max-width:190px;
+        font-size:11px;
+    }
+
+    .side-btn{
+        width:60px;
+        min-height:65px;
+        font-size:25px;
+    }
+
+    .side-btn small{
+        font-size:8px;
+    }
+
+    .bottom-info{
+        width:68%;
+        bottom:115px;
+        padding:8px;
+    }
+
+    .goal-icon{
+        font-size:30px;
+    }
+
+    .goal-title{
+        font-size:12px;
+    }
+
+    .goal-sub{
+        font-size:10px;
+    }
+
+    .nav{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .nav-btn{
+        min-height:65px;
+        font-size:10px;
+    }
+
+    .nav-btn span{
+        font-size:25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<!-- =========================
+       HUD
+========================= -->
+
+<header class="top-hud">
+
+    <div class="profile">
+        <div class="avatar-small">
+            🧑🏻
+            <div class="crown">👑</div>
+        </div>
+
+        <div class="profile-info">
+            <div class="profile-name">Leo García</div>
+            <div class="level">Estudiante • Nivel <span id="level">1</span></div>
+            <div class="level">🏆 Puntos: <span id="points">0</span></div>
+        </div>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat money">
+            <div class="icon">💵</div>
+            <div>
+                <div class="number" id="money">$1,500</div>
+                <small>Dinero disponible</small>
+            </div>
+        </div>
+
+        <div class="stat saving">
+            <div class="icon">🏦</div>
+            <div>
+                <div class="number" id="savings">$500</div>
+                <small>Ahorros</small>
+            </div>
+        </div>
+
+        <div class="stat happy">
+            <div class="icon">❤️</div>
+            <div>
+                <div class="number" id="happiness">80</div>
+                <small>Felicidad</small>
+            </div>
+        </div>
+
+        <div class="stat stress">
+            <div class="icon">😰</div>
+            <div>
+                <div class="number" id="stress">20</div>
+                <small>Estrés</small>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="day-box">
+
+        <div>
+            <strong>AGOSTO</strong>
+            <div style="font-size:13px">
+                Día <span id="dayText">1</span> de 30
+            </div>
+        </div>
+
+        <div class="calendar">
+            <div class="month">AGOSTO</div>
+            <div class="day" id="calendarDay">01</div>
+            <div class="year">2026</div>
+        </div>
+
+        <button class="gear" onclick="openSettings()">⚙️</button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+        ESCENA
+========================= -->
+
+<main class="scene">
+
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+
+    <div class="water">
+        <div class="wave"></div>
+    </div>
+
+    <div class="island"></div>
+
+    <div class="tree tree1">🌴</div>
+    <div class="tree tree2">🌴</div>
+    <div class="tree tree3">🌴</div>
+
+
+    <!-- CASA -->
+
+    <div class="house">
+
+        <div class="house-main">
+
+            <div class="window w1"></div>
+            <div class="window w2"></div>
+            <div class="window w3"></div>
+            <div class="window w4"></div>
+
+            <div class="balcony"></div>
+
+        </div>
+
+        <div class="house-top"></div>
+
+    </div>
+
+
+    <!-- AUTO -->
+
+    <div class="car">
+
+        <div class="car-roof"></div>
+        <div class="car-window"></div>
+
+        <div class="car-body">
+            <div class="car-label">FINANZAS</div>
+        </div>
+
+        <div class="wheel wheel1"></div>
+        <div class="wheel wheel2"></div>
+
+    </div>
+
+
+    <!-- PERSONAJE -->
+
+    <div id="character" class="character happy">
+
+        <div class="head">
+            <div class="hair"></div>
+
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+
+            <div class="glasses"></div>
+
+            <div class="mouth"></div>
+        </div>
+
+        <div class="body">
+            <div class="shirt"></div>
+            <div class="tie"></div>
+        </div>
+
+        <div class="arm left"></div>
+        <div class="arm right"></div>
+
+        <div class="leg left"></div>
+        <div class="leg right"></div>
+
+        <div class="shoe left"></div>
+        <div class="shoe right"></div>
+
+    </div>
+
+
+    <!-- pensamiento -->
+
+    <div class="thought" id="thought">
+        ¡Hoy comienza mi mes! Tengo que administrar bien mi dinero.
+    </div>
+
+
+    <!-- BOTONES LATERALES -->
+
+    <div class="side-buttons left">
+
+        <button class="side-btn" onclick="openEvents()">
+            💼
+            <small>Eventos</small>
+            <span class="notification">!</span>
+        </button>
+
+        <button class="side-btn" onclick="work()">
+            👨🏻‍💻
+            <small>Trabajar</small>
+        </button>
+
+        <button class="side-btn" onclick="openAchievements()">
+            🏆
+            <small>Logros</small>
+        </button>
+
+    </div>
+
+
+    <div class="side-buttons right">
+
+        <button class="side-btn" onclick="openMiniGames()">
+            🎮
+            <small>Minijuegos</small>
+        </button>
+
+        <button class="side-btn" onclick="openShop()">
+            🛍️
+            <small>Tienda</small>
+        </button>
+
+        <button class="side-btn" onclick="invest()">
+            📈
+            <small>Invertir</small>
+        </button>
+
+    </div>
+
+
+    <!-- OBJETIVO -->
+
+    <div class="bottom-info">
+
+        <div class="goal-icon">🎯</div>
+
+        <div class="goal-text">
+
+            <div class="goal-title">
+                Meta de ahorro: $1,200
+            </div>
+
+            <div class="goal-sub">
+                Progreso: $<span id="goalCurrent">500</span> / $1,200
+            </div>
+
+            <div class="progress">
+                <div class="progress-fill" id="goalProgress"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- =========================
+        NAVEGACIÓN
+========================= -->
+
+<nav class="nav">
+
+    <button class="nav-btn active" onclick="showPanel('inicio',this)">
+        <span>🏠</span>
+        Inicio
+    </button>
+
+    <button class="nav-btn" onclick="showPanel('skills',this)">
+        <span>💪</span>
+        Habilidades
+    </button>
+
+    <button class="nav-btn" onclick="showPanel('relationships',this)">
+        <span>❤️</span>
+        Relaciones
+    </button>
+
+    <button class="nav-btn" onclick="work()">
+        <span>💼</span>
+        Trabajo
+    </button>
+
+    <button class="nav-btn" onclick="openBusiness()">
+        <span>💰</span>
+        Negocios
+    </button>
+
+    <button class="nav-btn" onclick="invest()">
+        <span>📊</span>
+        Inversiones
+    </button>
+
+    <button class="nav-btn" onclick="openAssets()">
+        <span>🏠</span>
+        Cosas
+    </button>
+
+</nav>
+
+</div>
+
+
+<!-- =========================
+       TOAST
+========================= -->
+
+<div class="toast" id="toast">
+
+    <div class="toast-title" id="toastTitle">
+        Finanzas a la Vista
+    </div>
+
+    <div class="toast-message" id="toastMessage">
+        Mensaje
+    </div>
+
+</div>
+
+
+<!-- =========================
+       MODAL GENERAL
+========================= -->
+
+<div class="overlay" id="overlay">
+
+    <div class="modal">
+
+        <button class="close" onclick="closeModal()">×</button>
+
+        <div id="modalContent"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+            ESTADO DEL JUEGO
+===================================================== */
+
+let game = {
+
+    day:1,
+
+    month:1,
+
+    money:1500,
+
+    savings:500,
+
+    happiness:80,
+
+    stress:20,
+
+    energy:80,
+
+    reputation:50,
+
+    points:0,
+
+    debt:0,
+
+    level:1,
+
+    goal:1200,
+
+    salary:900,
+
+    expenses:0,
+
+    investments:0,
+
+    relationship:50,
+
+    skill:10,
+
+    eventsDone:0,
+
+    achievements:[],
+
+    log:[]
+
+};
+
+
+/* =====================================================
+            UTILIDADES
+===================================================== */
+
+function moneyFormat(value){
+
+    return "$" + Math.round(value).toLocaleString("en-US");
+
+}
+
+
+function clamp(value,min,max){
+
+    return Math.max(min,Math.min(max,value));
+
+}
+
+
+function updateGame(){
+
+    game.happiness=clamp(game.happiness,0,100);
+    game.stress=clamp(game.stress,0,100);
+    game.energy=clamp(game.energy,0,100);
+    game.reputation=clamp(game.reputation,0,100);
+    game.relationship=clamp(game.relationship,0,100);
+
+    document.getElementById("money").textContent=moneyFormat(game.money);
+
+    document.getElementById("savings").textContent=moneyFormat(game.savings);
+
+    document.getElementById("happiness").textContent=game.happiness;
+
+    document.getElementById("stress").textContent=game.stress;
+
+    document.getElementById("points").textContent=game.points;
+
+    document.getElementById("level").textContent=game.level;
+
+    document.getElementById("dayText").textContent=game.day;
+
+    document.getElementById("calendarDay").textContent=
+        String(game.day).padStart(2,"0");
+
+    document.getElementById("goalCurrent").textContent=
+        Math.round(game.savings).toLocaleString();
+
+    let percentage=(game.savings/game.goal)*100;
+
+    document.getElementById("goalProgress").style.width=
+        Math.min(100,percentage)+"%";
+
+    updateCharacter();
+
+    saveGame();
+
+}
+
+
+/* =====================================================
+          PERSONAJE REACCIONA
+===================================================== */
+
+function updateCharacter(){
+
+    const character=document.getElementById("character");
+    const thought=document.getElementById("thought");
+
+    character.className="character";
+
+    if(game.happiness>=75 && game.stress<35){
+
+        character.classList.add("happy");
+
+        thought.textContent=
+        "😎 Me siento genial. ¡Estoy controlando mis finanzas!";
+
+    }
+
+    else if(game.stress>=70){
+
+        character.classList.add("angry");
+
+        thought.textContent=
+        "😰 ¡Estoy demasiado estresado! Tengo que parar y organizarme.";
+
+    }
+
+    else if(game.happiness<=30){
+
+        character.classList.add("sad");
+
+        thought.textContent=
+        "😔 No puedo disfrutar de nada... necesito equilibrar mi vida.";
+
+    }
+
+    else if(game.energy<=20){
+
+        character.classList.add("tired");
+
+        thought.textContent=
+        "🥱 Estoy agotado. Quizás debería descansar.";
+
+    }
+
+    else if(game.savings>=game.goal){
+
+        character.classList.add("rich");
+
+        thought.textContent=
+        "🤑 ¡Lo logré! Mi meta de ahorro está cumplida.";
+
+    }
+
+    else{
+
+        character.classList.add("happy");
+
+        thought.textContent=
+        "🤔 Tengo que pensar bien antes de gastar.";
+
+    }
+
+}
+
+
+/* =====================================================
+          TOAST
+===================================================== */
+
+function toast(title,message,type="good"){
+
+    const box=document.getElementById("toast");
+
+    document.getElementById("toastTitle").textContent=title;
+
+    document.getElementById("toastMessage").textContent=message;
+
+    box.style.borderLeftColor=
+        type==="danger" ? "#ed5b50" :
+        type==="warning" ? "#f59b38" :
+        "#38bd72";
+
+    box.classList.add("show");
+
+    setTimeout(()=>{
+        box.classList.remove("show");
+    },3500);
+
+}
+
+
+/* =====================================================
+          LOG
+===================================================== */
+
+function addLog(text){
+
+    game.log.unshift(
+        "Día "+game.day+": "+text
+    );
+
+    if(game.log.length>30){
+
+        game.log.pop();
+
+    }
+
+}
+
+
+/* =====================================================
+        GASTAR DINERO
+===================================================== */
+
+function spend(amount){
+
+    if(game.money>=amount){
+
+        game.money-=amount;
+
+        game.expenses+=amount;
+
+        return true;
+
+    }
+
+    return false;
+
+}
+
+
+/* =====================================================
+        AHORRAR
+===================================================== */
+
+function saveMoney(amount){
+
+    if(game.money<amount){
+
+        toast(
+            "No tienes suficiente",
+            "No puedes ahorrar una cantidad mayor a tu dinero disponible.",
+            "danger"
+        );
+
+        return;
+
+    }
+
+    game.money-=amount;
+
+    game.savings+=amount;
+
+    game.points+=10;
+
+    game.reputation+=3;
+
+    addLog("Ahorraste "+moneyFormat(amount));
+
+    toast(
+        "¡Buen movimiento!",
+        "Has aumentado tu fondo de ahorro.",
+        "good"
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+          TRABAJAR
+===================================================== */
+
+function work(){
+
+    if(game.energy<20){
+
+        toast(
+            "Estás agotado",
+            "Necesitas descansar antes de trabajar.",
+            "danger"
+        );
+
+        return;
+
+    }
+
+    let salary=180;
+
+    game.money+=salary;
+
+    game.energy-=25;
+
+    game.stress+=10;
+
+    game.happiness-=4;
+
+    game.points+=20;
+
+    addLog("Trabajaste y ganaste "+moneyFormat(salary));
+
+    toast(
+        "💼 Día de trabajo",
+        "Ganaste $180, pero aumentó tu estrés.",
+        "good"
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+          DESCANSAR
+===================================================== */
+
+function rest(){
+
+    game.energy+=30;
+
+    game.happiness+=10;
+
+    game.stress-=12;
+
+    game.points+=5;
+
+    addLog("Tomaste un día para descansar.");
+
+    toast(
+        "😴 Descanso",
+        "Recuperaste energía y redujiste el estrés."
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+          EVENTOS
+===================================================== */
+
+const events=[
+
+    {
+        icon:"🍕",
+        title:"Tus amigos quieren salir",
+        description:
+        "Tus amigos te invitan a cenar. Es divertido, pero tienes una meta de ahorro.",
+        choices:[
+            {
+                text:"🍕 Ir a cenar",
+                detail:"-$80 • +20 felicidad • +5 estrés",
+                type:"neutral",
+                action:()=>{
+                    if(spend(80)){
+                        game.happiness+=20;
+                        game.stress+=5;
+                        game.relationship+=10;
+                        addLog("Saliste a cenar con tus amigos.");
+                        finishEvent("¡Noche divertida!","Tus amigos están felices de verte.");
+                    }else{
+                        noMoney();
+                    }
+                }
+            },
+            {
+                text:"🏦 Ahorrar el dinero",
+                detail:"+$0 • +5 reputación financiera",
+                type:"good",
+                action:()=>{
+                    game.reputation+=5;
+                    game.points+=15;
+                    addLog("Decidiste priorizar tu ahorro.");
+                    finishEvent("Decisión inteligente","Tu meta de ahorro está más cerca.");
+                }
+            },
+            {
+                text:"🤝 Buscar un plan barato",
+                detail:"-$25 • +10 felicidad",
+                type:"good",
+                action:()=>{
+                    if(spend(25)){
+                        game.happiness+=10;
+                        game.relationship+=8;
+                        addLog("Elegiste un plan económico.");
+                        finishEvent("Buen equilibrio","Disfrutaste sin gastar demasiado.");
+                    }else{
+                        noMoney();
+                    }
+                }
+            }
+        ]
+    },
+
+    {
+        icon:"🚗",
+        title:"El auto necesita reparación",
+        description:
+        "Tu auto presenta una falla inesperada.",
+        choices:[
+            {
+                text:"🔧 Repararlo inmediatamente",
+                detail:"-$250 • -5 estrés",
+                type:"good",
+                action:()=>{
+                    if(spend(250)){
+                        game.stress-=5;
+                        game.reputation+=5;
+                        addLog("Reparaste el auto.");
+                        finishEvent("Problema solucionado","Pagaste, pero evitaste un problema mayor.");
+                    }else{
+                        noMoney();
+                    }
+                }
+            },
+            {
+                text:"⏳ Ignorar el problema",
+                detail:"$0 • +20 estrés • riesgo futuro",
+                type:"danger",
+                action:()=>{
+                    game.stress+=20;
+                    game.happiness-=10;
+                    addLog("Ignoraste la reparación.");
+                    finishEvent("Decisión arriesgada","La avería podría empeorar.");
+                }
+            },
+            {
+                text:"🏦 Usar el fondo de emergencia",
+                detail:"-$150 de ahorros • +5 estrés",
+                type:"good",
+                action:()=>{
+                    if(game.savings>=150){
+                        game.savings-=150;
+                        game.stress+=5;
+                        addLog("Usaste tu fondo de emergencia.");
+                        finishEvent("Fondo de emergencia","Tu ahorro te protegió de la deuda.");
+                    }else{
+                        noMoney();
+                    }
+                }
+            }
+        ]
+    },
+
+    {
+        icon:"📱",
+        title:"Nuevo teléfono",
+        description:
+        "Aparece un teléfono nuevo. El tuyo todavía funciona perfectamente.",
+        choices:[
+            {
+                text:"📱 Comprar el teléfono",
+                detail:"-$700 • +25 felicidad • +15 estrés",
+                type:"danger",
+                action:()=>{
+                    if(spend(700)){
+                        game.happiness+=25;
+                        game.stress+=15;
+                        game.reputation-=8;
+                        addLog("Compraste un teléfono nuevo.");
+                        finishEvent("Compra impulsiva","Te gusta tu teléfono, pero tu bolsillo sufrió.");
+                    }else{
+                        noMoney();
+                    }
+                }
+            },
+            {
+                text:"📦 Esperar una oferta",
+                detail:"$0 • +5 reputación",
+                type:"good",
+                action:()=>{
+                    game.reputation+=5;
+                    game.points+=20;
+                    addLog("Esperaste una oferta.");
+                    finishEvent("Paciencia financiera","Esperar puede ayudarte a conseguir un mejor precio.");
+                }
+            },
+            {
+                text:"📱 Mantener el actual",
+                detail:"$0 • +15 ahorro virtual",
+                type:"good",
+                action:()=>{
+                    game.reputation+=8;
+                    game.points+=25;
+                    addLog("Evitaste una compra impulsiva.");
+                    finishEvent("Excelente decisión","Tu teléfono todavía funciona.");
+                }
+            }
+        ]
+    },
+
+    {
+        icon:"🏥",
+        title:"Emergencia médica",
+        description:
+        "Te sientes mal y necesitas acudir a una clínica.",
+        choices:[
+            {
+                text:"🏥 Usar fondo de emergencia",
+                detail:"-$300 ahorro • +10 tranquilidad",
+                type:"good",
+                action:()=>{
+                    if(game.savings>=300){
+                        game.savings-=300;
+                        game.stress-=10;
+                        game.happiness+=5;
+                        addLog("Usaste el fondo de emergencia para salud.");
+                        finishEvent("Fondo de emergencia","Por suerte tenías dinero reservado.");
+                    }else{
+                        noMoney();
+                    }
+                }
+            },
+            {
+                text:"💳 Pedir dinero prestado",
+                detail:"+$300 deuda • +20 estrés",
+                type:"danger",
+                action:()=>{
+                    game.debt+=300;
+                    game.money+=300;
+                    game.stress+=20;
+                    game.reputation-=10;
+                    addLog("Pediste dinero prestado.");
+                    finishEvent("Ahora tienes una deuda","El problema se solucionó, pero tendrás que pagar.");
+                }
+            },
+            {
+                text:"⚠️ Ignorarlo",
+                detail:"+30 estrés • -20 felicidad",
+                type:"danger",
+                action:()=>{
+                    game.stress+=30;
+                    game.happiness-=20;
+                    addLog("Ignoraste una emergencia.");
+                    finishEvent("Mala decisión","Tu salud no debería ser sacrificada por dinero.");
+                }
+            }
+        ]
+    },
+
+    {
+        icon:"🎓",
+        title:"Curso profesional",
+        description:
+        "Puedes pagar un curso que aumentará tus habilidades y tus ingresos futuros.",
+        choices:[
+            {
+                text:"🎓 Pagar el curso",
+                detail:"-$250 • +20 habilidad • +15 puntos",
+                type:"good",
+                action:()=>{
+                    if(spend(250)){
+                        game.skill+=20;
+                        game.points+=15;
+                        game.reputation+=5;
+                        addLog("Invertiste en educación.");
+                        finishEvent("Inversión en ti","Tus habilidades aumentaron.");
+                    }else{
+                        noMoney();
+                    }
+                }
+            },
+            {
+                text:"📚 Estudiar gratis",
+                detail:"$0 • +8 habilidad",
+                type:"good",
+                action:()=>{
+                    game.skill+=8;
+                    game.energy-=10;
+                    game.points+=10;
+                    addLog("Estudiaste con recursos gratuitos.");
+                    finishEvent("Aprendizaje gratuito","No siempre necesitas gastar para aprender.");
+                }
+            }
+        ]
+    }
+
+];
+
+
+let currentEvent=null;
+
+
+/* =====================================================
+        EVENTOS
+===================================================== */
+
+function openEvents(){
+
+    if(currentEvent===null){
+
+        currentEvent=
+            events[Math.floor(Math.random()*events.length)];
+
+    }
+
+    let e=currentEvent;
+
+    let html=`
+
+        <div class="event-card">
+
+            <div class="event-image">${e.icon}</div>
+
+            <div class="event-title">
+                ${e.title}
+            </div>
+
+            <div class="event-description">
+                ${e.description}
+            </div>
+
+            ${e.choices.map((c,i)=>`
+
+                <button class="choice ${c.type}"
+                    onclick="chooseEvent(${i})">
+
+                    <strong>${c.text}</strong>
+
+                    <span>${c.detail}</span>
+
+                </button>
+
+            `).join("")}
+
+        </div>
+
+    `;
+
+    openModal(html);
+
+}
+
+
+function chooseEvent(index){
+
+    let choice=currentEvent.choices[index];
+
+    choice.action();
+
+}
+
+
+function finishEvent(title,message){
+
+    game.eventsDone++;
+
+    currentEvent=null;
+
+    closeModal();
+
+    toast(title,message);
+
+    nextDay();
+
+}
+
+
+/* =====================================================
+          SIGUIENTE DÍA
+===================================================== */
+
+function nextDay(){
+
+    game.day++;
+
+    game.energy+=8;
+
+    game.stress-=3;
+
+    if(game.day>30){
+
+        endMonth();
+
+        return;
+
+    }
+
+    if(game.day%5===0){
+
+        randomEvent();
+
+    }
+
+    checkLevel();
+
+    checkAchievements();
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+         EVENTO AUTOMÁTICO
+===================================================== */
+
+function randomEvent(){
+
+    setTimeout(()=>{
+
+        if(Math.random()<.65){
+
+            openEvents();
+
+        }
+
+    },700);
+
+}
+
+
+/* =====================================================
+          MES
+===================================================== */
+
+function endMonth(){
+
+    if(game.savings>=game.goal && game.money>0){
+
+        winGame();
+
+        return;
+
+    }
+
+    if(game.money<=0 || game.debt>=1000){
+
+        loseGame();
+
+        return;
+
+    }
+
+    game.month++;
+
+    game.level++;
+
+    game.day=1;
+
+    game.salary+=150;
+
+    game.money+=game.salary;
+
+    game.goal+=500;
+
+    game.happiness+=10;
+
+    game.stress-=15;
+
+    addLog("Comenzó un nuevo mes.");
+
+    toast(
+        "📅 Nuevo mes",
+        "Recibiste tu salario de "+moneyFormat(game.salary)
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+          DINERO INSUFICIENTE
+===================================================== */
+
+function noMoney(){
+
+    game.stress+=15;
+
+    game.happiness-=10;
+
+    toast(
+        "💸 Dinero insuficiente",
+        "No puedes realizar esta acción.",
+        "danger"
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+          INVERSIONES
+===================================================== */
+
+function invest(){
+
+    let html=`
+
+        <h2>📈 Inversiones</h2>
+
+        <div class="event-card">
+
+            <div class="event-image">📊</div>
+
+            <p style="text-align:center">
+                Invierte parte de tu dinero para intentar aumentar tus recursos.
+                Las inversiones tienen riesgo.
+            </p>
+
+            <button class="choice good"
+                onclick="makeInvestment(100)">
+
+                <strong>🟢 Invertir $100</strong>
+                <span>Posible retorno: $80 - $160</span>
+
+            </button>
+
+            <button class="choice neutral"
+                onclick="makeInvestment(300)">
+
+                <strong>🟡 Invertir $300</strong>
+                <span>Posible retorno: $200 - $480</span>
+
+            </button>
+
+            <button class="choice danger"
+                onclick="makeInvestment(600)">
+
+                <strong>🔴 Invertir $600</strong>
+                <span>Posible retorno: $300 - $1,000</span>
+
+            </button>
+
+        </div>
+    `;
+
+    openModal(html);
+
+}
+
+
+function makeInvestment(amount){
+
+    if(game.money<amount){
+
+        noMoney();
+
+        return;
+
+    }
+
+    game.money-=amount;
+
+    let multiplier=.7+Math.random()*1.3;
+
+    let result=Math.round(amount*multiplier);
+
+    game.money+=result;
+
+    game.investments+=result-amount;
+
+    game.points+=25;
+
+    if(result>=amount){
+
+        game.reputation+=5;
+
+        toast(
+            "📈 Inversión exitosa",
+            "Recibiste "+moneyFormat(result)
+        );
+
+    }else{
+
+        game.stress+=10;
+
+        toast(
+            "📉 La inversión bajó",
+            "Recuperaste "+moneyFormat(result),
+            "warning"
+        );
+
+    }
+
+    addLog(
+        "Invertiste "+moneyFormat(amount)+
+        " y recibiste "+moneyFormat(result)
+    );
+
+    closeModal();
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+           TIENDA
+===================================================== */
+
+function openShop(){
+
+    let html=`
+
+        <h2>🛍️ Tienda</h2>
+
+        <div class="dashboard">
+
+            <button class="choice good"
+                onclick="buyItem('☕ Café',20,5,0,5)">
+
+                <strong>☕ Café — $20</strong>
+                <span>+5 felicidad</span>
+
+            </button>
+
+            <button class="choice neutral"
+                onclick="buyItem('🎧 Audífonos',120,12,0,2)">
+
+                <strong>🎧 Audífonos — $120</strong>
+                <span>+12 felicidad</span>
+
+            </button>
+
+            <button class="choice neutral"
+                onclick="buyItem('👟 Zapatillas',180,15,0,0)">
+
+                <strong>👟 Zapatillas — $180</strong>
+                <span>+15 felicidad</span>
+
+            </button>
+
+            <button class="choice danger"
+                onclick="buyItem('🎮 Consola',500,25,10,0)">
+
+                <strong>🎮 Consola — $500</strong>
+                <span>+25 felicidad • +10 estrés</span>
+
+            </button>
+
+        </div>
+    `;
+
+    openModal(html);
+
+}
+
+
+function buyItem(name,cost,happy,stress,rep){
+
+    if(!spend(cost)){
+
+        noMoney();
+
+        return;
+
+    }
+
+    game.happiness+=happy;
+
+    game.stress+=stress;
+
+    game.reputation+=rep;
+
+    game.points+=5;
+
+    addLog("Compraste "+name);
+
+    closeModal();
+
+    toast(
+        "🛍️ Compra realizada",
+        "Compraste "+name
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+           NEGOCIOS
+===================================================== */
+
+function openBusiness(){
+
+    let html=`
+
+        <h2>💰 Negocios</h2>
+
+        <div class="event-card">
+
+            <div class="event-image">🏪</div>
+
+            <p style="text-align:center">
+                Puedes iniciar pequeños negocios para generar ingresos.
+            </p>
+
+            <button class="choice good"
+                onclick="businessAction(150,250,5)">
+
+                <strong>🍔 Vender comida</strong>
+                <span>Invertir $150 • posible ganancia $250</span>
+
+            </button>
+
+            <button class="choice good"
+                onclick="businessAction(300,500,8)">
+
+                <strong>👕 Tienda online</strong>
+                <span>Invertir $300 • posible ganancia $500</span>
+
+            </button>
+
+            <button class="choice neutral"
+                onclick="businessAction(500,900,12)">
+
+                <strong>💻 Emprendimiento digital</strong>
+                <span>Invertir $500 • posible ganancia $900</span>
+
+            </button>
+
+        </div>
+
+    `;
+
+    openModal(html);
+
+}
+
+
+function businessAction(cost,maxProfit,rep){
+
+    if(!spend(cost)){
+
+        noMoney();
+
+        return;
+
+    }
+
+    let profit=Math.round(
+        maxProfit*(.6+Math.random()*.7)
+    );
+
+    game.money+=profit;
+
+    game.reputation+=rep;
+
+    game.points+=30;
+
+    addLog(
+        "Invertiste "+moneyFormat(cost)+
+        " en un negocio y ganaste "+
+        moneyFormat(profit)
+    );
+
+    closeModal();
+
+    toast(
+        "🏪 Negocio terminado",
+        "Ganaste "+moneyFormat(profit)
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+           HABILIDADES
+===================================================== */
+
+function showPanel(type,button){
+
+    document.querySelectorAll(".nav-btn")
+        .forEach(b=>b.classList.remove("active"));
+
+    if(button) button.classList.add("active");
+
+    if(type==="skills"){
+
+        openModal(`
+
+            <h2>💪 Habilidades</h2>
+
+            <div class="dashboard">
+
+                <div class="dashboard-card">
+                    <h3>📚 Educación</h3>
+                    <div class="big">${game.skill}</div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>⭐ Reputación</h3>
+                    <div class="big">${game.reputation}</div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>⚡ Energía</h3>
+                    <div class="big">${game.energy}</div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🏆 Puntos</h3>
+                    <div class="big">${game.points}</div>
+                </div>
+
+            </div>
+
+            <div class="event-card">
+
+                <strong>
+                    Consejo:
+                </strong>
+
+                <p>
+                    Invertir en educación puede aumentar tus oportunidades
+                    de trabajo y mejorar tus decisiones financieras.
+                </p>
+
+            </div>
+
+        `);
+
+    }
+
+    else if(type==="relationships"){
+
+        openModal(`
+
+            <h2>❤️ Relaciones</h2>
+
+            <div class="event-card">
+
+                <div class="event-image">❤️</div>
+
+                <h3 style="text-align:center">
+                    Relaciones: ${game.relationship}/100
+                </h3>
+
+                <div class="progress">
+                    <div class="progress-fill"
+                        style="width:${game.relationship}%">
+                    </div>
+                </div>
+
+                <p style="text-align:center;margin-top:15px">
+                    No todo en la vida es dinero. También necesitas
+                    mantener relaciones saludables.
+                </p>
+
+                <button class="main-btn"
+                    onclick="socialize()">
+
+                    👥 Pasar tiempo con alguien — $50
+
+                </button>
+
+            </div>
+
+        `);
+
+    }
+
+}
+
+
+function socialize(){
+
+    if(!spend(50)){
+
+        noMoney();
+
+        return;
+
+    }
+
+    game.relationship+=20;
+
+    game.happiness+=15;
+
+    game.stress-=10;
+
+    game.points+=10;
+
+    closeModal();
+
+    toast(
+        "❤️ Buen momento",
+        "Tu vida social mejoró."
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+          COSAS / ACTIVOS
+===================================================== */
+
+function openAssets(){
+
+    openModal(`
+
+        <h2>🏠 Tus cosas</h2>
+
+        <div class="dashboard">
+
+            <div class="dashboard-card">
+                <h3>🏠 Casa</h3>
+                <div class="big">Propia</div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>🚗 Auto</h3>
+                <div class="big">Activo</div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>🏦 Ahorros</h3>
+                <div class="big">
+                    ${moneyFormat(game.savings)}
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>📈 Inversiones</h3>
+                <div class="big">
+                    ${moneyFormat(game.investments)}
+                </div>
+            </div>
+
+        </div>
+
+    `);
+
+}
+
+
+/* =====================================================
+          MINI JUEGOS
+===================================================== */
+
+function openMiniGames(){
+
+    openModal(`
+
+        <h2>🎮 Minijuegos financieros</h2>
+
+        <div class="event-card">
+
+            <div class="event-image">🧠</div>
+
+            <h3 style="text-align:center">
+                ¿Necesidad o deseo?
+            </h3>
+
+            <p style="text-align:center">
+                Entrena tu cerebro financiero.
+            </p>
+
+            <button class="choice good"
+                onclick="miniResult(true)">
+
+                <strong>💊 Comprar medicamentos</strong>
+                <span>Necesidad</span>
+
+            </button>
+
+            <button class="choice danger"
+                onclick="miniResult(false)">
+
+                <strong>👟 Comprar zapatos porque están de moda</strong>
+                <span>Deseo</span>
+
+            </button>
+
+        </div>
+
+    `);
+
+}
+
+
+function miniResult(correct){
+
+    if(correct){
+
+        game.points+=15;
+
+        game.reputation+=3;
+
+        toast(
+            "🧠 ¡Correcto!",
+            "Aprender a diferenciar necesidades y deseos es clave."
+        );
+
+    }else{
+
+        game.points-=5;
+
+        toast(
+            "🤔 Cuidado",
+            "No todos los gastos son necesidades.",
+            "warning"
+        );
+
+    }
+
+    closeModal();
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+         LOGROS
+===================================================== */
+
+function checkAchievements(){
+
+    if(game.savings>=1000 &&
+       !game.achievements.includes("ahorrador")){
+
+        game.achievements.push("ahorrador");
+
+        game.points+=50;
+
+        toast(
+            "🏆 LOGRO",
+            "Ahorrador: acumulaste $1,000."
+        );
+
+    }
+
+    if(game.reputation>=80 &&
+       !game.achievements.includes("responsable")){
+
+        game.achievements.push("responsable");
+
+        game.points+=50;
+
+        toast(
+            "🏆 LOGRO",
+            "Financiero responsable."
+        );
+
+    }
+
+    if(game.debt===0 &&
+       game.day>=20 &&
+       !game.achievements.includes("sinDeudas")){
+
+        game.achievements.push("sinDeudas");
+
+        game.points+=40;
+
+        toast(
+            "🏆 LOGRO",
+            "Llegaste al día 20 sin deudas."
+        );
+
+    }
+
+}
+
+
+function openAchievements(){
+
+    let list="";
+
+    if(game.achievements.length===0){
+
+        list="<p style='text-align:center'>Todavía no tienes logros.</p>";
+
+    }else{
+
+        list=game.achievements.map(a=>`
+
+            <div class="log-item">
+                🏆 ${a}
+            </div>
+
+        `).join("");
+
+    }
+
+    openModal(`
+
+        <h2>🏆 Logros</h2>
+
+        <div class="event-card">
+            ${list}
+        </div>
+
+    `);
+
+}
+
+
+/* =====================================================
+          NIVEL
+===================================================== */
+
+function checkLevel(){
+
+    let newLevel=
+        Math.floor(game.points/100)+1;
+
+    if(newLevel>game.level){
+
+        game.level=newLevel;
+
+        game.salary+=100;
+
+        toast(
+            "⭐ ¡Subiste de nivel!",
+            "Tu salario base aumentó."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+         CONFIGURACIÓN
+===================================================== */
+
+function openSettings(){
+
+    openModal(`
+
+        <h2>⚙️ Configuración</h2>
+
+        <div class="event-card">
+
+            <h3>📊 Resumen financiero</h3>
+
+            <div class="dashboard">
+
+                <div class="dashboard-card">
+                    <h3>Dinero</h3>
+                    <div class="big">
+                        ${moneyFormat(game.money)}
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Ahorros</h3>
+                    <div class="big">
+                        ${moneyFormat(game.savings)}
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Deuda</h3>
+                    <div class="big">
+                        ${moneyFormat(game.debt)}
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Gastos</h3>
+                    <div class="big">
+                        ${moneyFormat(game.expenses)}
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="main-btn"
+                onclick="saveMoney(100)">
+
+                🏦 Ahorrar $100
+
+            </button>
+
+            <button class="main-btn"
+                style="margin-left:8px;background:#e89532"
+                onclick="rest()">
+
+                😴 Descansar
+
+            </button>
+
+            <hr style="margin:20px 0">
+
+            <button class="choice danger"
+                onclick="resetGame()">
+
+                <strong>🔄 Reiniciar partida</strong>
+
+                <span>
+                    Se perderá todo el progreso actual.
+                </span>
+
+            </button>
+
+        </div>
+
+    `);
+
+}
+
+
+/* =====================================================
+         MODAL
+===================================================== */
+
+function openModal(content){
+
+    document.getElementById("modalContent").innerHTML=content;
+
+    document.getElementById("overlay")
+        .classList.add("show");
+
+}
+
+
+function closeModal(){
+
+    document.getElementById("overlay")
+        .classList.remove("show");
+
+}
+
+
+/* =====================================================
+          VICTORIA
+===================================================== */
+
+function winGame(){
+
+    updateGame();
+
+    openModal(`
+
+        <div class="tutorial">
+
+            <div class="tutorial-icon">🏆</div>
+
+            <h2>¡MES COMPLETADO!</h2>
+
+            <p>
+                ¡Felicidades, Leo!
+            </p>
+
+            <p>
+                Lograste cumplir tu meta de ahorro
+                y terminaste el mes con dinero positivo.
+            </p>
+
+            <div class="dashboard">
+
+                <div class="dashboard-card">
+                    <h3>💰 Dinero</h3>
+                    <div class="big">
+                        ${moneyFormat(game.money)}
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🏦 Ahorros</h3>
+                    <div class="big">
+                        ${moneyFormat(game.savings)}
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>❤️ Felicidad</h3>
+                    <div class="big">
+                        ${game.happiness}
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🏆 Puntos</h3>
+                    <div class="big">
+                        ${game.points}
+                    </div>
+                </div>
+
+            </div>
+
+            <br>
+
+            <button class="main-btn"
+                onclick="newMonth()">
+
+                🚀 Continuar al siguiente mes
+
+            </button>
+
+        </div>
+
+    `);
+
+}
+
+
+function newMonth(){
+
+    closeModal();
+
+    game.day=1;
+
+    game.level++;
+
+    game.salary+=200;
+
+    game.goal+=500;
+
+    game.money+=game.salary;
+
+    game.happiness+=10;
+
+    game.stress-=15;
+
+    toast(
+        "📅 Nuevo mes",
+        "Tu nuevo salario es "+moneyFormat(game.salary)
+    );
+
+    updateGame();
+
+}
+
+
+/* =====================================================
+          DERROTA
+===================================================== */
+
+function loseGame(){
+
+    openModal(`
+
+        <div class="tutorial">
+
+            <div class="tutorial-icon">💀</div>
+
+            <h2>FIN DE LA PARTIDA</h2>
+
+            <p>
+                Tus finanzas llegaron a un punto crítico.
+            </p>
+
+            <div class="event-card">
+
+                <p>
+                    💵 Dinero:
+                    <strong>${moneyFormat(game.money)}</strong>
+                </p>
+
+                <p>
+                    🏦 Ahorros:
+                    <strong>${moneyFormat(game.savings)}</strong>
+                </p>
+
+                <p>
+                    💳 Deuda:
+                    <strong>${moneyFormat(game.debt)}</strong>
+                </p>
+
+                <p>
+                    😰 Estrés:
+                    <strong>${game.stress}</strong>
+                </p>
+
+            </div>
+
+            <button class="main-btn"
+                onclick="resetGame()">
+
+                🔄 Intentar nuevamente
+
+            </button>
+
+        </div>
+
+    `);
+
+}
+
+
+/* =====================================================
+          GUARDAR PARTIDA
+===================================================== */
+
+function saveGame(){
+
+    localStorage.setItem(
+        "finanzasVistaSave",
+        JSON.stringify(game)
+    );
+
+}
+
+
+function loadGame(){
+
+    let save=
+        localStorage.getItem("finanzasVistaSave");
+
+    if(save){
+
+        try{
+
+            game=JSON.parse(save);
+
+        }catch(e){
+
+            console.log("No se pudo cargar");
+
+        }
+
+    }
+
+}
+
+
+function resetGame(){
+
+    localStorage.removeItem("finanzasVistaSave");
+
+    location.reload();
+
+}
+
+
+/* =====================================================
+          TUTORIAL
+===================================================== */
+
+function tutorial(){
+
+    if(localStorage.getItem("tutorialSeen")){
+
+        return;
+
+    }
+
+    openModal(`
+
+        <div class="tutorial">
+
+            <div class="tutorial-icon">💰</div>
+
+            <h2>FINANZAS A LA VISTA</h2>
+
+            <p>
+                Bienvenido a tu simulador de vida financiera.
+            </p>
+
+            <p>
+                Tu objetivo es terminar el mes con
+                <strong>dinero positivo</strong> y alcanzar
+                tu <strong>meta de ahorro</strong>.
+            </p>
+
+            <p>
+                ⚠️ Cuidado con las compras impulsivas.
+            </p>
+
+            <p>
+                ❤️ Mantén tu felicidad.
+            </p>
+
+            <p>
+                😰 Controla tu estrés.
+            </p>
+
+            <p>
+                🏦 Construye un fondo de emergencia.
+            </p>
+
+            <p>
+                📈 Aprende a invertir.
+            </p>
+
+            <button class="main-btn"
+                onclick="startGame()">
+
+                🎮 COMENZAR
+
+            </button>
+
+        </div>
+
+    `);
+
+}
+
+
+function startGame(){
+
+    localStorage.setItem(
+        "tutorialSeen",
+        "true"
+    );
+
+    closeModal();
+
+}
+
+
+/* =====================================================
+          INICIO
+===================================================== */
+
+loadGame();
+
+updateGame();
+
+setTimeout(tutorial,500);
+
+
+/* cerrar modal al tocar fuera */
+
+document.getElementById("overlay")
+.addEventListener("click",function(e){
+
+    if(e.target===this){
+
+        closeModal();
+
+    }
+
+});
+
+
+/* =====================================================
+       TECLA E = EVENTO
+===================================================== */
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key.toLowerCase()==="e"){
+
+        openEvents();
+
+    }
+
+    if(e.key.toLowerCase()==="w"){
+
+        work();
+
+    }
+
+    if(e.key.toLowerCase()==="r"){
+
+        rest();
+
+    }
+
+});
+
+
+</script>
+
+</body>
+</html>
