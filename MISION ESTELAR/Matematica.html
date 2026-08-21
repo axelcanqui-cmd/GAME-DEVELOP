@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>🚀 Misión Estelar Matemática</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Fredoka', sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(72,202,228,.15), transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(144,224,239,.12), transparent 30%),
+        linear-gradient(135deg, #020024, #03045e, #0077b6);
+    color: white;
+    user-select: none;
+}
+
+/* =====================================================
+   APP
+===================================================== */
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =====================================================
+   BARRA SUPERIOR
+===================================================== */
+
+#top-bar {
+    width: 100%;
+    min-height: 65px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+    padding: 8px 12px;
+
+    position: relative;
+    z-index: 20;
+}
+
+.badge {
+    background: rgba(0, 15, 70, .7);
+
+    border: 2px solid #48cae4;
+    border-radius: 30px;
+
+    padding: 7px 17px;
+
+    font-size: clamp(14px, 2vw, 20px);
+
+    box-shadow:
+        0 0 15px rgba(72,202,228,.25),
+        inset 0 0 10px rgba(72,202,228,.08);
+
+    white-space: nowrap;
+}
+
+#music-btn {
+    border: none;
+    background: transparent;
+
+    color: #caf0f8;
+
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+/* =====================================================
+   CONTENEDOR DEL JUEGO
+===================================================== */
+
+#game-container {
+    position: relative;
+
+    flex: 1;
+
+    width: 100%;
+    min-height: 0;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle at 10% 15%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 25% 55%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 45% 25%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 70% 15%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 90% 40%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 15% 80%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 55% 75%, white 0 1px, transparent 2px),
+        radial-gradient(circle at 85% 80%, white 0 1px, transparent 2px),
+        linear-gradient(
+            to bottom,
+            #020024 0%,
+            #03045e 50%,
+            #0077b6 100%
+        );
+
+    border-top: 3px solid #48cae4;
+    border-bottom: 3px solid #48cae4;
+}
+
+/* =====================================================
+   ESTRELLAS
+===================================================== */
+
+.star {
+    position: absolute;
+
+    background: white;
+
+    border-radius: 50%;
+
+    box-shadow: 0 0 8px white;
+
+    animation: twinkle 1.5s infinite alternate;
+}
+
+@keyframes twinkle {
+
+    from {
+        opacity: .25;
+        transform: scale(.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+
+}
+
+/* =====================================================
+   PREGUNTA
+===================================================== */
+
+#math-banner {
+    position: absolute;
+
+    top: 18px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: rgba(2, 4, 70, .92);
+
+    border: 3px solid #00b4d8;
+
+    border-radius: 25px;
+
+    padding: 8px 25px;
+
+    font-size: clamp(20px, 3vw, 32px);
+
+    color: #90e0ef;
+
+    box-shadow:
+        0 0 20px rgba(0,180,216,.4),
+        0 5px 15px rgba(0,0,0,.3);
+
+    z-index: 8;
+
+    white-space: nowrap;
+}
+
+/* =====================================================
+   ALERTAS
+===================================================== */
+
+#alert-box {
+    position: absolute;
+
+    top: 85px;
+    left: 50%;
+
+    transform: translateX(-50%) scale(.8);
+
+    padding: 10px 25px;
+
+    border-radius: 20px;
+
+    font-size: clamp(18px, 3vw, 28px);
+
+    font-weight: bold;
+
+    opacity: 0;
+
+    z-index: 30;
+
+    pointer-events: none;
+
+    transition:
+        opacity .2s,
+        transform .2s;
+}
+
+#alert-box.show {
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        scale(1);
+}
+
+.alert-success {
+    background: #06d6a0;
+
+    color: #023047;
+
+    border: 3px solid white;
+
+    box-shadow:
+        0 0 30px #06d6a0;
+}
+
+.alert-error {
+    background: #ef476f;
+
+    color: white;
+
+    border: 3px solid white;
+
+    box-shadow:
+        0 0 30px #ef476f;
+}
+
+/* =====================================================
+   NAVE ESPACIAL
+===================================================== */
+
+#player {
+    position: absolute;
+
+    /*
+       LA NAVE AHORA ESTÁ MUY CERCA DEL FONDO
+       PARA DAR MUCHO MÁS TIEMPO DE REACCIÓN.
+    */
+
+    width: clamp(55px, 8vw, 80px);
+
+    height: clamp(55px, 8vw, 80px);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: clamp(38px, 6vw, 60px);
+
+    z-index: 10;
+
+    filter:
+        drop-shadow(0 0 8px #48cae4)
+        drop-shadow(0 8px 8px rgba(0,0,0,.5));
+
+    transition:
+        left .08s ease-out;
+
+    transform-origin: center;
+}
+
+/* =====================================================
+   ANIMACIONES DE LA NAVE
+===================================================== */
+
+#player.hit {
+    animation: playerHit .4s ease;
+}
+
+#player.correct {
+    animation: playerCorrect .5s ease;
+}
+
+@keyframes playerHit {
+
+    0%, 100% {
+        transform: rotate(0) scale(1);
+    }
+
+    25% {
+        transform: rotate(-15deg) scale(1.2);
+    }
+
+    50% {
+        transform: rotate(15deg) scale(.9);
+    }
+
+    75% {
+        transform: rotate(-10deg) scale(1.1);
+    }
+
+}
+
+@keyframes playerCorrect {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.5);
+
+        filter:
+            drop-shadow(0 0 25px #fff)
+            drop-shadow(0 0 40px #06d6a0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+}
+
+/* =====================================================
+   BURBUJAS
+===================================================== */
+
+.collectible {
+    position: absolute;
+
+    width: clamp(55px, 8vw, 75px);
+
+    height: clamp(55px, 8vw, 75px);
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            #ffffff,
+            #caf0f8 25%,
+            #48cae4 60%,
+            #0077b6
+        );
+
+    border: 3px solid white;
+
+    color: #03045e;
+
+    font-size: clamp(20px, 3vw, 28px);
+
+    font-weight: 700;
+
+    box-shadow:
+        0 0 15px #48cae4,
+        0 5px 10px rgba(0,0,0,.35);
+
+    z-index: 7;
+}
+
+/* =====================================================
+   ANIMACIÓN CORRECTA
+===================================================== */
+
+.collectible.correct-hit {
+    animation:
+        correctBubble .45s ease forwards;
+}
+
+@keyframes correctBubble {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.7);
+
+        background: #06d6a0;
+
+        box-shadow:
+            0 0 40px #06d6a0;
+    }
+
+    100% {
+        transform: scale(0);
+
+        opacity: 0;
+    }
+
+}
+
+/* =====================================================
+   ANIMACIÓN INCORRECTA
+===================================================== */
+
+.collectible.wrong-hit {
+    animation:
+        wrongBubble .45s ease forwards;
+}
+
+@keyframes wrongBubble {
+
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform:
+            translateX(-10px)
+            scale(1.1);
+    }
+
+    60% {
+        transform:
+            translateX(10px)
+            scale(1.1);
+    }
+
+    100% {
+        transform: scale(0);
+
+        opacity: 0;
+    }
+
+}
+
+/* =====================================================
+   CONTROLES MÓVILES
+===================================================== */
+
+#mobile-controls {
+    position: absolute;
+
+    bottom: 15px;
+
+    left: 0;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 0 20px;
+
+    z-index: 15;
+
+    pointer-events: none;
+}
+
+.control-btn {
+
+    width: 65px;
+
+    height: 65px;
+
+    border-radius: 50%;
+
+    border: 3px solid rgba(255,255,255,.8);
+
+    background: rgba(0,15,70,.7);
+
+    color: white;
+
+    font-size: 32px;
+
+    box-shadow:
+        0 0 15px rgba(72,202,228,.4);
+
+    pointer-events: auto;
+
+    touch-action: manipulation;
+
+}
+
+.control-btn:active {
+
+    transform: scale(.9);
+
+    background: #00b4d8;
+
+}
+
+/* =====================================================
+   PANTALLAS
+===================================================== */
+
+.overlay-screen {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,180,216,.2),
+            transparent 50%
+        ),
+        rgba(2,4,60,.95);
+
+    z-index: 50;
+
+    text-align: center;
+}
+
+.overlay-screen h2 {
+
+    margin: 0 0 15px;
+
+    font-size: clamp(28px, 6vw, 55px);
+
+    color: #90e0ef;
+
+    text-shadow:
+        0 0 15px #00b4d8,
+        3px 3px 0 #03045e;
+}
+
+.overlay-screen p {
+
+    max-width: 650px;
+
+    font-size: clamp(15px, 2vw, 20px);
+
+    line-height: 1.5;
+
+    color: #caf0f8;
+
+    margin: 7px 0;
+}
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.btn-game {
+
+    margin-top: 20px;
+
+    border: none;
+
+    padding: 14px 35px;
+
+    border-radius: 50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00b4d8,
+            #48cae4
+        );
+
+    color: #03045e;
+
+    font-family: inherit;
+
+    font-size: clamp(18px, 3vw, 24px);
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 0 #0077b6,
+        0 0 20px rgba(72,202,228,.5);
+
+    transition: .1s;
+}
+
+.btn-game:hover {
+
+    transform: translateY(-2px);
+
+    filter: brightness(1.15);
+
+}
+
+.btn-game:active {
+
+    transform: translateY(5px);
+
+    box-shadow:
+        0 2px 0 #0077b6;
+
+}
+
+/* =====================================================
+   DAÑO DE PANTALLA
+===================================================== */
+
+#game-container.damage {
+
+    animation:
+        screenShake .35s ease;
+
+}
+
+@keyframes screenShake {
+
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-8px);
+    }
+
+    40% {
+        transform: translateX(8px);
+    }
+
+    60% {
+        transform: translateX(-6px);
+    }
+
+    80% {
+        transform: translateX(6px);
+    }
+
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    #top-bar {
+
+        min-height: 55px;
+
+        gap: 5px;
+
+        padding: 5px;
+
+    }
+
+    .badge {
+
+        padding:
+            6px 9px;
+
+        font-size: 13px;
+
+        border-width: 1px;
+
+    }
+
+    #math-banner {
+
+        top: 10px;
+
+        padding:
+            7px 15px;
+
+    }
+
+    #alert-box {
+
+        top: 65px;
+
+        width: 90%;
+
+        text-align: center;
+
+    }
+
+}
+
+/* =====================================================
+   PC
+===================================================== */
+
+@media (min-width: 601px) {
+
+    #mobile-controls {
+        display: none;
+    }
+
+}
+
+/* =====================================================
+   PANTALLAS BAJAS
+===================================================== */
+
+@media (max-height: 550px) {
+
+    #top-bar {
+        min-height: 45px;
+    }
+
+    #math-banner {
+        top: 7px;
+    }
+
+    #mobile-controls {
+        bottom: 5px;
+    }
+
+    .control-btn {
+        width: 52px;
+        height: 52px;
+        font-size: 25px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+    <!-- =================================================
+         BARRA SUPERIOR
+    ================================================== -->
+
+    <div id="top-bar">
+
+        <div class="badge">
+            ⭐ Puntos:
+            <span id="score">0</span>/50
+        </div>
+
+        <div class="badge">
+            ❤️ Vidas:
+            <span id="lives">3</span>
+        </div>
+
+        <div class="badge">
+
+            🎵
+
+            <button
+                id="music-btn"
+                onclick="toggleMusic()">
+                ON
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CONTENEDOR DEL JUEGO
+    ================================================== -->
+
+    <div id="game-container">
+
+
+        <!-- ESTRELLAS -->
+
+        <div
+            class="star"
+            style="
+                width:4px;
+                height:4px;
+                top:10%;
+                left:8%;
+            ">
+        </div>
+
+        <div
+            class="star"
+            style="
+                width:6px;
+                height:6px;
+                top:20%;
+                left:30%;
+                animation-delay:.5s;
+            ">
+        </div>
+
+        <div
+            class="star"
+            style="
+                width:5px;
+                height:5px;
+                top:12%;
+                left:75%;
+                animation-delay:1s;
+            ">
+        </div>
+
+        <div
+            class="star"
+            style="
+                width:4px;
+                height:4px;
+                top:40%;
+                left:15%;
+                animation-delay:.3s;
+            ">
+        </div>
+
+        <div
+            class="star"
+            style="
+                width:5px;
+                height:5px;
+                top:50%;
+                left:90%;
+                animation-delay:.8s;
+            ">
+        </div>
+
+        <div
+            class="star"
+            style="
+                width:3px;
+                height:3px;
+                top:70%;
+                left:40%;
+                animation-delay:1.2s;
+            ">
+        </div>
+
+        <div
+            class="star"
+            style="
+                width:4px;
+                height:4px;
+                top:80%;
+                left:65%;
+                animation-delay:.4s;
+            ">
+        </div>
+
+
+        <!-- =================================================
+             PREGUNTA
+        ================================================== -->
+
+        <div id="math-banner">
+            Suma: ? + ? = ?
+        </div>
+
+
+        <!-- =================================================
+             ALERTA
+        ================================================== -->
+
+        <div id="alert-box"></div>
+
+
+        <!-- =================================================
+             NAVE
+        ================================================== -->
+
+        <div id="player">
+            🛸
+        </div>
+
+
+        <!-- =================================================
+             CONTROLES MÓVILES
+        ================================================== -->
+
+        <div id="mobile-controls">
+
+            <button
+                class="control-btn"
+                id="left-btn">
+                ◀
+            </button>
+
+            <button
+                class="control-btn"
+                id="right-btn">
+                ▶
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             PANTALLA INICIAL
+        ================================================== -->
+
+        <div
+            id="start-screen"
+            class="overlay-screen">
+
+            <h2>
+                🚀 ¡Misión Estelar!
+            </h2>
+
+            <p>
+                ¡Hola, piloto espacial! 👨‍🚀
+            </p>
+
+            <p>
+                Mueve la nave con
+                <b>⬅️ ➡️</b>
+                y atrapa la burbuja que contiene
+                <b>la respuesta correcta</b>.
+            </p>
+
+            <p>
+                💥 Si chocas con una respuesta incorrecta,
+                pierdes una vida.
+            </p>
+
+            <p>
+                ⚠️ Si la respuesta correcta llega al fondo,
+                también pierdes una vida.
+            </p>
+
+            <p>
+                ⭐ Cada respuesta correcta vale
+                <b>10 puntos</b>.
+            </p>
+
+            <p>
+                🏆 ¡Consigue 50 puntos!
+            </p>
+
+            <button
+                class="btn-game"
+                onclick="startGame()">
+
+                🚀 ¡DESPEGAR!
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             GANASTE
+        ================================================== -->
+
+        <div
+            id="win-screen"
+            class="overlay-screen"
+            style="display:none;">
+
+            <h2>
+                🏆 ¡MISIÓN CUMPLIDA!
+            </h2>
+
+            <p>
+                🌟 ¡Excelente trabajo, piloto!
+            </p>
+
+            <p>
+                Has conseguido los
+                <b>50 puntos</b>.
+            </p>
+
+            <button
+                class="btn-game"
+                onclick="startGame()">
+
+                🚀 Jugar de Nuevo
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             GAME OVER
+        ================================================== -->
+
+        <div
+            id="gameover-screen"
+            class="overlay-screen"
+            style="display:none;">
+
+            <h2>
+                💥 ¡NAVE DAÑADA!
+            </h2>
+
+            <p>
+                Te has quedado sin vidas.
+            </p>
+
+            <p>
+                ¡Un gran piloto siempre vuelve a intentarlo! 🚀
+            </p>
+
+            <button
+                class="btn-game"
+                onclick="startGame()">
+
+                🔄 Reintentar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   ELEMENTOS
+===================================================== */
+
+const gameContainer =
+    document.getElementById("game-container");
+
+const player =
+    document.getElementById("player");
+
+const scoreDisplay =
+    document.getElementById("score");
+
+const livesDisplay =
+    document.getElementById("lives");
+
+const questionBanner =
+    document.getElementById("math-banner");
+
+const alertBox =
+    document.getElementById("alert-box");
+
+const startScreen =
+    document.getElementById("start-screen");
+
+const winScreen =
+    document.getElementById("win-screen");
+
+const gameoverScreen =
+    document.getElementById("gameover-screen");
+
+const leftBtn =
+    document.getElementById("left-btn");
+
+const rightBtn =
+    document.getElementById("right-btn");
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let score = 0;
+
+let lives = 3;
+
+let playerX = 0;
+
+let playerY = 0;
+
+let currentAnswer = 0;
+
+let items = [];
+
+let isPlaying = false;
+
+let gameInterval = null;
+
+let audioCtx = null;
+
+let musicEnabled = true;
+
+let musicInterval = null;
+
+let noteIndex = 0;
+
+
+/* =====================================================
+   AUDIO
+===================================================== */
+
+function initAudio() {
+
+    if (!audioCtx) {
+
+        audioCtx =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+    if (
+        audioCtx.state ===
+        "suspended"
+    ) {
+
+        audioCtx.resume();
+
+    }
+
+}
+
+
+function playTone(
+    frequency,
+    type,
+    duration
+) {
+
+    if (
+        !audioCtx ||
+        !musicEnabled
+    ) {
+
+        return;
+
+    }
+
+    try {
+
+        const oscillator =
+            audioCtx.createOscillator();
+
+        const gain =
+            audioCtx.createGain();
+
+        oscillator.type =
+            type;
+
+        oscillator.frequency.setValueAtTime(
+            frequency,
+            audioCtx.currentTime
+        );
+
+        gain.gain.setValueAtTime(
+            .12,
+            audioCtx.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .0001,
+            audioCtx.currentTime + duration
+        );
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            audioCtx.destination
+        );
+
+        oscillator.start();
+
+        oscillator.stop(
+            audioCtx.currentTime +
+            duration
+        );
+
+    } catch (error) {}
+
+}
+
+
+function soundCorrect() {
+
+    playTone(
+        440,
+        "sine",
+        .1
+    );
+
+    setTimeout(() => {
+
+        playTone(
+            554,
+            "sine",
+            .1
+        );
+
+    }, 100);
+
+    setTimeout(() => {
+
+        playTone(
+            659,
+            "sine",
+            .2
+        );
+
+    }, 200);
+
+}
+
+
+function soundError() {
+
+    playTone(
+        180,
+        "sawtooth",
+        .15
+    );
+
+    setTimeout(() => {
+
+        playTone(
+            120,
+            "sawtooth",
+            .2
+        );
+
+    }, 150);
+
+}
+
+
+/* =====================================================
+   MÚSICA
+===================================================== */
+
+const melody = [
+    329.63,
+    392,
+    440,
+    523.25,
+    440,
+    392
+];
+
+
+function startBackgroundMusic() {
+
+    clearInterval(
+        musicInterval
+    );
+
+    musicInterval =
+        setInterval(() => {
+
+            if (
+                isPlaying &&
+                musicEnabled
+            ) {
+
+                playTone(
+                    melody[noteIndex],
+                    "triangle",
+                    .25
+                );
+
+                noteIndex =
+                    (
+                        noteIndex + 1
+                    ) %
+                    melody.length;
+
+            }
+
+        }, 350);
+
+}
+
+
+function toggleMusic() {
+
+    musicEnabled =
+        !musicEnabled;
+
+    document.getElementById(
+        "music-btn"
+    ).textContent =
+        musicEnabled
+            ? "ON"
+            : "OFF";
+
+}
+
+
+/* =====================================================
+   POSICIONAR NAVE ABAJO
+===================================================== */
+
+function positionPlayer() {
+
+    const playerHeight =
+        player.offsetHeight;
+
+    const gameHeight =
+        gameContainer.clientHeight;
+
+
+    /*
+       Dejamos solamente un pequeño
+       espacio entre la nave y el fondo.
+    */
+
+    const bottomSpace =
+        Math.max(
+            12,
+            gameHeight * 0.025
+        );
+
+
+    playerY =
+        gameHeight -
+        playerHeight -
+        bottomSpace;
+
+
+    player.style.top =
+        playerY + "px";
+
+}
+
+
+/* =====================================================
+   ANCHO DE NAVE
+===================================================== */
+
+function getPlayerWidth() {
+
+    return player.getBoundingClientRect().width;
+
+}
+
+
+/* =====================================================
+   ANCHO DEL JUEGO
+===================================================== */
+
+function getGameWidth() {
+
+    return gameContainer.clientWidth;
+
+}
+
+
+/* =====================================================
+   MOVER NAVE
+===================================================== */
+
+function movePlayer(direction) {
+
+    if (!isPlaying)
+        return;
+
+
+    const playerWidth =
+        getPlayerWidth();
+
+
+    const maxX =
+        getGameWidth() -
+        playerWidth;
+
+
+    /*
+       Movimiento un poco más suave.
+    */
+
+    playerX +=
+        direction * 45;
+
+
+    playerX =
+        Math.max(
+            5,
+            Math.min(
+                playerX,
+                maxX - 5
+            )
+        );
+
+
+    player.style.left =
+        playerX + "px";
+
+}
+
+
+/* =====================================================
+   TECLADO
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (!isPlaying)
+            return;
+
+
+        if (
+            event.key ===
+                "ArrowLeft" ||
+            event.key ===
+                "a" ||
+            event.key ===
+                "A"
+        ) {
+
+            event.preventDefault();
+
+            movePlayer(-1);
+
+        }
+
+
+        if (
+            event.key ===
+                "ArrowRight" ||
+            event.key ===
+                "d" ||
+            event.key ===
+                "D"
+        ) {
+
+            event.preventDefault();
+
+            movePlayer(1);
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CONTROLES TÁCTILES
+===================================================== */
+
+leftBtn.addEventListener(
+    "pointerdown",
+    () => {
+
+        movePlayer(-1);
+
+    }
+);
+
+
+rightBtn.addEventListener(
+    "pointerdown",
+    () => {
+
+        movePlayer(1);
+
+    }
+);
+
+
+/* =====================================================
+   ALERTA
+===================================================== */
+
+function showAlert(
+    text,
+    type
+) {
+
+    alertBox.textContent =
+        text;
+
+
+    alertBox.className =
+        type === "success"
+            ? "alert-success show"
+            : "alert-error show";
+
+
+    setTimeout(() => {
+
+        alertBox.classList.remove(
+            "show"
+        );
+
+    }, 900);
+
+}
+
+
+/* =====================================================
+   NUEVA RONDA
+===================================================== */
+
+function nextRound() {
+
+    /*
+       Eliminar todas las burbujas
+       anteriores.
+    */
+
+    items.forEach(item => {
+
+        if (item.element) {
+
+            item.element.remove();
+
+        }
+
+    });
+
+
+    items = [];
+
+
+    /* =================================
+       GENERAR SUMA
+    ================================= */
+
+    const num1 =
+        Math.floor(
+            Math.random() * 9
+        ) + 1;
+
+    const num2 =
+        Math.floor(
+            Math.random() * 9
+        ) + 1;
+
+
+    currentAnswer =
+        num1 + num2;
+
+
+    questionBanner.textContent =
+        `Suma: ${num1} + ${num2} = ?`;
+
+
+    /* =================================
+       RESPUESTAS
+    ================================= */
+
+    const answers = [
+        currentAnswer
+    ];
+
+
+    while (
+        answers.length < 3
+    ) {
+
+        const variation =
+            Math.floor(
+                Math.random() * 9
+            ) - 4;
+
+
+        const wrong =
+            currentAnswer +
+            variation;
+
+
+        if (
+            wrong !== currentAnswer &&
+            wrong > 0 &&
+            !answers.includes(wrong)
+        ) {
+
+            answers.push(wrong);
+
+        }
+
+    }
+
+
+    answers.sort(
+        () => Math.random() - .5
+    );
+
+
+    /* =================================
+       POSICIONES
+    ================================= */
+
+    const gameWidth =
+        gameContainer.clientWidth;
+
+
+    const bubbleWidth =
+        Math.min(
+            75,
+            Math.max(
+                55,
+                gameWidth * .08
+            )
+        );
+
+
+    const positions = [
+
+        gameWidth * .18 -
+            bubbleWidth / 2,
+
+        gameWidth * .50 -
+            bubbleWidth / 2,
+
+        gameWidth * .82 -
+            bubbleWidth / 2
+
+    ];
+
+
+    /* =================================
+       CREAR BURBUJAS
+    ================================= */
+
+    answers.forEach(
+        (answer, index) => {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "collectible";
+
+
+            element.textContent =
+                answer;
+
+
+            const x =
+                Math.max(
+                    5,
+                    Math.min(
+                        positions[index],
+                        gameWidth -
+                        bubbleWidth -
+                        5
+                    )
+                );
+
+
+            /*
+               Comienzan MUY ARRIBA.
+               Esto da un recorrido
+               largo para reaccionar.
+            */
+
+            const startY = -90;
+
+
+            element.style.left =
+                x + "px";
+
+
+            element.style.top =
+                startY + "px";
+
+
+            gameContainer.appendChild(
+                element
+            );
+
+
+            items.push({
+
+                element,
+
+                x,
+
+                y: startY,
+
+                value: answer,
+
+                active: true
+
+            });
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   COLISIÓN REAL
+===================================================== */
+
+function checkCollision(item) {
+
+    const playerRect =
+        player.getBoundingClientRect();
+
+
+    const itemRect =
+        item.element
+            .getBoundingClientRect();
+
+
+    return !(
+        playerRect.right <
+            itemRect.left ||
+
+        playerRect.left >
+            itemRect.right ||
+
+        playerRect.bottom <
+            itemRect.top ||
+
+        playerRect.top >
+            itemRect.bottom
+    );
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR JUEGO
+===================================================== */
+
+function updateGame() {
+
+    if (!isPlaying)
+        return;
+
+
+    const gameHeight =
+        gameContainer.clientHeight;
+
+
+    /*
+       Recorremos desde el final
+       para poder eliminar elementos
+       sin provocar problemas.
+    */
+
+    for (
+        let i = items.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const item =
+            items[i];
+
+
+        if (!item.active)
+            continue;
+
+
+        /*
+           VELOCIDAD DE CAÍDA.
+
+           1.8 = más fácil.
+        */
+
+        item.y += 1.8;
+
+
+        item.element.style.top =
+            item.y + "px";
+
+
+        /* =================================
+           COLISIÓN
+        ================================= */
+
+        if (
+            checkCollision(item)
+        ) {
+
+            item.active = false;
+
+
+            /* =================================
+               RESPUESTA CORRECTA
+            ================================= */
+
+            if (
+                item.value ===
+                currentAnswer
+            ) {
+
+                item.element.classList.add(
+                    "correct-hit"
+                );
+
+
+                player.classList.add(
+                    "correct"
+                );
+
+
+                setTimeout(() => {
+
+                    player.classList.remove(
+                        "correct"
+                    );
+
+                }, 500);
+
+
+                score += 10;
+
+
+                scoreDisplay.textContent =
+                    score;
+
+
+                soundCorrect();
+
+
+                showAlert(
+                    "🌟 ¡CORRECTO! +10",
+                    "success"
+                );
+
+
+                items.splice(
+                    i,
+                    1
+                );
+
+
+                /*
+                   GANASTE
+                */
+
+                if (
+                    score >= 50
+                ) {
+
+                    setTimeout(
+                        triggerWin,
+                        350
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                   Nueva pregunta
+                */
+
+                setTimeout(() => {
+
+                    if (isPlaying) {
+
+                        nextRound();
+
+                    }
+
+                }, 400);
+
+
+            }
+
+            /* =================================
+               RESPUESTA INCORRECTA
+            ================================= */
+
+            else {
+
+                item.element.classList.add(
+                    "wrong-hit"
+                );
+
+
+                player.classList.add(
+                    "hit"
+                );
+
+
+                gameContainer.classList.add(
+                    "damage"
+                );
+
+
+                setTimeout(() => {
+
+                    player.classList.remove(
+                        "hit"
+                    );
+
+                    gameContainer.classList.remove(
+                        "damage"
+                    );
+
+                }, 400);
+
+
+                soundError();
+
+
+                showAlert(
+                    `❌ ${item.value} no es correcto`,
+                    "error"
+                );
+
+
+                lives--;
+
+
+                livesDisplay.textContent =
+                    lives;
+
+
+                items.splice(
+                    i,
+                    1
+                );
+
+
+                /*
+                   GAME OVER
+                */
+
+                if (
+                    lives <= 0
+                ) {
+
+                    setTimeout(
+                        triggerGameOver,
+                        400
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                   Nueva pregunta
+                */
+
+                setTimeout(() => {
+
+                    if (isPlaying) {
+
+                        nextRound();
+
+                    }
+
+                }, 500);
+
+            }
+
+
+            continue;
+
+        }
+
+
+        /* =================================
+           BURBUJA LLEGA AL FONDO
+        ================================= */
+
+        if (
+            item.y >
+            gameHeight + 30
+        ) {
+
+            item.active =
+                false;
+
+
+            /*
+               Si era la correcta,
+               perder vida.
+            */
+
+            if (
+                item.value ===
+                currentAnswer
+            ) {
+
+                item.element.remove();
+
+
+                items.splice(
+                    i,
+                    1
+                );
+
+
+                lives--;
+
+
+                livesDisplay.textContent =
+                    lives;
+
+
+                soundError();
+
+
+                showAlert(
+                    "⚠️ ¡Se escapó la respuesta!",
+                    "error"
+                );
+
+
+                if (
+                    lives <= 0
+                ) {
+
+                    triggerGameOver();
+
+                    return;
+
+                }
+
+
+                setTimeout(() => {
+
+                    if (isPlaying) {
+
+                        nextRound();
+
+                    }
+
+                }, 400);
+
+            }
+
+            /*
+               Las incorrectas pueden
+               desaparecer sin penalización.
+            */
+
+            else {
+
+                item.element.remove();
+
+
+                items.splice(
+                    i,
+                    1
+                );
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   INICIAR JUEGO
+===================================================== */
+
+function startGame() {
+
+    initAudio();
+
+
+    startScreen.style.display =
+        "none";
+
+
+    winScreen.style.display =
+        "none";
+
+
+    gameoverScreen.style.display =
+        "none";
+
+
+    score = 0;
+
+    lives = 3;
+
+
+    scoreDisplay.textContent =
+        score;
+
+
+    livesDisplay.textContent =
+        lives;
+
+
+    /*
+       IMPORTANTE:
+       colocar nave abajo.
+    */
+
+    positionPlayer();
+
+
+    /*
+       Centrar nave.
+    */
+
+    const playerWidth =
+        getPlayerWidth();
+
+
+    playerX =
+        (
+            getGameWidth() -
+            playerWidth
+        ) / 2;
+
+
+    player.style.left =
+        playerX + "px";
+
+
+    /*
+       Limpiar burbujas.
+    */
+
+    items.forEach(item => {
+
+        if (item.element) {
+
+            item.element.remove();
+
+        }
+
+    });
+
+
+    items = [];
+
+
+    isPlaying = true;
+
+
+    /*
+       Primera pregunta.
+    */
+
+    nextRound();
+
+
+    /*
+       Música.
+    */
+
+    startBackgroundMusic();
+
+
+    /*
+       Loop principal.
+    */
+
+    clearInterval(
+        gameInterval
+    );
+
+
+    gameInterval =
+        setInterval(
+            updateGame,
+            30
+        );
+
+}
+
+
+/* =====================================================
+   GANAR
+===================================================== */
+
+function triggerWin() {
+
+    isPlaying = false;
+
+
+    clearInterval(
+        gameInterval
+    );
+
+
+    winScreen.style.display =
+        "flex";
+
+
+    soundCorrect();
+
+}
+
+
+/* =====================================================
+   GAME OVER
+===================================================== */
+
+function triggerGameOver() {
+
+    isPlaying = false;
+
+
+    clearInterval(
+        gameInterval
+    );
+
+
+    gameoverScreen.style.display =
+        "flex";
+
+
+    soundError();
+
+}
+
+
+/* =====================================================
+   CAMBIO DE TAMAÑO
+===================================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        /*
+           Mantener la nave abajo.
+        */
+
+        positionPlayer();
+
+
+        if (!isPlaying)
+            return;
+
+
+        const playerWidth =
+            getPlayerWidth();
+
+
+        const maxX =
+            getGameWidth() -
+            playerWidth;
+
+
+        playerX =
+            Math.max(
+                5,
+                Math.min(
+                    playerX,
+                    maxX - 5
+                )
+            );
+
+
+        player.style.left =
+            playerX + "px";
+
+    }
+);
+
+
+/* =====================================================
+   INICIALIZACIÓN
+===================================================== */
+
+positionPlayer();
+
+</script>
+
+</body>
+</html>
