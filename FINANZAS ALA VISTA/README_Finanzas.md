@@ -2,10 +2,9 @@
 
 > **¿Puedes llegar al día 30 con dinero, felicidad y tu meta de ahorro cumplida?**
 
-![Finanzas a la Vista](capturas/finanzas.png)
+1. ![Finanzas a la Vista](../capturas/finanzas.png)
 
-[💰 JUGAR](index%20%281%29.html) · [📊 Sistema](#-qué-debes-equilibrar) · [🎲 Eventos](#-eventos) · [🏆 Meta](#-objetivo)
-
+[💰 JUGAR](index%20%281%29.html) · 📊 Sistema · 🎲 Eventos · 🏆 Meta
 ## 💳 Ficha del juego
 | Dato | Información |
 |---|---|
