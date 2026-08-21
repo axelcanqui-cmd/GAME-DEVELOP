@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AquaZero — La Ruta del Agua</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    color:white;
+    overflow-x:hidden;
+    background:
+        linear-gradient(rgba(4,22,38,.35),rgba(4,22,38,.7)),
+        linear-gradient(#1680b4,#58c7df 55%,#174b3c);
+}
+
+/* ================= FONDO ================= */
+
+.sky{
+    position:fixed;
+    inset:0;
+    z-index:-5;
+    background:
+        radial-gradient(circle at 80% 15%,#ffe58a 0 45px,transparent 120px),
+        linear-gradient(#092544 0%,#146b92 55%,#23684d 100%);
+}
+
+.mountain{
+    position:fixed;
+    bottom:12%;
+    width:0;
+    height:0;
+    border-left:260px solid transparent;
+    border-right:260px solid transparent;
+    border-bottom:350px solid #123c4c;
+    z-index:-4;
+}
+
+.m1{left:-100px}
+.m2{left:25%;border-bottom-color:#185265}
+.m3{right:-120px;border-bottom-color:#0f3547}
+
+.ground{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    height:18%;
+    background:
+        radial-gradient(circle at 20% 30%,#286b4a 0 5px,transparent 6px),
+        radial-gradient(circle at 70% 50%,#286b4a 0 6px,transparent 7px),
+        #103c2d;
+    z-index:-3;
+}
+
+.cloud{
+    position:fixed;
+    background:#e9fbff;
+    opacity:.15;
+    border-radius:100px;
+    filter:blur(2px);
+}
+
+.cloud1{
+    width:330px;
+    height:70px;
+    left:8%;
+    top:15%;
+}
+
+.cloud2{
+    width:250px;
+    height:60px;
+    right:12%;
+    top:23%;
+}
+
+/* ================= LLUVIA ================= */
+
+.rain{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-1;
+}
+
+.rain i{
+    position:absolute;
+    width:2px;
+    height:18px;
+    background:#8beaff;
+    opacity:.5;
+    animation:rainFall linear infinite;
+}
+
+@keyframes rainFall{
+    from{
+        transform:translateY(-30px);
+    }
+    to{
+        transform:translateY(110vh);
+    }
+}
+
+/* ================= APP ================= */
+
+#app{
+    width:min(1250px,96%);
+    margin:auto;
+    padding:20px 0 50px;
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:900;
+}
+
+.logo span{
+    color:#52e7ff;
+}
+
+.badge{
+    background:#062033cc;
+    border:1px solid #5bdfff55;
+    border-radius:30px;
+    padding:9px 15px;
+    font-weight:bold;
+}
+
+/* ================= PANEL ================= */
+
+.panel{
+    background:#061a2bdd;
+    border:1px solid #63ddff33;
+    border-radius:24px;
+    box-shadow:0 25px 80px #0008;
+    backdrop-filter:blur(10px);
+    overflow:hidden;
+}
+
+/* ================= MENU ================= */
+
+.start{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    min-height:650px;
+}
+
+.intro{
+    padding:55px;
+}
+
+.intro h1{
+    font-size:clamp(45px,6vw,80px);
+    line-height:.9;
+    margin:20px 0;
+}
+
+.cyan{
+    color:#52e7ff;
+}
+
+.intro p{
+    color:#b6d8e3;
+    font-size:18px;
+    line-height:1.6;
+}
+
+.btn{
+    border:none;
+    border-radius:14px;
+    padding:14px 22px;
+    background:linear-gradient(135deg,#5cecff,#198cff);
+    color:#001522;
+    font-weight:900;
+    cursor:pointer;
+    transition:.2s;
+    box-shadow:0 8px 25px #19cfff33;
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+}
+
+.btn.dark{
+    background:#12364a;
+    color:white;
+}
+
+/* ================= ESCENA ================= */
+
+.scene{
+    min-height:650px;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(#0b4260,#14819b 65%,#164d3a);
+}
+
+.house{
+    position:absolute;
+    bottom:17%;
+    left:10%;
+    font-size:100px;
+}
+
+.tree{
+    position:absolute;
+    bottom:15%;
+    left:40%;
+    font-size:75px;
+}
+
+.rain-source{
+    position:absolute;
+    left:10%;
+    top:16%;
+    font-size:80px;
+    filter:drop-shadow(0 0 15px #64eaff);
+}
+
+/* ================= JUEGO ================= */
+
+.hidden{
+    display:none!important;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    padding:15px;
+    background:#041421dd;
+}
+
+.stat{
+    background:#0c2c40;
+    border:1px solid #27566b;
+    border-radius:13px;
+    padding:10px;
+}
+
+.stat small{
+    display:block;
+    color:#91b8c8;
+}
+
+.stat b{
+    font-size:20px;
+}
+
+.game{
+    padding:18px;
+}
+
+.layout{
+    display:grid;
+    grid-template-columns:1fr 290px;
+    gap:18px;
+}
+
+.board{
+    position:relative;
+    height:650px;
+    border-radius:20px;
+    overflow:hidden;
+    border:2px solid #3f8ca2;
+    background:
+        linear-gradient(#0b4762,#116c76 65%,#164b39);
+}
+
+/* ================= TUBERIAS ================= */
+
+.pipe{
+    position:absolute;
+    width:90px;
+    height:90px;
+    border-radius:18px;
+
+    background:
+        linear-gradient(145deg,#344f5a,#172b34 45%,#405e66);
+
+    border:3px solid #09191f;
+
+    box-shadow:
+        inset 4px 4px 8px #ffffff22,
+        inset -5px -5px 10px #0009,
+        0 8px 18px #0009;
+
+    display:grid;
+    place-items:center;
+
+    cursor:pointer;
+
+    transition:
+        transform .2s,
+        border .2s,
+        box-shadow .2s;
+}
+
+.pipe:hover{
+    transform:scale(1.05);
+}
+
+.pipe.selected{
+    border-color:#62eaff;
+    box-shadow:
+        0 0 25px #49e8ff88,
+        inset 4px 4px 8px #ffffff22,
+        inset -5px -5px 10px #0009;
+}
+
+/* Conexiones metálicas */
+
+.pipe-svg{
+    width:76px;
+    height:76px;
+}
+
+.pipe-metal{
+    stroke:#879da3;
+    stroke-width:18;
+    stroke-linecap:round;
+}
+
+.pipe-highlight{
+    stroke:#d6e7ea;
+    stroke-width:5;
+    stroke-linecap:round;
+    opacity:.7;
+}
+
+.pipe-water{
+    stroke:#48ddff;
+    stroke-width:9;
+    stroke-linecap:round;
+    filter:drop-shadow(0 0 5px #3ce7ff);
+}
+
+/* ESTADO */
+
+.pipe.correct{
+    border-color:#42ed92;
+    box-shadow:
+        0 0 25px #35ed9277,
+        inset 4px 4px 8px #ffffff22,
+        inset -5px -5px 10px #0009;
+}
+
+.pipe.wrong{
+    border-color:#ff5368;
+    animation:shake .25s;
+    box-shadow:
+        0 0 24px #ff405566,
+        inset 4px 4px 8px #ffffff22;
+}
+
+@keyframes shake{
+    25%{transform:translateX(-4px)}
+    50%{transform:translateX(4px)}
+    75%{transform:translateX(-4px)}
+}
+
+/* Agua */
+
+.water{
+    position:absolute;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:#65edff;
+    box-shadow:
+        0 0 12px #44eaff,
+        0 0 25px #44eaff;
+    z-index:20;
+    pointer-events:none;
+}
+
+/* Fuga */
+
+.leak{
+    position:absolute;
+    width:8px;
+    height:35px;
+    background:#45ddff;
+    border-radius:50%;
+    z-index:19;
+    box-shadow:0 0 10px #40eaff;
+    animation:leak 1s infinite;
+}
+
+@keyframes leak{
+    0%{
+        transform:translateY(0);
+        opacity:1;
+    }
+    100%{
+        transform:translateY(35px);
+        opacity:0;
+    }
+}
+
+/* ================= ENTRADA ================= */
+
+.source{
+    position:absolute;
+    display:grid;
+    place-items:center;
+    font-size:43px;
+    z-index:10;
+}
+
+/* ================= TANQUE ================= */
+
+.tank{
+    position:absolute;
+    width:105px;
+    height:125px;
+    border-radius:16px 16px 25px 25px;
+    background:
+        linear-gradient(90deg,#62777c,#e3f0f1 45%,#61767b);
+    border:5px solid #29434b;
+    z-index:10;
+    overflow:hidden;
+    box-shadow:0 12px 25px #0008;
+}
+
+.tank-top{
+    position:absolute;
+    top:-14px;
+    left:12px;
+    right:12px;
+    height:20px;
+    border-radius:50%;
+    background:#8ca5aa;
+    border:4px solid #29434b;
+}
+
+.tank-water{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:0%;
+    background:
+        linear-gradient(#65eaff,#087ec4);
+    transition:height 1s;
+}
+
+.tank-label{
+    position:absolute;
+    z-index:3;
+    top:45px;
+    left:0;
+    width:100%;
+    text-align:center;
+    font-weight:900;
+    text-shadow:0 2px 4px #000;
+}
+
+.tank.full{
+    animation:tankGlow .8s infinite alternate;
+}
+
+@keyframes tankGlow{
+    to{
+        box-shadow:0 0 45px #49eaff;
+    }
+}
+
+/* ================= PANEL LATERAL ================= */
+
+.sidebar{
+    background:#0a2638;
+    border:1px solid #2c5d70;
+    border-radius:18px;
+    padding:18px;
+}
+
+.sidebar h3{
+    margin-top:0;
+}
+
+.sidebar p{
+    color:#abcbd5;
+    line-height:1.5;
+}
+
+.status{
+    padding:14px;
+    border-radius:12px;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+.status.neutral{
+    background:#12364a;
+}
+
+.status.good{
+    background:#0d4a35;
+    border:1px solid #35d98a;
+}
+
+.status.bad{
+    background:#531e29;
+    border:1px solid #ff5368;
+}
+
+.controls{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+    flex-wrap:wrap;
+}
+
+/* ================= VICTORIA ================= */
+
+.win{
+    padding:60px;
+    text-align:center;
+}
+
+.win h1{
+    font-size:70px;
+}
+
+.final-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    max-width:700px;
+    margin:25px auto;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    .start{
+        grid-template-columns:1fr;
+    }
+
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        order:-1;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .scene{
+        min-height:450px;
+    }
+
+    .board{
+        height:550px;
+    }
+}
+
+@media(max-width:600px){
+
+    #app{
+        width:98%;
+    }
+
+    .intro{
+        padding:30px;
+    }
+
+    .intro h1{
+        font-size:48px;
+    }
+
+    .pipe{
+        width:68px;
+        height:68px;
+    }
+
+    .pipe-svg{
+        width:58px;
+        height:58px;
+    }
+
+    .board{
+        height:500px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sky">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="mountain m1"></div>
+    <div class="mountain m2"></div>
+    <div class="mountain m3"></div>
+    <div class="ground"></div>
+</div>
+
+<div class="rain" id="rain"></div>
+
+<div id="app">
+
+<header>
+    <div class="logo">💧 AQUA<span>ZERO</span></div>
+    <div class="badge" id="levelBadge">LA RUTA DEL AGUA</div>
+</header>
+
+
+<!-- ================= INICIO ================= -->
+
+<section id="home" class="panel start">
+
+<div class="intro">
+
+    <div class="badge">🌧️ PUZZLE DE TUBERÍAS</div>
+
+    <h1>
+        SALVA<br>
+        <span class="cyan">CADA GOTA</span>
+    </h1>
+
+    <p>
+        Una tormenta está llegando, pero las tuberías de captación
+        quedaron completamente desordenadas.
+    </p>
+
+    <p>
+        <b>Tu misión:</b> conectar correctamente la lluvia con el tanque
+        antes de que el agua se desperdicie.
+    </p>
+
+    <p>
+        🔧 Gira las tuberías.<br>
+        💧 Comprueba las conexiones.<br>
+        🌊 Observa cómo el agua viaja por ellas.<br>
+        🏠 ¡Llena el tanque!
+    </p>
+
+    <button class="btn" onclick="startGame()">
+        JUGAR AHORA 🌧️
+    </button>
+
+</div>
+
+<div class="scene">
+
+    <div class="rain-source">🌧️</div>
+
+    <div class="house">🏠</div>
+
+    <div class="tree">🌳</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= JUEGO ================= -->
+
+<section id="game" class="panel hidden">
+
+<div class="stats">
+
+    <div class="stat">
+        💧
+        <small>Agua</small>
+        <b id="waterStat">0 L</b>
+    </div>
+
+    <div class="stat">
+        🎯
+        <small>Nivel</small>
+        <b id="levelStat">1</b>
+    </div>
+
+    <div class="stat">
+        🔧
+        <small>Movimientos</small>
+        <b id="movesStat">0</b>
+    </div>
+
+    <div class="stat">
+        🏆
+        <small>Puntos</small>
+        <b id="scoreStat">0</b>
+    </div>
+
+    <div class="stat">
+        🔗
+        <small>Conexiones</small>
+        <b id="connectionStat">0/0</b>
+    </div>
+
+</div>
+
+
+<div class="game">
+
+<div class="layout">
+
+<div>
+
+<div id="board" class="board"></div>
+
+<div class="controls">
+
+<button class="btn" onclick="rotateSelected(-1)">
+    ↶ GIRAR
+</button>
+
+<button class="btn" onclick="rotateSelected(1)">
+    GIRAR ↷
+</button>
+
+<button class="btn dark" onclick="resetLevel()">
+    🔄 REINICIAR
+</button>
+
+</div>
+
+<div id="status" class="status neutral">
+    Selecciona una tubería para comenzar.
+</div>
+
+</div>
+
+
+<aside class="sidebar">
+
+<h3>🌧️ MISIÓN</h3>
+
+<p id="mission">
+    Conecta la lluvia con el tanque.
+</p>
+
+<h3>🔎 ¿Cómo saber si está bien?</h3>
+
+<p>
+    🟢 <b>Verde:</b> conexión correcta y el agua puede avanzar.
+</p>
+
+<p>
+    🔴 <b>Rojo:</b> hay una conexión incorrecta o una fuga.
+</p>
+
+<p>
+    💧 Cuando todo esté conectado, verás el agua recorrer
+    las tuberías hasta el tanque.
+</p>
+
+<hr>
+
+<h3>💡 APRENDE</h3>
+
+<p>
+    Captar agua de lluvia permite aprovechar un recurso natural
+    que normalmente se pierde y ayuda a reducir el consumo
+    de agua potable.
+</p>
+
+</aside>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= VICTORIA ================= -->
+
+<section id="win" class="panel hidden win">
+
+<div style="font-size:80px">
+    🌊🏆💧
+</div>
+
+<h1>
+    ¡TANQUE LLENO!
+</h1>
+
+<p style="font-size:20px;color:#afd4df" id="winMessage"></p>
+
+<div class="final-stats">
+
+<div class="stat">
+    💧
+    <small>Agua recuperada</small>
+    <b id="finalWater">0 L</b>
+</div>
+
+<div class="stat">
+    🔧
+    <small>Movimientos</small>
+    <b id="finalMoves">0</b>
+</div>
+
+<div class="stat">
+    🏆
+    <small>Puntos</small>
+    <b id="finalScore">0</b>
+</div>
+
+</div>
+
+<button class="btn" onclick="nextLevel()">
+    SIGUIENTE NIVEL 🚀
+</button>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   NIVELES
+========================================================= */
+
+const levels=[
+
+{
+    name:"El patio",
+    rows:4,
+    cols:6,
+    liters:120,
+
+    pieces:[
+
+        {r:1,c:0,type:"source",rot:0},
+
+        {r:1,c:1,type:"straight",rot:0},
+        {r:1,c:2,type:"corner",rot:1},
+
+        {r:2,c:2,type:"straight",rot:1},
+
+        {r:3,c:2,type:"corner",rot:0},
+
+        {r:3,c:3,type:"straight",rot:0},
+
+        {r:3,c:4,type:"corner",rot:3},
+
+        {r:2,c:4,type:"straight",rot:1},
+
+        {r:1,c:4,type:"corner",rot:2},
+
+        {r:1,c:5,type:"tank",rot:0}
+    ]
+},
+
+{
+    name:"La escuela",
+    rows:5,
+    cols:7,
+    liters:180,
+
+    pieces:[
+
+        {r:2,c:0,type:"source",rot:0},
+
+        {r:2,c:1,type:"corner",rot:1},
+
+        {r:1,c:1,type:"straight",rot:1},
+
+        {r:0,c:1,type:"corner",rot:0},
+
+        {r:0,c:2,type:"straight",rot:0},
+
+        {r:0,c:3,type:"corner",rot:1},
+
+        {r:1,c:3,type:"straight",rot:1},
+
+        {r:2,c:3,type:"corner",rot:2},
+
+        {r:2,c:4,type:"corner",rot:1},
+
+        {r:3,c:4,type:"straight",rot:1},
+
+        {r:4,c:4,type:"corner",rot:0},
+
+        {r:4,c:5,type:"straight",rot:0},
+
+        {r:4,c:6,type:"tank",rot:0}
+    ]
+},
+
+{
+    name:"La comunidad",
+    rows:5,
+    cols:8,
+    liters:250,
+
+    pieces:[
+
+        {r:2,c:0,type:"source",rot:0},
+        {r:2,c:1,type:"straight",rot:0},
+        {r:2,c:2,type:"corner",rot:1},
+
+        {r:1,c:2,type:"corner",rot:0},
+        {r:1,c:3,type:"straight",rot:0},
+        {r:1,c:4,type:"corner",rot:1},
+
+        {r:2,c:4,type:"straight",rot:1},
+
+        {r:3,c:4,type:"corner",rot:2},
+        {r:3,c:5,type:"corner",rot:1},
+
+        {r:2,c:5,type:"straight",rot:1},
+
+        {r:1,c:5,type:"corner",rot:1},
+        {r:1,c:6,type:"corner",rot:0},
+
+        {r:2,c:6,type:"straight",rot:1},
+
+        {r:3,c:6,type:"corner",rot:2},
+
+        {r:3,c:7,type:"tank",rot:0}
+    ]
+}
+
+];
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+let level=0;
+let pieces=[];
+let selected=null;
+let moves=0;
+let score=0;
+let water=0;
+let solved=false;
+
+const DIRS=[
+    [0,-1], // izquierda
+    [-1,0], // arriba
+    [0,1],  // derecha
+    [1,0]   // abajo
+];
+
+
+/* =========================================================
+   INICIAR
+========================================================= */
+
+function startGame(){
+
+    document.getElementById("home").classList.add("hidden");
+
+    document.getElementById("game").classList.remove("hidden");
+
+    loadLevel();
+}
+
+
+/* =========================================================
+   CARGAR NIVEL
+========================================================= */
+
+function loadLevel(){
+
+    const L=levels[level];
+
+    pieces=L.pieces.map((p,i)=>({
+
+        ...p,
+
+        id:i,
+
+        rot:
+            p.type==="source" || p.type==="tank"
+            ?p.rot
+            :(p.rot+Math.floor(Math.random()*4))%4
+
+    }));
+
+    moves=0;
+    water=0;
+    selected=null;
+    solved=false;
+
+    document.getElementById("levelStat").textContent=level+1;
+
+    document.getElementById("levelBadge").textContent=
+        "NIVEL "+(level+1)+" — "+L.name;
+
+    document.getElementById("mission").innerHTML=
+        `
+        Conecta 🌧️ con 🏠 y recupera
+        <b>${L.liters} litros</b> de agua.
+        `;
+
+    render();
+
+    updateStats();
+
+    setStatus(
+        "neutral",
+        "🔧 Ordena las tuberías. Las conexiones correctas se pondrán verdes."
+    );
+}
+
+
+/* =========================================================
+   CONEXIONES
+========================================================= */
+
+function connections(piece){
+
+    let base=[];
+
+    if(piece.type==="straight"){
+
+        base=[1,3];
+
+    }else if(piece.type==="corner"){
+
+        base=[1,2];
+
+    }else if(piece.type==="source"){
+
+        base=[2];
+
+    }else if(piece.type==="tank"){
+
+        base=[0];
+
+    }
+
+    return base.map(
+        d=>(d+piece.rot)%4
+    );
+}
+
+
+/* =========================================================
+   VECINO
+========================================================= */
+
+function getNeighbor(piece,d){
+
+    const nr=
+        piece.r+
+        DIRS[d][0];
+
+    const nc=
+        piece.c+
+        DIRS[d][1];
+
+    return pieces.find(
+        p=>p.r===nr && p.c===nc
+    );
+}
+
+
+/* =========================================================
+   SVG TUBERÍA
+========================================================= */
+
+function pipeSVG(piece,active=false){
+
+    const con=connections(piece);
+
+    const has=d=>con.includes(d);
+
+    let lines="";
+
+    const paths=[
+
+        [50,50,50,5,1],
+        [50,50,95,50,2],
+        [50,50,50,95,3],
+        [50,50,5,50,0]
+
+    ];
+
+    paths.forEach(a=>{
+
+        if(has(a[4])){
+
+            lines+=`
+
+            <line
+                x1="${a[0]}"
+                y1="${a[1]}"
+                x2="${a[2]}"
+                y2="${a[3]}"
+                class="pipe-metal"
+            />
+
+            <line
+                x1="${a[0]}"
+                y1="${a[1]}"
+                x2="${a[2]}"
+                y2="${a[3]}"
+                class="pipe-highlight"
+            />
+
+            ${
+                active
+                ?
+                `
+                <line
+                    x1="${a[0]}"
+                    y1="${a[1]}"
+                    x2="${a[2]}"
+                    y2="${a[3]}"
+                    class="pipe-water"
+                />
+                `
+                :""
+            }
+
+            `;
+
+        }
+
+    });
+
+
+    return`
+
+    <svg
+        class="pipe-svg"
+        viewBox="0 0 100 100"
+    >
+
+        ${lines}
+
+        <circle
+            cx="50"
+            cy="50"
+            r="15"
+            fill="#a9bcc1"
+            stroke="#334a50"
+            stroke-width="4"
+        />
+
+    </svg>
+
+    `;
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render(active=new Set()){
+
+    const board=document.getElementById("board");
+
+    const L=levels[level];
+
+    board.innerHTML="";
+
+
+    pieces.forEach(piece=>{
+
+        const el=document.createElement("div");
+
+        let state="";
+
+        if(active.has(piece.id)){
+
+            state=" correct";
+
+        }
+
+        el.className=
+            "pipe"+
+            state+
+            (selected===piece.id?" selected":"");
+
+        const left=
+            piece.c*100/L.cols+
+            50/L.cols;
+
+        const top=
+            piece.r*100/L.rows+
+            50/L.rows;
+
+        el.style.left=
+            `calc(${left}% - 45px)`;
+
+        el.style.top=
+            `calc(${top}% - 45px)`;
+
+
+        if(piece.type==="source"){
+
+            el.innerHTML=
+                `<div style="font-size:48px">🌧️</div>`;
+
+        }
+
+        else if(piece.type==="tank"){
+
+            el.innerHTML=
+                `
+                <div class="tank">
+                    <div class="tank-top"></div>
+
+                    <div
+                        id="tankWater"
+                        class="tank-water"
+                        style="height:${waterPercent()}%"
+                    ></div>
+
+                    <div class="tank-label">
+                        🏠<br>
+                        <span>${Math.round(waterPercent())}%</span>
+                    </div>
+                </div>
+                `;
+
+        }
+
+        else{
+
+            el.innerHTML=
+                pipeSVG(
+                    piece,
+                    active.has(piece.id)
+                );
+
+        }
+
+
+        el.onclick=()=>{
+
+            if(
+                piece.type!=="source" &&
+                piece.type!=="tank" &&
+                !solved
+            ){
+
+                selected=piece.id;
+
+                rotateSelected(1);
+
+            }
+
+        };
+
+
+        board.appendChild(el);
+
+    });
+
+}
+
+
+/* =========================================================
+   ROTAR
+========================================================= */
+
+function rotateSelected(direction){
+
+    if(
+        selected===null ||
+        solved
+    )return;
+
+    const piece=
+        pieces.find(
+            p=>p.id===selected
+        );
+
+    if(!piece)return;
+
+    piece.rot=
+        (piece.rot+
+        direction+
+        4)%4;
+
+    moves++;
+
+    render();
+
+    updateStats();
+
+    evaluate();
+
+}
+
+
+/* =========================================================
+   EVALUAR CONEXIONES
+========================================================= */
+
+function evaluate(){
+
+    const source=
+        pieces.find(
+            p=>p.type==="source"
+        );
+
+    const reachable=
+        new Set([source.id]);
+
+    const queue=[source];
+
+
+    while(queue.length){
+
+        const current=
+            queue.shift();
+
+        const dirs=
+            connections(current);
+
+
+        dirs.forEach(d=>{
+
+            const next=
+                getNeighbor(current,d);
+
+            if(!next)return;
+
+            const nextDirs=
+                connections(next);
+
+            const opposite=
+                (d+2)%4;
+
+            if(
+                nextDirs.includes(opposite) &&
+                !reachable.has(next.id)
+            ){
+
+                reachable.add(next.id);
+
+                queue.push(next);
+
+            }
+
+        });
+
+    }
+
+
+    /* Pintar correctas */
+
+    render(reachable);
+
+
+    /* Conexiones correctas */
+
+    const all=
+        pieces.filter(
+            p=>
+            p.type!=="source" &&
+            p.type!=="tank"
+        );
+
+    let correct=0;
+
+    all.forEach(p=>{
+
+        const con=
+            connections(p);
+
+        let ok=false;
+
+        con.forEach(d=>{
+
+            const n=
+                getNeighbor(p,d);
+
+            if(
+                n &&
+                connections(n)
+                .includes((d+2)%4)
+            ){
+
+                ok=true;
+
+            }
+
+        });
+
+        if(ok)correct++;
+
+    });
+
+
+    document.getElementById(
+        "connectionStat"
+    ).textContent=
+        correct+"/"+all.length;
+
+
+    /* ¿Llegó al tanque? */
+
+    const tank=
+        pieces.find(
+            p=>p.type==="tank"
+        );
+
+    if(
+        reachable.has(tank.id)
+    ){
+
+        solve(reachable);
+
+    }
+
+    else{
+
+        /* Detectar errores cerca de la ruta */
+
+        if(selected!==null){
+
+            const p=
+                pieces.find(
+                    x=>x.id===selected
+                );
+
+            const connected=
+                reachable.has(p.id);
+
+            if(connected){
+
+                setStatus(
+                    "good",
+                    "🟢 CONEXIÓN CORRECTA — El agua puede avanzar desde la lluvia."
+                );
+
+            }else{
+
+                setStatus(
+                    "bad",
+                    "🔴 FUGA — Esta tubería todavía no está conectada correctamente."
+                );
+
+                createLeak(p);
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   FUGA
+========================================================= */
+
+function createLeak(piece){
+
+    document
+        .querySelectorAll(".leak")
+        .forEach(x=>x.remove());
+
+    const L=levels[level];
+
+    const leak=
+        document.createElement("div");
+
+    leak.className="leak";
+
+    leak.style.left=
+        `calc(${piece.c*100/L.cols+
+        50/L.cols}% + 35px)`;
+
+    leak.style.top=
+        `calc(${piece.r*100/L.rows+
+        50/L.rows}% + 35px)`;
+
+    document
+        .getElementById("board")
+        .appendChild(leak);
+
+}
+
+
+/* =========================================================
+   SOLUCIÓN
+========================================================= */
+
+function solve(path){
+
+    if(solved)return;
+
+    solved=true;
+
+    setStatus(
+        "good",
+        "🌊 ¡RUTA COMPLETA! ¡MIRA CÓMO EL AGUA RECORRE TODAS LAS TUBERÍAS!"
+    );
+
+    animateWater(path);
+
+}
+
+
+/* =========================================================
+   ANIMACIÓN DEL AGUA
+========================================================= */
+
+function animateWater(path){
+
+    const board=
+        document.getElementById("board");
+
+    let index=0;
+
+    const L=levels[level];
+
+    function next(){
+
+        if(index>=path.size){
+
+            fillTank();
+
+            return;
+
+        }
+
+        const ids=
+            Array.from(path);
+
+        const id=
+            ids[index];
+
+        const piece=
+            pieces.find(
+                p=>p.id===id
+            );
+
+
+        const drop=
+            document.createElement("div");
+
+        drop.className="water";
+
+
+        const x=
+            piece.c*100/L.cols+
+            50/L.cols;
+
+        const y=
+            piece.r*100/L.rows+
+            50/L.rows;
+
+
+        drop.style.left=
+            `calc(${x}% - 8px)`;
+
+        drop.style.top=
+            `calc(${y}% - 8px)`;
+
+
+        board.appendChild(drop);
+
+
+        drop.animate(
+
+            [
+                {
+                    transform:"scale(.5)",
+                    opacity:0
+                },
+                {
+                    transform:"scale(1.4)",
+                    opacity:1
+                },
+                {
+                    transform:"scale(1)",
+                    opacity:1
+                }
+            ],
+
+            {
+                duration:600,
+                easing:"ease-out"
+            }
+
+        );
+
+
+        setTimeout(
+            ()=>drop.remove(),
+            650
+        );
+
+
+        index++;
+
+        setTimeout(
+            next,
+            420
+        );
+
+    }
+
+    next();
+
+}
+
+
+/* =========================================================
+   LLENAR TANQUE
+========================================================= */
+
+function fillTank(){
+
+    const target=
+        levels[level].liters;
+
+    let percent=0;
+
+    const timer=
+        setInterval(()=>{
+
+            percent+=5;
+
+            water=
+                Math.round(
+                    target*
+                    percent/
+                    100
+                );
+
+            const tankWater=
+                document.getElementById(
+                    "tankWater"
+                );
+
+            if(tankWater){
+
+                tankWater.style.height=
+                    percent+"%";
+
+            }
+
+            updateStats();
+
+            if(percent>=100){
+
+                clearInterval(timer);
+
+                setTimeout(
+                    showWin,
+                    700
+                );
+
+            }
+
+        },70);
+
+}
+
+
+/* =========================================================
+   VICTORIA
+========================================================= */
+
+function showWin(){
+
+    const earned=
+        Math.max(
+            100,
+            500-
+            moves*10+
+            level*100
+        );
+
+    score+=earned;
+
+    document.getElementById(
+        "finalWater"
+    ).textContent=
+        levels[level].liters+
+        " L";
+
+    document.getElementById(
+        "finalMoves"
+    ).textContent=
+        moves;
+
+    document.getElementById(
+        "finalScore"
+    ).textContent=
+        earned;
+
+    document.getElementById(
+        "winMessage"
+    ).textContent=
+        `
+        ¡Excelente! Has conseguido llevar
+        ${levels[level].liters} litros de agua
+        de lluvia hasta el tanque.
+        Cada gota que aprovechaste es agua
+        que no se desperdició.
+        `;
+
+    document
+        .getElementById("game")
+        .classList.add("hidden");
+
+    document
+        .getElementById("win")
+        .classList.remove("hidden");
+
+}
+
+
+/* =========================================================
+   SIGUIENTE NIVEL
+========================================================= */
+
+function nextLevel(){
+
+    if(
+        level<
+        levels.length-1
+    ){
+
+        level++;
+
+        document
+            .getElementById("win")
+            .classList.add("hidden");
+
+        document
+            .getElementById("game")
+            .classList.remove("hidden");
+
+        loadLevel();
+
+    }
+
+    else{
+
+        alert(
+            "🏆 ¡FELICIDADES!\n\n"+
+            "Has completado AquaZero.\n"+
+            "Ahora eres un Guardián del Agua."
+        );
+
+        location.reload();
+
+    }
+
+}
+
+
+/* =========================================================
+   REINICIAR
+========================================================= */
+
+function resetLevel(){
+
+    loadLevel();
+
+}
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+function setStatus(type,text){
+
+    const status=
+        document.getElementById(
+            "status"
+        );
+
+    status.className=
+        "status "+type;
+
+    status.innerHTML=text;
+
+}
+
+
+/* =========================================================
+   ESTADÍSTICAS
+========================================================= */
+
+function updateStats(){
+
+    document.getElementById(
+        "waterStat"
+    ).textContent=
+        water+" L";
+
+    document.getElementById(
+        "movesStat"
+    ).textContent=
+        moves;
+
+    document.getElementById(
+        "scoreStat"
+    ).textContent=
+        score;
+
+}
+
+
+/* =========================================================
+   TANQUE %
+========================================================= */
+
+function waterPercent(){
+
+    if(
+        !levels[level] ||
+        !levels[level].liters
+    )return 0;
+
+    return Math.min(
+        100,
+        water/
+        levels[level].liters*
+        100
+    );
+
+}
+
+
+/* =========================================================
+   LLUVIA
+========================================================= */
+
+function createRain(){
+
+    const rain=
+        document.getElementById(
+            "rain"
+        );
+
+    for(
+        let i=0;
+        i<120;
+        i++
+    ){
+
+        const drop=
+            document.createElement("i");
+
+        drop.style.left=
+            Math.random()*100+
+            "%";
+
+        drop.style.animationDuration=
+            (.4+
+            Math.random()*1.2)+
+            "s";
+
+        drop.style.animationDelay=
+            (-Math.random()*2)+
+            "s";
+
+        rain.appendChild(drop);
+
+    }
+
+}
+
+createRain();
+
+</script>
+
+</body>
+</html>
