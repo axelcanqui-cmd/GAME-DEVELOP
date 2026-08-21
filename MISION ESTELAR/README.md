@@ -2,9 +2,9 @@
 
 > **¡Tu misión, piloto!** Resuelve las operaciones antes de que las respuestas caigan al vacío. Solo una respuesta es correcta.
 
-![Misión Estelar Matemática](capturas/matematica.png)
+![Misión Estelar Matemática](../capturas/matematica.png)
 
-[🎮 JUGAR](Matematica.html) · [📖 Cómo jugar](#-cómo-jugar) · [🏆 Objetivo](#-objetivo) · [🧠 Aprendizaje](#-qué-se-practica)
+[🎮 JUGAR](Matematica.html)· 📖 Cómo jugar · 🏆 Objetivo · 🧠 Aprendizaje
 
 ## 🌌 Ficha del juego
 | Dato | Información |
