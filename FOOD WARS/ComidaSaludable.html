@@ -1,0 +1,3155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>🍎 FOOD WARS</title>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:#030712;
+
+    color:white;
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+#app{
+
+    width:100vw;
+    height:100vh;
+
+    display:flex;
+    flex-direction:column;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(0,229,255,.15),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(6,214,160,.12),
+            transparent 30%
+        ),
+
+        #030712;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+#topbar{
+
+    height:82px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    gap:8px;
+
+    padding:8px;
+
+    background:
+        rgba(2,6,23,.94);
+
+    border-bottom:
+        2px solid rgba(0,229,255,.6);
+
+    box-shadow:
+        0 0 30px rgba(0,229,255,.15);
+
+    z-index:100;
+}
+
+.stat{
+
+    width:125px;
+
+    padding:6px 10px;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.02)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    text-align:center;
+
+    backdrop-filter:
+        blur(10px);
+}
+
+.statLabel{
+
+    font-size:10px;
+
+    opacity:.75;
+
+    letter-spacing:1px;
+}
+
+.statValue{
+
+    font-size:18px;
+
+    font-weight:900;
+
+    margin-top:2px;
+}
+
+#healthValue{
+    color:#ff4d6d;
+}
+
+#energyValue{
+    color:#ffd166;
+}
+
+#focusValue{
+    color:#00e5ff;
+}
+
+#moneyValue{
+    color:#06d6a0;
+}
+
+#scoreValue{
+    color:#ffe66d;
+}
+
+
+/* =========================================================
+   GAME
+========================================================= */
+
+#game{
+
+    position:relative;
+
+    flex:1;
+
+    min-height:0;
+
+    overflow:hidden;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            #06132c 0%,
+            #082b4c 60%,
+            #063b46 100%
+        );
+}
+
+
+/* =========================================================
+   BACKGROUND PARTICLES
+========================================================= */
+
+.backgroundParticle{
+
+    position:absolute;
+
+    width:3px;
+    height:3px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    opacity:.6;
+
+    animation:
+        floatParticle
+        linear
+        infinite;
+}
+
+@keyframes floatParticle{
+
+    from{
+
+        transform:
+            translateY(110vh);
+
+    }
+
+    to{
+
+        transform:
+            translateY(-20vh);
+
+    }
+
+}
+
+
+/* =========================================================
+   GLOW ORBS
+========================================================= */
+
+.orb{
+
+    position:absolute;
+
+    width:250px;
+    height:250px;
+
+    border-radius:50%;
+
+    filter:blur(70px);
+
+    opacity:.15;
+
+    pointer-events:none;
+}
+
+.orb1{
+
+    background:#00e5ff;
+
+    top:10%;
+    left:-100px;
+
+    animation:
+        orbMove 8s infinite alternate;
+}
+
+.orb2{
+
+    background:#06d6a0;
+
+    bottom:-100px;
+    right:-80px;
+
+    animation:
+        orbMove 10s infinite alternate-reverse;
+}
+
+@keyframes orbMove{
+
+    from{
+        transform:translate(0,0);
+    }
+
+    to{
+        transform:translate(100px,-60px);
+    }
+
+}
+
+
+/* =========================================================
+   LEVEL HEADER
+========================================================= */
+
+#levelInfo{
+
+    position:absolute;
+
+    top:12px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    width:min(90%,700px);
+
+    text-align:center;
+
+    z-index:50;
+
+    pointer-events:none;
+}
+
+#location{
+
+    font-size:
+        clamp(22px,4vw,36px);
+
+    font-weight:900;
+
+    color:#00e5ff;
+
+    text-shadow:
+        0 0 20px #00e5ff;
+}
+
+#mission{
+
+    margin-top:4px;
+
+    font-size:
+        clamp(11px,2vw,16px);
+
+    color:#dffaff;
+}
+
+
+/* =========================================================
+   LEVEL BAR
+========================================================= */
+
+#levelBar{
+
+    position:absolute;
+
+    top:75px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    width:min(80%,450px);
+
+    height:7px;
+
+    background:
+        rgba(255,255,255,.12);
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    z-index:50;
+}
+
+#levelProgress{
+
+    height:100%;
+
+    width:0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00e5ff,
+            #06d6a0,
+            #ffe66d
+        );
+
+    box-shadow:
+        0 0 15px #00e5ff;
+
+    transition:
+        width .4s ease;
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+#player{
+
+    position:absolute;
+
+    width:76px;
+    height:76px;
+
+    bottom:60px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:45px;
+
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            #ffffff,
+            #00e5ff 35%,
+            #0077ff 100%
+        );
+
+    border:
+        4px solid white;
+
+    box-shadow:
+
+        0 0 20px #00e5ff,
+        0 0 50px rgba(0,229,255,.4);
+
+    z-index:40;
+
+    transition:
+        left .04s linear;
+
+    animation:
+        playerFloat
+        1.4s
+        ease-in-out
+        infinite alternate;
+}
+
+@keyframes playerFloat{
+
+    from{
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+    to{
+        transform:
+            translateX(-50%)
+            translateY(-6px);
+    }
+
+}
+
+
+/* =========================================================
+   PLAYER BOOST
+========================================================= */
+
+#player::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-25px;
+
+    width:25px;
+    height:30px;
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            #fff,
+            #ffd166,
+            #ff4d00,
+            transparent
+        );
+
+    filter:
+        blur(3px);
+
+    animation:
+        flame .15s
+        infinite alternate;
+}
+
+@keyframes flame{
+
+    from{
+        height:20px;
+        opacity:.7;
+    }
+
+    to{
+        height:35px;
+        opacity:1;
+    }
+
+}
+
+
+/* =========================================================
+   FOOD
+========================================================= */
+
+.food{
+
+    position:absolute;
+
+    width:78px;
+    height:78px;
+
+    border-radius:22px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+        rgba(3,10,25,.95);
+
+    border:
+        3px solid white;
+
+    z-index:30;
+
+    box-shadow:
+        0 0 20px rgba(255,255,255,.15);
+
+    animation:
+        foodFloat
+        1s
+        ease-in-out
+        infinite alternate;
+}
+
+@keyframes foodFloat{
+
+    from{
+        transform:rotate(-3deg);
+    }
+
+    to{
+        transform:rotate(3deg);
+    }
+
+}
+
+.food.healthy{
+
+    border-color:#06d6a0;
+
+    box-shadow:
+        0 0 25px
+        rgba(6,214,160,.6);
+}
+
+.food.junk{
+
+    border-color:#ff4d6d;
+
+    box-shadow:
+        0 0 25px
+        rgba(255,77,109,.6);
+}
+
+.food.special{
+
+    border-color:#ffe66d;
+
+    box-shadow:
+        0 0 35px
+        rgba(255,230,109,.9);
+
+    animation:
+        specialFood
+        .7s
+        infinite alternate;
+}
+
+@keyframes specialFood{
+
+    from{
+        transform:scale(1);
+    }
+
+    to{
+        transform:scale(1.12);
+    }
+
+}
+
+.foodIcon{
+
+    font-size:38px;
+}
+
+.foodName{
+
+    font-size:9px;
+
+    font-weight:900;
+
+    margin-top:2px;
+
+    text-align:center;
+}
+
+
+/* =========================================================
+   COMBO
+========================================================= */
+
+#combo{
+
+    position:absolute;
+
+    right:20px;
+
+    top:95px;
+
+    z-index:60;
+
+    font-size:20px;
+
+    font-weight:900;
+
+    color:#ffe66d;
+
+    text-shadow:
+        0 0 15px #ffe66d;
+
+    opacity:0;
+
+    transform:scale(.7);
+
+    transition:.2s;
+}
+
+#combo.active{
+
+    opacity:1;
+
+    transform:scale(1);
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+#message{
+
+    position:absolute;
+
+    top:115px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%)
+        scale(.5);
+
+    opacity:0;
+
+    padding:13px 25px;
+
+    border-radius:30px;
+
+    background:#06d6a0;
+
+    color:#001c17;
+
+    font-size:
+        clamp(17px,3vw,28px);
+
+    font-weight:900;
+
+    z-index:200;
+
+    pointer-events:none;
+
+    transition:.25s;
+
+    white-space:nowrap;
+}
+
+#message.show{
+
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        scale(1);
+}
+
+#message.bad{
+
+    background:#ff4d6d;
+
+    color:white;
+}
+
+#message.gold{
+
+    background:#ffe66d;
+
+    color:#211b00;
+
+}
+
+
+/* =========================================================
+   INSTRUCTION
+========================================================= */
+
+#instruction{
+
+    position:absolute;
+
+    bottom:10px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    width:min(90%,650px);
+
+    padding:9px;
+
+    border-radius:16px;
+
+    text-align:center;
+
+    background:
+        rgba(0,0,0,.6);
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    font-size:12px;
+
+    z-index:70;
+}
+
+
+/* =========================================================
+   MOBILE CONTROLS
+========================================================= */
+
+#mobileControls{
+
+    position:absolute;
+
+    bottom:75px;
+
+    left:0;
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:0 20px;
+
+    z-index:100;
+
+    pointer-events:none;
+}
+
+.control{
+
+    width:68px;
+    height:68px;
+
+    border-radius:50%;
+
+    border:
+        3px solid white;
+
+    background:
+        rgba(0,229,255,.2);
+
+    color:white;
+
+    font-size:32px;
+
+    pointer-events:auto;
+
+    touch-action:none;
+
+    backdrop-filter:
+        blur(8px);
+}
+
+@media(min-width:700px){
+
+    #mobileControls{
+        display:none;
+    }
+
+}
+
+
+/* =========================================================
+   PARTICLE EFFECT
+========================================================= */
+
+.particle{
+
+    position:absolute;
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    z-index:150;
+
+    animation:
+        particleExplosion
+        .7s
+        ease-out
+        forwards;
+}
+
+@keyframes particleExplosion{
+
+    from{
+
+        opacity:1;
+
+        transform:
+            translate(0,0)
+            scale(1);
+    }
+
+    to{
+
+        opacity:0;
+
+        transform:
+            translate(
+                var(--dx),
+                var(--dy)
+            )
+            scale(.2);
+    }
+
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    z-index:500;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:25px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(8,42,70,.98),
+            rgba(1,5,15,.99)
+        );
+}
+
+.overlay h1{
+
+    font-size:
+        clamp(38px,8vw,75px);
+
+    color:#00e5ff;
+
+    text-shadow:
+        0 0 35px #00e5ff;
+
+    margin-bottom:10px;
+}
+
+.overlay h2{
+
+    font-size:
+        clamp(30px,7vw,60px);
+
+    color:#06d6a0;
+
+    text-shadow:
+        0 0 25px #06d6a0;
+
+    margin-bottom:15px;
+}
+
+.overlay p{
+
+    max-width:720px;
+
+    margin:6px;
+
+    line-height:1.5;
+
+    color:#dffaff;
+
+    font-size:
+        clamp(13px,2vw,18px);
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.gameButton{
+
+    margin-top:20px;
+
+    padding:
+        15px
+        35px;
+
+    border:none;
+
+    border-radius:50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00e5ff,
+            #06d6a0
+        );
+
+    color:#001519;
+
+    font-size:20px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 7px 0 #00766f,
+        0 0 30px
+        rgba(0,229,255,.4);
+}
+
+.gameButton:active{
+
+    transform:
+        translateY(5px);
+
+    box-shadow:
+        0 2px 0 #00766f;
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+#results{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:10px;
+
+    width:min(500px,95%);
+
+    margin:15px;
+}
+
+.result{
+
+    padding:12px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+}
+
+.result strong{
+
+    display:block;
+
+    margin-top:5px;
+
+    font-size:25px;
+
+    color:#ffe66d;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:600px){
+
+    #topbar{
+
+        height:62px;
+
+        gap:3px;
+
+        padding:4px;
+    }
+
+    .stat{
+
+        flex:1;
+
+        width:auto;
+
+        padding:4px;
+
+    }
+
+    .statLabel{
+
+        font-size:8px;
+    }
+
+    .statValue{
+
+        font-size:14px;
+    }
+
+    #player{
+
+        width:62px;
+        height:62px;
+
+        font-size:37px;
+
+        bottom:55px;
+    }
+
+    .food{
+
+        width:65px;
+        height:65px;
+
+        border-radius:18px;
+    }
+
+    .foodIcon{
+
+        font-size:30px;
+    }
+
+    .foodName{
+
+        font-size:8px;
+    }
+
+    #combo{
+
+        top:90px;
+
+        right:10px;
+
+        font-size:16px;
+    }
+
+    #instruction{
+
+        bottom:7px;
+
+        font-size:9px;
+    }
+
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti{
+
+    position:fixed;
+
+    top:-20px;
+
+    width:10px;
+    height:14px;
+
+    z-index:1000;
+
+    animation:
+        confettiFall
+        2.5s
+        linear
+        forwards;
+}
+
+@keyframes confettiFall{
+
+    to{
+
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+
+        opacity:0;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div id="app">
+
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+
+<div id="topbar">
+
+    <div class="stat">
+
+        <div class="statLabel">
+            ❤️ SALUD
+        </div>
+
+        <div
+            class="statValue"
+            id="healthValue">
+            100
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="statLabel">
+            ⚡ ENERGÍA
+        </div>
+
+        <div
+            class="statValue"
+            id="energyValue">
+            100
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="statLabel">
+            🧠 MENTE
+        </div>
+
+        <div
+            class="statValue"
+            id="focusValue">
+            100
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="statLabel">
+            💰 DINERO
+        </div>
+
+        <div
+            class="statValue"
+            id="moneyValue">
+            $20
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="statLabel">
+            ⭐ PUNTOS
+        </div>
+
+        <div
+            class="statValue"
+            id="scoreValue">
+            0
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     GAME
+===================================================== -->
+
+<div id="game">
+
+
+    <div class="orb orb1"></div>
+
+    <div class="orb orb2"></div>
+
+
+    <div id="levelInfo">
+
+        <div id="location">
+            🌅 DESAYUNO
+        </div>
+
+        <div id="mission">
+            Elige sabiamente.
+        </div>
+
+    </div>
+
+
+    <div id="levelBar">
+
+        <div id="levelProgress"></div>
+
+    </div>
+
+
+    <div id="combo">
+        🔥 COMBO x0
+    </div>
+
+
+    <div id="message"></div>
+
+
+    <!-- PLAYER -->
+
+    <div id="player">
+        🧑‍🚀
+    </div>
+
+
+    <!-- CONTROLES -->
+
+    <div id="mobileControls">
+
+        <button
+            class="control"
+            id="leftButton">
+
+            ◀
+
+        </button>
+
+
+        <button
+            class="control"
+            id="rightButton">
+
+            ▶
+
+        </button>
+
+    </div>
+
+
+    <div id="instruction">
+
+        🎮
+        <strong>
+            ← →
+        </strong>
+
+        o
+
+        <strong>
+            A D
+        </strong>
+
+        para moverte
+
+        &nbsp; • &nbsp;
+
+        🟢 saludable
+
+        &nbsp; • &nbsp;
+
+        🔴 chatarra
+
+    </div>
+
+
+    <!-- =================================================
+         START SCREEN
+    ================================================== -->
+
+    <div
+        class="overlay"
+        id="startScreen">
+
+        <h1>
+            🍎 FOOD WARS
+        </h1>
+
+        <p>
+            ⚔️
+            <strong>
+                LA BATALLA POR TU PLATO
+            </strong>
+        </p>
+
+        <p>
+            ¡Tu cuerpo es tu nave!
+            Tu misión es elegir los alimentos
+            que te ayuden a mantenerte fuerte.
+        </p>
+
+        <p>
+            🟢 Atrapa alimentos saludables
+            para aumentar tus estadísticas.
+        </p>
+
+        <p>
+            🔴 Ten cuidado con la comida
+            ultraprocesada.
+        </p>
+
+        <p>
+            🔥 Consigue combos para obtener
+            más puntos.
+        </p>
+
+        <p>
+            🏆 Completa los
+            <strong>5 niveles</strong>
+            y consigue
+            <strong>70 puntos</strong>.
+        </p>
+
+        <button
+            class="gameButton"
+            onclick="startGame()">
+
+            🚀 COMENZAR MISIÓN
+
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         WIN SCREEN
+    ================================================== -->
+
+    <div
+        class="overlay"
+        id="winScreen"
+        style="display:none;">
+
+        <h2>
+            🏆 ¡MISIÓN COMPLETADA!
+        </h2>
+
+        <p>
+            ¡Has demostrado que sabes tomar
+            mejores decisiones alimentarias!
+        </p>
+
+
+        <div id="results">
+
+            <div class="result">
+                ❤️ Salud
+                <strong id="finalHealth">
+                    0
+                </strong>
+            </div>
+
+            <div class="result">
+                ⚡ Energía
+                <strong id="finalEnergy">
+                    0
+                </strong>
+            </div>
+
+            <div class="result">
+                🧠 Mente
+                <strong id="finalFocus">
+                    0
+                </strong>
+            </div>
+
+            <div class="result">
+                ⭐ Puntos
+                <strong id="finalScore">
+                    0
+                </strong>
+            </div>
+
+        </div>
+
+
+        <p id="rank"></p>
+
+
+        <button
+            class="gameButton"
+            onclick="startGame()">
+
+            🔄 JUGAR OTRA VEZ
+
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         LOSE SCREEN
+    ================================================== -->
+
+    <div
+        class="overlay"
+        id="loseScreen"
+        style="display:none;">
+
+        <h2
+            style="color:#ff4d6d;">
+
+            💥 ¡MISIÓN FALLIDA!
+
+        </h2>
+
+        <p id="loseReason">
+        </p>
+
+        <p>
+            💡 Recuerda:
+            una alimentación saludable
+            consiste en equilibrio,
+            variedad y buenos hábitos.
+        </p>
+
+
+        <button
+            class="gameButton"
+            onclick="startGame()">
+
+            🔄 VOLVER A INTENTAR
+
+        </button>
+
+    </div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
+
+const game =
+document.getElementById("game");
+
+const player =
+document.getElementById("player");
+
+const healthValue =
+document.getElementById("healthValue");
+
+const energyValue =
+document.getElementById("energyValue");
+
+const focusValue =
+document.getElementById("focusValue");
+
+const moneyValue =
+document.getElementById("moneyValue");
+
+const scoreValue =
+document.getElementById("scoreValue");
+
+const locationText =
+document.getElementById("location");
+
+const missionText =
+document.getElementById("mission");
+
+const levelProgress =
+document.getElementById("levelProgress");
+
+const comboElement =
+document.getElementById("combo");
+
+const message =
+document.getElementById("message");
+
+const startScreen =
+document.getElementById("startScreen");
+
+const winScreen =
+document.getElementById("winScreen");
+
+const loseScreen =
+document.getElementById("loseScreen");
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let health = 100;
+
+let energy = 100;
+
+let focus = 100;
+
+let money = 20;
+
+let score = 0;
+
+let level = 0;
+
+let combo = 0;
+
+let playerX = 0;
+
+let keys = {};
+
+let foods = [];
+
+let gameRunning = false;
+
+let animationId;
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+let audioCtx = null;
+
+let musicTimer = null;
+
+let musicEnabled = true;
+
+let musicStep = 0;
+
+
+/* =========================================================
+   INICIAR AUDIO
+========================================================= */
+
+function initAudio(){
+
+    if(!audioCtx){
+
+        audioCtx =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+}
+
+
+/* =========================================================
+   SONIDO
+========================================================= */
+
+function tone(
+    frequency,
+    duration,
+    type="sine",
+    volume=.08
+){
+
+    if(
+        !audioCtx ||
+        !musicEnabled
+    )
+        return;
+
+
+    const osc =
+        audioCtx.createOscillator();
+
+    const gain =
+        audioCtx.createGain();
+
+
+    osc.type = type;
+
+    osc.frequency.value =
+        frequency;
+
+
+    gain.gain.setValueAtTime(
+        volume,
+        audioCtx.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        .001,
+        audioCtx.currentTime +
+        duration
+    );
+
+
+    osc.connect(gain);
+
+    gain.connect(
+        audioCtx.destination
+    );
+
+
+    osc.start();
+
+    osc.stop(
+        audioCtx.currentTime +
+        duration
+    );
+
+}
+
+
+/* =========================================================
+   SONIDO SALUDABLE
+========================================================= */
+
+function healthySound(){
+
+    tone(
+        523,
+        .12,
+        "sine",
+        .12
+    );
+
+    setTimeout(
+        () => tone(
+            659,
+            .12,
+            "sine",
+            .12
+        ),
+        100
+    );
+
+    setTimeout(
+        () => tone(
+            784,
+            .18,
+            "sine",
+            .12
+        ),
+        200
+    );
+
+}
+
+
+/* =========================================================
+   SONIDO CHATARRA
+========================================================= */
+
+function junkSound(){
+
+    tone(
+        180,
+        .15,
+        "sawtooth",
+        .08
+    );
+
+    setTimeout(
+        () => tone(
+            120,
+            .2,
+            "sawtooth",
+            .08
+        ),
+        120
+    );
+
+}
+
+
+/* =========================================================
+   SONIDO COMBO
+========================================================= */
+
+function comboSound(){
+
+    tone(
+        700,
+        .08,
+        "triangle",
+        .1
+    );
+
+    setTimeout(
+        () => tone(
+            900,
+            .12,
+            "triangle",
+            .1
+        ),
+        90
+    );
+
+}
+
+
+/* =========================================================
+   MÚSICA
+========================================================= */
+
+const melody = [
+
+    261.63,
+    329.63,
+    392.00,
+    329.63,
+
+    293.66,
+    349.23,
+    440.00,
+    349.23
+
+];
+
+
+function startMusic(){
+
+    if(musicTimer)
+        clearInterval(
+            musicTimer
+        );
+
+
+    musicTimer =
+        setInterval(
+            () => {
+
+                if(
+                    gameRunning &&
+                    musicEnabled
+                ){
+
+                    tone(
+                        melody[musicStep],
+                        .22,
+                        "triangle",
+                        .035
+                    );
+
+                    musicStep =
+                        (
+                            musicStep + 1
+                        )
+                        %
+                        melody.length;
+
+                }
+
+            },
+            300
+        );
+
+}
+
+
+/* =========================================================
+   NIVELES
+========================================================= */
+
+const levels = [
+
+{
+
+location:"🌅 DESAYUNO",
+
+mission:
+"Elige alimentos que te den energía para comenzar el día.",
+
+foods:[
+
+["🍎","Manzana","healthy",6,7,5,2],
+
+["🥣","Avena","healthy",7,10,8,3],
+
+["🍌","Banana","healthy",6,8,5,2],
+
+["🍩","Donut","junk",-5,2,-3,2],
+
+["🥤","Gaseosa","junk",-6,2,-5,3]
+
+]
+
+},
+
+
+{
+
+location:"🏫 RECREO",
+
+mission:
+"Busca una merienda que ayude a tu concentración.",
+
+foods:[
+
+["🥜","Frutos secos","healthy",7,7,9,4],
+
+["🍊","Naranja","healthy",6,6,7,2],
+
+["🥛","Yogur","healthy",6,8,7,3],
+
+["🍪","Galletas","junk",-4,3,-3,2],
+
+["🍫","Chocolate","junk",-4,3,-2,3]
+
+]
+
+},
+
+
+{
+
+location:"🍽️ ALMUERZO",
+
+mission:
+"Construye una elección equilibrada.",
+
+foods:[
+
+["🐟","Pescado","healthy",9,8,8,5],
+
+["🥦","Brócoli","healthy",9,5,8,3],
+
+["🥗","Ensalada","healthy",9,4,9,3],
+
+["🍚","Arroz","healthy",5,9,5,3],
+
+["🍔","Hamburguesa","junk",-8,4,-5,7],
+
+["🍟","Papas","junk",-6,4,-4,5]
+
+]
+
+},
+
+
+{
+
+location:"⚽ ENTRENAMIENTO",
+
+mission:
+"Necesitas energía e hidratación.",
+
+foods:[
+
+["💧","Agua","healthy",6,10,7,1],
+
+["🍉","Sandía","healthy",7,8,6,2],
+
+["🍊","Naranja","healthy",6,7,6,2],
+
+["🥤","Refresco","junk",-6,2,-4,3],
+
+["⚡","Energética","junk",-8,7,-6,5]
+
+]
+
+},
+
+
+{
+
+location:"🌙 CENA",
+
+mission:
+"Termina la misión con una elección equilibrada.",
+
+foods:[
+
+["🥚","Huevo","healthy",8,7,8,4],
+
+["🥕","Zanahoria","healthy",7,4,7,2],
+
+["🥗","Ensalada","healthy",9,4,9,3],
+
+["🐟","Pescado","healthy",8,7,8,5],
+
+["🍕","Pizza","junk",-7,5,-4,6],
+
+["🍬","Caramelos","junk",-6,2,-5,2]
+
+]
+
+}
+
+];
+
+
+/* =========================================================
+   INICIAR JUEGO
+========================================================= */
+
+function startGame(){
+
+    initAudio();
+
+    if(
+        audioCtx.state ===
+        "suspended"
+    ){
+
+        audioCtx.resume();
+
+    }
+
+
+    health=100;
+
+    energy=100;
+
+    focus=100;
+
+    money=20;
+
+    score=0;
+
+    level=0;
+
+    combo=0;
+
+
+    gameRunning=true;
+
+
+    startScreen.style.display="none";
+
+    winScreen.style.display="none";
+
+    loseScreen.style.display="none";
+
+
+    playerX =
+        game.clientWidth / 2 -
+        38;
+
+
+    player.style.left =
+        playerX+"px";
+
+
+    updateStats();
+
+    loadLevel();
+
+    startMusic();
+
+
+    cancelAnimationFrame(
+        animationId
+    );
+
+
+    gameLoop();
+
+}
+
+
+/* =========================================================
+   CARGAR NIVEL
+========================================================= */
+
+function loadLevel(){
+
+    clearFoods();
+
+
+    if(
+        level >= levels.length
+    ){
+
+        checkVictory();
+
+        return;
+
+    }
+
+
+    const current =
+        levels[level];
+
+
+    locationText.textContent =
+        current.location;
+
+
+    missionText.textContent =
+        current.mission;
+
+
+    levelProgress.style.width =
+        (
+            level /
+            levels.length
+        ) *
+        100
+        +
+        "%";
+
+
+    spawnFoods(
+        current.foods
+    );
+
+}
+
+
+/* =========================================================
+   CREAR COMIDA
+========================================================= */
+
+function spawnFoods(list){
+
+    const width =
+        game.clientWidth;
+
+
+    list.forEach(
+        (food,index)=>{
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            let type =
+                food[2];
+
+
+            /*
+              10% de posibilidades
+              de convertir una comida
+              saludable en especial.
+            */
+
+            if(
+                type==="healthy" &&
+                Math.random()<.12
+            ){
+
+                element.className =
+                    "food healthy special";
+
+            }
+            else{
+
+                element.className =
+                    "food "+type;
+
+            }
+
+
+            element.innerHTML=`
+
+                <div class="foodIcon">
+                    ${food[0]}
+                </div>
+
+                <div class="foodName">
+                    ${food[1]}
+                </div>
+
+            `;
+
+
+            const x =
+                40 +
+                Math.random() *
+                Math.max(
+                    50,
+                    width-130
+                );
+
+
+            const y =
+                -100 -
+                index*120;
+
+
+            element.style.left =
+                x+"px";
+
+
+            element.style.top =
+                y+"px";
+
+
+            game.appendChild(
+                element
+            );
+
+
+            foods.push({
+
+                element,
+
+                x,
+
+                y,
+
+                data:food,
+
+                speed:
+                    1.3+
+                    Math.random()*.8,
+
+                active:true
+
+            });
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TECLADO
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        keys[
+            e.key.toLowerCase()
+        ]=true;
+
+
+        if(
+            e.key==="ArrowLeft" ||
+            e.key==="ArrowRight"
+        ){
+
+            e.preventDefault();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    e=>{
+
+        keys[
+            e.key.toLowerCase()
+        ]=false;
+
+    }
+);
+
+
+/* =========================================================
+   CONTROLES TÁCTILES
+========================================================= */
+
+const leftButton =
+document.getElementById(
+    "leftButton"
+);
+
+const rightButton =
+document.getElementById(
+    "rightButton"
+);
+
+
+leftButton.addEventListener(
+    "pointerdown",
+    ()=>{
+        keys.arrowleft=true;
+    }
+);
+
+leftButton.addEventListener(
+    "pointerup",
+    ()=>{
+        keys.arrowleft=false;
+    }
+);
+
+leftButton.addEventListener(
+    "pointerleave",
+    ()=>{
+        keys.arrowleft=false;
+    }
+);
+
+
+rightButton.addEventListener(
+    "pointerdown",
+    ()=>{
+        keys.arrowright=true;
+    }
+);
+
+rightButton.addEventListener(
+    "pointerup",
+    ()=>{
+        keys.arrowright=false;
+    }
+);
+
+rightButton.addEventListener(
+    "pointerleave",
+    ()=>{
+        keys.arrowright=false;
+    }
+);
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(){
+
+    if(!gameRunning)
+        return;
+
+
+    movePlayer();
+
+    moveFoods();
+
+    checkCollisions();
+
+
+    animationId =
+        requestAnimationFrame(
+            gameLoop
+        );
+
+}
+
+
+/* =========================================================
+   MOVER JUGADOR
+========================================================= */
+
+function movePlayer(){
+
+    const speed=7;
+
+
+    if(
+        keys.arrowleft ||
+        keys.a
+    ){
+
+        playerX-=speed;
+
+    }
+
+
+    if(
+        keys.arrowright ||
+        keys.d
+    ){
+
+        playerX+=speed;
+
+    }
+
+
+    const maxX =
+        game.clientWidth -
+        player.offsetWidth;
+
+
+    playerX =
+        Math.max(
+            0,
+            Math.min(
+                maxX,
+                playerX
+            )
+        );
+
+
+    player.style.left =
+        playerX+"px";
+
+}
+
+
+/* =========================================================
+   MOVER COMIDA
+========================================================= */
+
+function moveFoods(){
+
+    foods.forEach(
+        food=>{
+
+            if(
+                !food.active
+            )
+                return;
+
+
+            food.y +=
+                food.speed;
+
+
+            food.element.style.top =
+                food.y+"px";
+
+
+            if(
+                food.y >
+                game.clientHeight
+            ){
+
+                food.active=false;
+
+                food.element.remove();
+
+            }
+
+        }
+    );
+
+
+    foods=
+        foods.filter(
+            food=>
+                food.active
+        );
+
+
+    if(
+        foods.length===0 &&
+        gameRunning
+    ){
+
+        setTimeout(
+            ()=>{
+
+                level++;
+
+                loadLevel();
+
+            },
+            500
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   COLISIONES
+========================================================= */
+
+function checkCollisions(){
+
+    const playerRect =
+        player.getBoundingClientRect();
+
+
+    foods.forEach(
+        food=>{
+
+            if(
+                !food.active
+            )
+                return;
+
+
+            const rect =
+                food.element
+                .getBoundingClientRect();
+
+
+            if(
+
+                playerRect.left <
+                rect.right &&
+
+                playerRect.right >
+                rect.left &&
+
+                playerRect.top <
+                rect.bottom &&
+
+                playerRect.bottom >
+                rect.top
+
+            ){
+
+                collectFood(
+                    food
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RECOGER COMIDA
+========================================================= */
+
+function collectFood(food){
+
+    if(
+        !food.active
+    )
+        return;
+
+
+    food.active=false;
+
+
+    const rect =
+        food.element
+        .getBoundingClientRect();
+
+
+    createParticles(
+        rect.left +
+        rect.width/2,
+
+        rect.top +
+        rect.height/2,
+
+        food.data[2]==="healthy"
+            ? "#06d6a0"
+            : "#ff4d6d"
+    );
+
+
+    food.element.remove();
+
+
+    const data =
+        food.data;
+
+
+    const healthy =
+        data[2]==="healthy";
+
+
+    health += data[3];
+
+    energy += data[4];
+
+    focus += data[5];
+
+    money -= data[6];
+
+
+    health =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                health
+            )
+        );
+
+
+    energy =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                energy
+            )
+        );
+
+
+    focus =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                focus
+            )
+        );
+
+
+    if(healthy){
+
+        combo++;
+
+
+        const points =
+            10+
+            combo*2;
+
+
+        score += points;
+
+
+        healthySound();
+
+
+        showMessage(
+            "🌟 ¡EXCELENTE! +"+
+            points,
+            false
+        );
+
+
+        if(
+            combo>=3
+        ){
+
+            comboSound();
+
+
+            showMessage(
+                "🔥 ¡COMBO x"+
+                combo+
+                "!",
+                false
+            );
+
+        }
+
+
+        comboElement.textContent =
+            "🔥 COMBO x"+
+            combo;
+
+
+        comboElement.classList.add(
+            "active"
+        );
+
+
+    }
+    else{
+
+        combo=0;
+
+
+        junkSound();
+
+
+        score+=2;
+
+
+        showMessage(
+            "⚠️ ¡CUIDADO!",
+            true
+        );
+
+
+        comboElement.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    updateStats();
+
+
+    if(
+        health<=0
+    ){
+
+        lose(
+            "❤️ Tu salud llegó a 0."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        energy<=0
+    ){
+
+        lose(
+            "⚡ Tu energía llegó a 0."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        foods.filter(
+            f=>f.active
+        ).length===0
+    ){
+
+        setTimeout(
+            ()=>{
+
+                level++;
+
+                loadLevel();
+
+            },
+            700
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PARTÍCULAS
+========================================================= */
+
+function createParticles(
+    x,
+    y,
+    color
+){
+
+    for(
+        let i=0;
+        i<18;
+        i++
+    ){
+
+        const p =
+            document.createElement(
+                "div"
+            );
+
+
+        p.className="particle";
+
+
+        p.style.background=color;
+
+
+        p.style.left=x+"px";
+
+        p.style.top=y+"px";
+
+
+        const angle =
+            Math.random() *
+            Math.PI *
+            2;
+
+
+        const distance =
+            40+
+            Math.random()*80;
+
+
+        p.style.setProperty(
+            "--dx",
+            Math.cos(angle)*
+            distance+
+            "px"
+        );
+
+
+        p.style.setProperty(
+            "--dy",
+            Math.sin(angle)*
+            distance+
+            "px"
+        );
+
+
+        game.appendChild(p);
+
+
+        setTimeout(
+            ()=>{
+                p.remove();
+            },
+            800
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MENSAJE
+========================================================= */
+
+function showMessage(
+    text,
+    bad=false
+){
+
+    message.textContent=text;
+
+
+    message.className =
+        bad
+        ? "show bad"
+        : "show";
+
+
+    setTimeout(
+        ()=>{
+
+            message.className="";
+
+        },
+        900
+    );
+
+}
+
+
+/* =========================================================
+   ESTADÍSTICAS
+========================================================= */
+
+function updateStats(){
+
+    healthValue.textContent =
+        health;
+
+    energyValue.textContent =
+        energy;
+
+    focusValue.textContent =
+        focus;
+
+    moneyValue.textContent =
+        "$"+
+        Math.max(
+            0,
+            money
+        );
+
+    scoreValue.textContent =
+        score;
+
+}
+
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function clearFoods(){
+
+    foods.forEach(
+        food=>{
+
+            if(
+                food.element &&
+                food.element.parentNode
+            ){
+
+                food.element.remove();
+
+            }
+
+        }
+    );
+
+
+    foods=[];
+
+}
+
+
+/* =========================================================
+   VICTORIA
+========================================================= */
+
+function checkVictory(){
+
+    gameRunning=false;
+
+
+    if(
+        score>=70 &&
+        health>=30
+    ){
+
+        victory();
+
+    }
+    else{
+
+        lose(
+            "No alcanzaste los requisitos: necesitas 70 puntos y al menos 30 de salud."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   VICTORIA
+========================================================= */
+
+function victory(){
+
+    gameRunning=false;
+
+
+    document.getElementById(
+        "finalHealth"
+    ).textContent=health;
+
+
+    document.getElementById(
+        "finalEnergy"
+    ).textContent=energy;
+
+
+    document.getElementById(
+        "finalFocus"
+    ).textContent=focus;
+
+
+    document.getElementById(
+        "finalScore"
+    ).textContent=score;
+
+
+    const average =
+        (
+            health+
+            energy+
+            focus
+        )/3;
+
+
+    let rank;
+
+
+    if(
+        score>=120 &&
+        average>=85
+    ){
+
+        rank=
+            "👑 LEYENDA DE LA ALIMENTACIÓN";
+
+    }
+    else if(
+        score>=100
+    ){
+
+        rank=
+            "🏆 MAESTRO DEL PLATO";
+
+    }
+    else if(
+        score>=85
+    ){
+
+        rank=
+            "🥇 EXPERTO SALUDABLE";
+
+    }
+    else{
+
+        rank=
+            "🥈 APRENDIZ SALUDABLE";
+
+    }
+
+
+    document.getElementById(
+        "rank"
+    ).textContent=rank;
+
+
+    winScreen.style.display="flex";
+
+
+    createConfetti();
+
+}
+
+
+/* =========================================================
+   DERROTA
+========================================================= */
+
+function lose(reason){
+
+    gameRunning=false;
+
+
+    cancelAnimationFrame(
+        animationId
+    );
+
+
+    clearFoods();
+
+
+    document.getElementById(
+        "loseReason"
+    ).textContent=reason;
+
+
+    loseScreen.style.display=
+        "flex";
+
+}
+
+
+/* =========================================================
+   CONFETI
+========================================================= */
+
+function createConfetti(){
+
+    const colors=[
+
+        "#00e5ff",
+        "#06d6a0",
+        "#ffe66d",
+        "#ff4d6d",
+        "#ffffff"
+
+    ];
+
+
+    for(
+        let i=0;
+        i<100;
+        i++
+    ){
+
+        const c =
+            document.createElement(
+                "div"
+            );
+
+
+        c.className=
+            "confetti";
+
+
+        c.style.left =
+            Math.random()*
+            100+
+            "vw";
+
+
+        c.style.background =
+            colors[
+                Math.floor(
+                    Math.random()*
+                    colors.length
+                )
+            ];
+
+
+        c.style.animationDelay =
+            Math.random()*
+            1.5+
+            "s";
+
+
+        document.body.appendChild(c);
+
+
+        setTimeout(
+            ()=>{
+                c.remove();
+            },
+            3500
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   FONDO ESTRELLAS
+========================================================= */
+
+function createBackground(){
+
+    for(
+        let i=0;
+        i<60;
+        i++
+    ){
+
+        const p =
+            document.createElement(
+                "div"
+            );
+
+
+        p.className=
+            "backgroundParticle";
+
+
+        p.style.left =
+            Math.random()*
+            100+
+            "%";
+
+
+        p.style.animationDuration =
+            8+
+            Math.random()*15+
+            "s";
+
+
+        p.style.animationDelay =
+            -Math.random()*15+
+            "s";
+
+
+        p.style.opacity =
+            .2+
+            Math.random()*.7;
+
+
+        game.appendChild(p);
+
+    }
+
+}
+
+
+createBackground();
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        if(
+            !gameRunning
+        )
+            return;
+
+
+        const maxX =
+            game.clientWidth -
+            player.offsetWidth;
+
+
+        playerX =
+            Math.max(
+                0,
+                Math.min(
+                    maxX,
+                    playerX
+                )
+            );
+
+
+        player.style.left =
+            playerX+"px";
+
+    }
+);
+
+</script>
+
+</body>
+</html>
