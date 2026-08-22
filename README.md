@@ -163,7 +163,7 @@ Se utilizó apoyo de herramientas de IA en tareas relacionadas con **ideación, 
 
 La IA se utilizó como herramienta de apoyo; las ideas, adaptación, pruebas, correcciones y organización del proyecto forman parte del proceso de desarrollo.
 
-> 📌 Ajusta esta sección si tu docente solicita indicar exactamente qué parte de cada juego recibió apoyo de IA.
+
 
 ---
 
