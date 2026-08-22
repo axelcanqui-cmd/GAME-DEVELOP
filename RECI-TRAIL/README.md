@@ -4,7 +4,7 @@
 
 ![Reci-Trail](../capturas/recitrail.png)
 
-[🏍️ JUGAR](segundojuego.html) · ♻️ Mecánica · 🔋 Energía · 🌱 Aprendizaje
+[🏍️ JUGAR](https://axl-niebla.github.io/recitrail/) · ♻️ Mecánica · 🔋 Energía · 🌱 Aprendizaje
 
 ## 🏔️ Ficha del juego
 | Dato | Información |
@@ -34,4 +34,4 @@ Recorre la ruta en motocicleta, identifica cada residuo y deposítalo en el cont
 ♻️ Separación de residuos · 🌎 Cuidado ambiental · ⚡ Gestión de recursos · 🧠 Toma de decisiones
 
 ## 🚀 Ejecutar
-Abre `segundojuego.html` en el navegador. **Sin instalación y sin conexión a internet.**
+[🏍️ JUGAR](https://axl-niebla.github.io/recitrail/) **
