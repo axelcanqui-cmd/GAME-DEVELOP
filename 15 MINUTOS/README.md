@@ -4,7 +4,7 @@
 
 ![15 Minutos](../capturas/15minutos.png)
 
-📱 VIVIR LA HISTORIA · 🧠 Decisiones · 💭 Emoción · 🫂 Mensaje
+📱 [VIVIR LA HISTORIA](https://axl-niebla.github.io/15_minutos/) · 🧠 Decisiones · 💭 Emoción · 🫂 Mensaje
 
 ## 🎭 Ficha del juego
 | Dato | Información |
@@ -40,4 +40,4 @@ Las notificaciones dañinas pueden bloquear la pantalla. **Mantén presionada un
 Empatía · Reflexión · Reconocimiento del ciberbullying · Importancia de pedir ayuda
 
 ## 🚀 Ejecutar
-Abre `storytelling.html` y activa el sonido para disfrutar la experiencia completa. **No requiere instalación ni internet.**
+Abre [JUGAR](https://axl-niebla.github.io/15_minutos/)
