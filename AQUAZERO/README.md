@@ -4,7 +4,7 @@
 
 ![AquaZero](../capturas/aquazero.png)
 
-[💧 JUGAR](AhorrroAgua.html) ·🧩 Puzzle · 💦 Objetivo · 🌎 Aprendizaje
+[💧 JUGAR](https://axl-niebla.github.io/aquazero/) ·🧩 Puzzle · 💦 Objetivo · 🌎 Aprendizaje
 
 ## 💧 Ficha del juego
 | Dato | Información |
@@ -37,4 +37,4 @@ Universal: **clic o toque directo** sobre las piezas y botones de giro.
 💧 Uso responsable del agua · 🧩 Pensamiento lógico · 🔎 Resolución de problemas · 🌱 Conciencia ambiental
 
 ## 🚀 Ejecutar
-Abre `AhorrroAgua.html` en tu navegador. **Sin instalación ni internet.**
+[💧 JUGAR](https://axl-niebla.github.io/aquazero/)
