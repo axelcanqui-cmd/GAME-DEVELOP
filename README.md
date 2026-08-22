@@ -40,12 +40,12 @@ Se presentan los **6 proyectos** desarrollados, indicando su temática, género,
 
 | # | 🎮 Proyecto | 🧩 Tema | 🎲 Género | 🛠️ Tecnología | ▶️ Jugar |
 |:--:|:--|:--|:--|:--|:--:|
-| 01 | **Misión Estelar Matemática** | Matemáticas | Arcade / Acción | HTML5 · CSS3 · JS | [Jugar](Matematica.html) |
-| 02 | **Reci-Trail** | Reciclaje | Racing / Arcade | HTML5 · CSS3 · JS | [Jugar](segundojuego.html) |
-| 03 | **FOOD WARS** | Alimentación saludable | Arcade | HTML5 · CSS3 · JS | [Jugar](ComidaSaludable.html) |
-| 04 | **AquaZero** | Cuidado del agua | Puzzle | HTML5 · CSS3 · JS | [Jugar](AhorrroAgua.html) |
-| 05 | **15 Minutos** | Ciberbullying | Aventura / Storytelling | HTML5 · CSS3 · JS · Web Audio API | [Jugar](storytelling.html) |
-| 06 | **Finanzas a la Vista** | Educación financiera | Simulación / Gestión | HTML5 · CSS3 · JS | [Jugar](index%20(1).html) |
+| 01 | **Misión Estelar Matemática** | Matemáticas | Arcade / Acción | HTML5 · CSS3 · JS | [Jugar](https://axl-niebla.github.io/matematicas/) |
+| 02 | **Reci-Trail** | Reciclaje | Racing / Arcade | HTML5 · CSS3 · JS | [Jugar](https://axl-niebla.github.io/recitrail/) |
+| 03 | **FOOD WARS** | Alimentación saludable | Arcade | HTML5 · CSS3 · JS | [Jugar](https://axl-niebla.github.io/foodwars/) |
+| 04 | **AquaZero** | Cuidado del agua | Puzzle | HTML5 · CSS3 · JS | [Jugar](https://axl-niebla.github.io/aquazero/) |
+| 05 | **15 Minutos** | Ciberbullying | Aventura / Storytelling | HTML5 · CSS3 · JS · Web Audio API | [Jugar](https://axl-niebla.github.io/15_minutos/)) |
+| 06 | **Finanzas a la Vista** | Educación financiera | Simulación / Gestión | HTML5 · CSS3 · JS | [Jugar](https://axl-niebla.github.io/finanzas/) |
 
 > 💡 **Nota:** La clasificación de género se presenta como una categorización del portafolio basada en las mecánicas descritas de cada proyecto.
 
@@ -171,7 +171,7 @@ Las decisiones afectan la experiencia narrativa. La música y la visualización 
 **Género:** Aventura / Storytelling interactivo  
 **Tecnología:** HTML5 · CSS3 · JavaScript ES6 · Web Audio API
 
-▶️ **[JUGAR AHORA](https://axl-niebla.github.io/15_minutos/**
+▶️ **[JUGAR AHORA](https://axl-niebla.github.io/15_minutos/)**
 
 ---
 
