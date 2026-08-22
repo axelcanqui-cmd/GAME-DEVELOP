@@ -4,7 +4,7 @@
 
 ![FOOD WARS](../capturas/foodwars.png)
 
-[🍎 JUGAR](ComidaSaludable.html) · ⚔️ Mecánicas · 📊 Estadísticas · 🧠 Aprendizaje
+[🍎 JUGAR](https://axl-niebla.github.io/foodwars/) · ⚔️ Mecánicas · 📊 Estadísticas · 🧠 Aprendizaje
 
 ## 🥗 Ficha del juego
 | Dato | Información |
@@ -40,4 +40,4 @@ No basta con conseguir puntos: debes mantener un **equilibrio saludable**.
 🥦 Alimentación equilibrada · ⚡ Energía · ❤️ Salud · 🎯 Atención y reflejos
 
 ## 🚀 Ejecutar
-Abre `ComidaSaludable.html`. **No requiere instalación ni internet.**
+[🍎 JUGAR](https://axl-niebla.github.io/foodwars/)**
