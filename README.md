@@ -228,7 +228,7 @@ La IA se utilizó como herramienta de apoyo; las ideas, adaptación, pruebas, co
 **[📱 15 Minutos](https://axl-niebla.github.io/15_minutos/)** ·
 **[💰 Finanzas](https://axl-niebla.github.io/finanzas/)**
 
-Cada carpeta contiene el proyecto correspondiente y su documentación individual.
+
 
 ---
 
