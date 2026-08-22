@@ -4,7 +4,7 @@
 
 ![15 Minutos](../capturas/15minutos.png)
 
-📱 [VIVIR LA HISTORIA](https://axl-niebla.github.io/15_minutos/) · 🧠 Decisiones · 💭 Emoción · 🫂 Mensaje
+📱 [JUGAR](https://axl-niebla.github.io/15_minutos/) · 🧠 Decisiones · 💭 Emoción · 🫂 Mensaje
 
 ## 🎭 Ficha del juego
 | Dato | Información |
