@@ -74,7 +74,7 @@ El juego utiliza **3 vidas**. El jugador pierde una vida al chocar con una respu
 **Género:** Arcade / Acción  
 **Tecnología:** HTML5 · CSS3 · JavaScript ES6
 
-▶️ **[JUGAR AHORA](Matematica.html)**
+▶️ **[JUGAR AHORA](https://axl-niebla.github.io/matematicas/)**
 
 ---
 
@@ -99,7 +99,7 @@ Los aciertos otorgan puntos y ayudan a recuperar energía, mientras que los erro
 **Género:** Racing / Arcade  
 **Tecnología:** HTML5 · CSS3 · JavaScript ES6
 
-▶️ **[JUGAR AHORA](segundojuego.html)**
+▶️ **[JUGAR AHORA](https://axl-niebla.github.io/recitrail/)**
 
 ---
 
@@ -123,7 +123,7 @@ El jugador administra **Salud · Energía · Mente** y puede conseguir multiplic
 **Género:** Arcade  
 **Tecnología:** HTML5 · CSS3 · JavaScript ES6
 
-▶️ **[JUGAR AHORA](ComidaSaludable.html)**
+▶️ **[JUGAR AHORA]( https://axl-niebla.github.io/foodwars/)**
 
 ---
 
@@ -147,7 +147,7 @@ El jugador toca las tuberías para rotarlas y debe conseguir una conexión compl
 **Género:** Puzzle  
 **Tecnología:** HTML5 · CSS3 · JavaScript ES6
 
-▶️ **[JUGAR AHORA](AhorrroAgua.html)**
+▶️ **[JUGAR AHORA](https://axl-niebla.github.io/aquazero/)**
 
 ---
 
@@ -171,7 +171,7 @@ Las decisiones afectan la experiencia narrativa. La música y la visualización 
 **Género:** Aventura / Storytelling interactivo  
 **Tecnología:** HTML5 · CSS3 · JavaScript ES6 · Web Audio API
 
-▶️ **[JUGAR AHORA](storytelling.html)**
+▶️ **[JUGAR AHORA](https://axl-niebla.github.io/15_minutos/**
 
 ---
 
@@ -195,7 +195,7 @@ El jugador trabaja, invierte y responde a diferentes situaciones. Las decisiones
 **Género:** Simulación / Gestión de recursos  
 **Tecnología:** HTML5 · CSS3 · JavaScript ES6
 
-▶️ **[JUGAR AHORA](index%20(1).html)**
+▶️ **[JUGAR AHORA](https://axl-niebla.github.io/finanzas/)**
 
 ---
 
