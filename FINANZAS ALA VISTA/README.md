@@ -4,7 +4,7 @@
 
 1. ![Finanzas a la Vista](../capturas/finanzas.png)
 
-[💰 JUGAR](index%20%281%29.html) · 📊 Sistema · 🎲 Eventos · 🏆 Meta
+[💰 JUGAR](https://axl-niebla.github.io/finanzas/) · 📊 Sistema · 🎲 Eventos · 🏆 Meta
 ## 💳 Ficha del juego
 | Dato | Información |
 |---|---|
@@ -43,4 +43,5 @@ El progreso mensual se guarda automáticamente en el navegador.
 📋 Presupuestación · 💰 Ahorro · ⚖️ Necesidades vs. deseos · 🎲 Gestión de imprevistos · 🧠 Toma de decisiones
 
 ## 🚀 Ejecutar
-Abre `index (1).html`. **No requiere instalación ni conexión a internet.**
+[💰 JUGAR](https://axl-niebla.github.io/finanzas/) 
+
