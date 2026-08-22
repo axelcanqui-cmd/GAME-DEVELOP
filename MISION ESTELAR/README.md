@@ -4,7 +4,7 @@
 
 ![Misión Estelar Matemática](../capturas/matematica.png)
 
-[🎮 JUGAR](Matematica.html)· 📖 Cómo jugar · 🏆 Objetivo · 🧠 Aprendizaje
+[🎮 JUGAR](https://axl-niebla.github.io/matematicas/)· 📖 Cómo jugar · 🏆 Objetivo · 🧠 Aprendizaje
 
 ## 🌌 Ficha del juego
 | Dato | Información |
@@ -38,4 +38,4 @@ Pierdes una vida si chocas con una respuesta incorrecta o dejas caer la correcta
 ⚡ Cálculo mental · 🎯 Atención · 🧩 Resolución rápida · 🧮 Operaciones básicas
 
 ## 🚀 Ejecutar
-Abre `Matematica.html` directamente en un navegador. **No requiere instalación ni internet.**
+[🎮 JUGAR](https://axl-niebla.github.io/matematicas/)**
